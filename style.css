@@ -872,6 +872,7 @@ nav.scrolled {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 28px 30px;
+  text-align: center;
   transition: border-color var(--transition), background var(--transition), box-shadow var(--transition), transform var(--transition);
   position: relative;
   overflow: hidden;
@@ -911,7 +912,7 @@ nav.scrolled {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 18px;
+  margin: 0 auto 18px;
 }
 .edu-card-logo img {
   height: 32px;
@@ -945,6 +946,7 @@ nav.scrolled {
   margin-top: 4px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
 }
 
@@ -1010,30 +1012,49 @@ nav.scrolled {
 .skill-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 8px;
 }
 .skill-pill {
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
   font-weight: 500;
   color: var(--text-2);
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
-  padding: 5px 12px;
+  padding: 6px 13px;
   border-radius: var(--radius-pill);
   transition: color var(--transition), border-color var(--transition), background var(--transition), transform var(--transition), opacity 0.4s ease;
   cursor: default;
   opacity: 0;
   transform: translateY(8px);
+  line-height: 1;
 }
 .skill-pill.pill-visible {
   opacity: 1;
   transform: translateY(0);
 }
 .skill-pill:hover {
+  color: var(--text-1);
+  border-color: rgba(99,102,241,0.4);
+  background: rgba(99,102,241,0.08);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 2px 12px rgba(99,102,241,0.15);
+}
+/* Devicon inside pill */
+.skill-pill [class^="devicon-"],
+.skill-pill [class*=" devicon-"] {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+/* Font Awesome fallback icons inside pill */
+.skill-pill .skill-icon-fa {
+  font-size: 12px;
   color: var(--accent-cyan);
-  border-color: rgba(34,211,238,0.3);
-  background: rgba(34,211,238,0.06);
-  transform: translateY(-2px) scale(1.04);
+  flex-shrink: 0;
+  opacity: 0.85;
 }
 
 /* ─── 3D TILT — smooth transition on leave ─────────────────────── */
@@ -1047,102 +1068,124 @@ nav.scrolled {
 }
 
 /* ─── LOOKING FORWARD / GOALS ──────────────────────────────────── */
-.goals-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 48px 52px;
+.goals-layout {
   display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 48px;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
 }
-.goals-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
+
+/* Left column */
+.goals-quote {
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+  margin: 0 0 28px;
+  padding: 0;
+  border: none;
+  quotes: none;
 }
-.goals-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 80% 50%, rgba(99,102,241,0.06) 0%, transparent 60%);
-  pointer-events: none;
-}
-.goals-statement {
-  font-size: 1.02rem;
+.goals-body {
+  font-size: 1rem;
   color: var(--text-2);
   line-height: 1.78;
-  margin-bottom: 16px;
+  margin-bottom: 36px;
 }
-.goals-statement strong { color: var(--text-1); }
-.goals-statement:last-of-type { margin-bottom: 32px; }
-.goals-focuses {
+.goals-exploring-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 14px;
+}
+.goals-tech-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 9px;
 }
-.goals-focus-item {
+.goals-tech-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 9px 18px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(99,102,241,0.28);
-  background: rgba(99,102,241,0.07);
-  font-size: 13px;
+  gap: 7px;
+  font-size: 12px;
   font-weight: 500;
-  color: var(--text-1);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(34,211,238,0.22);
+  background: rgba(34,211,238,0.06);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-family: 'JetBrains Mono', monospace;
   transition: var(--transition);
   cursor: default;
 }
-.goals-focus-item i {
-  color: var(--accent-cyan);
-  font-size: 12px;
-}
-.goals-focus-item:hover {
+.goals-tech-badge i { font-size: 13px; }
+.goals-tech-badge:hover {
+  background: rgba(34,211,238,0.12);
   border-color: rgba(34,211,238,0.4);
-  background: rgba(34,211,238,0.07);
-  color: var(--accent-cyan);
   transform: translateY(-2px);
 }
-/* Decorative column */
-.goals-deco {
-  position: relative;
+
+/* Right column — stacked focus cards */
+.goals-cards {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 220px;
+  flex-direction: column;
+  gap: 12px;
 }
-.goals-orb {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-}
-.goals-orb-1 {
-  width: 170px; height: 170px;
-  background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
-  animation: floatGlow 5s ease-in-out infinite;
-}
-.goals-orb-2 {
-  width: 100px; height: 100px;
-  background: radial-gradient(circle, rgba(34,211,238,0.14) 0%, transparent 70%);
-  animation: floatGlow 7s ease-in-out infinite reverse;
-  right: 12px; bottom: 12px;
-}
-.goals-icon {
-  font-size: 68px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.goals-focus-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 22px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color var(--transition), background var(--transition),
+              box-shadow var(--transition), transform var(--transition);
   position: relative;
-  z-index: 1;
-  filter: drop-shadow(0 0 22px rgba(99,102,241,0.45));
+  overflow: hidden;
+}
+.goals-focus-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-cyan));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+.goals-focus-card:hover {
+  border-color: var(--border-h);
+  background: var(--bg-card-h);
+  box-shadow: var(--glow-sm);
+  transform: translateX(5px);
+}
+.goals-focus-card:hover::before { transform: scaleY(1); }
+.goals-focus-icon {
+  width: 36px; height: 36px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: var(--accent-soft);
+  border: 1px solid rgba(99,102,241,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent);
+  font-size: 14px;
+}
+.goals-focus-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.goals-focus-desc {
+  font-size: 12.5px;
+  color: var(--text-3);
+  line-height: 1.55;
 }
 
 /* ─── CONTACT / FOOTER ─────────────────────────────────────────── */
@@ -1248,8 +1291,7 @@ nav.scrolled {
   .hero-stats  { gap: 24px; flex-wrap: wrap; }
   .skills-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
   .edu-grid    { grid-template-columns: 1fr 1fr; }
-  .goals-card  { grid-template-columns: 1fr; }
-  .goals-deco  { display: none; }
+  .goals-layout { grid-template-columns: 1fr; gap: 40px; }
 }
 
 /* ── Large phone / small tablet ── */
@@ -1281,9 +1323,9 @@ nav.scrolled {
   .skill-group  { padding: 20px 22px; }
 
   /* Goals */
-  .goals-card   { padding: 32px 24px; }
-  .goals-focuses { gap: 8px; }
-  .goals-focus-item { font-size: 12px; padding: 7px 14px; }
+  .goals-layout  { grid-template-columns: 1fr; gap: 36px; }
+  .goals-quote   { font-size: 1.3rem; }
+  .goals-tech-row { gap: 7px; }
 
   /* Section titles */
   .section-title { margin-bottom: 40px; }
