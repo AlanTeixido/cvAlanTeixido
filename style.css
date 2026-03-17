@@ -949,6 +949,27 @@ nav.scrolled {
   justify-content: center;
   gap: 4px;
 }
+/* Secondary education card — reduced visual weight */
+.edu-card-secondary {
+  opacity: 0.7;
+  border-style: dashed;
+}
+.edu-card-secondary:hover { opacity: 1; }
+.edu-card-secondary .edu-degree {
+  font-size: 14px;
+  font-weight: 600;
+}
+.edu-card-secondary .edu-institution a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+}
+.edu-card-secondary .edu-institution a:hover { opacity: 0.75; }
+.edu-card-logo-sm {
+  height: 40px;
+  padding: 5px 10px;
+  margin-bottom: 14px;
+}
+.edu-card-logo-sm img { height: 22px; }
 
 /* ─── SKILLS ───────────────────────────────────────────────────── */
 .skills-grid {
@@ -1092,41 +1113,6 @@ nav.scrolled {
   color: var(--text-2);
   line-height: 1.78;
   margin-bottom: 36px;
-}
-.goals-exploring-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  display: block;
-  margin-bottom: 14px;
-}
-.goals-tech-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-}
-.goals-tech-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--accent-cyan);
-  border: 1px solid rgba(34,211,238,0.22);
-  background: rgba(34,211,238,0.06);
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  font-family: 'JetBrains Mono', monospace;
-  transition: var(--transition);
-  cursor: default;
-}
-.goals-tech-badge i { font-size: 13px; }
-.goals-tech-badge:hover {
-  background: rgba(34,211,238,0.12);
-  border-color: rgba(34,211,238,0.4);
-  transform: translateY(-2px);
 }
 
 /* Right column — stacked focus cards */
