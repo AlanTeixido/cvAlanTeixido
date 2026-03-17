@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alan Teixidó — Software Engineer</title>
+    <meta
+      name="description"
+      content="Alan Teixidó Sararols — Software Engineer focused on backend, mobile and cloud systems."
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ─── PAGE LOADER ──────────────────────────────────────────────────── -->
+    <div id="page-loader">
+      <div class="loader-crystals">
+        <div class="lc"></div>
+        <div class="lc"></div>
+        <div class="lc"></div>
+        <div class="lc"></div>
+        <div class="lc"></div>
+        <div class="lc"></div>
+      </div>
+      <div class="loader-name">Alan Teixidó</div>
+    </div>
+
+    <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
+    <nav id="navbar">
+      <div class="nav-inner">
+        <a href="#hero" class="nav-logo">AT<span>.</span></a>
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#contact" class="nav-cta">Contact</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile nav (toggled by hamburger) -->
+    <nav class="mobile-menu" id="mobileMenu">
+      <a href="#about" onclick="closeMobile()">About</a>
+      <a href="#experience" onclick="closeMobile()">Experience</a>
+      <a href="#education" onclick="closeMobile()">Education</a>
+      <a href="#skills" onclick="closeMobile()">Skills</a>
+      <a href="#contact" onclick="closeMobile()">Contact</a>
+    </nav>
+
+    <!-- ─── HERO ─────────────────────────────────────────────────────────── -->
+    <section id="hero">
+      <canvas id="hero-canvas"></canvas>
+      <div class="hero-glow-1"></div>
+      <div class="hero-glow-2"></div>
+
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-eyebrow">
+            <div class="hero-eyebrow-dot"></div>
+            Open to side projects & collaborations
+          </div>
+
+          <h1 class="hero-name">
+            Alan<br />
+            <span class="line2">Teixidó.</span>
+          </h1>
+
+          <p class="hero-role">
+            <strong>Software Engineer</strong> — Backend, Mobile &amp; Cloud
+            Systems
+          </p>
+
+          <p class="hero-tagline">
+            Building scalable backend systems, mobile applications, and reliable
+            production environments. Based in Barcelona, working globally.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#experience" class="btn btn-primary">
+              <i class="fa-solid fa-code-branch"></i> View Experience
+            </a>
+            <a href="#contact" class="btn btn-secondary">
+              <i class="fa-regular fa-paper-plane"></i> Get in touch
+            </a>
+          </div>
+
+          <div class="hero-stats">
+            <div>
+              <div class="hero-stat-num">2<span>+</span></div>
+              <div class="hero-stat-label">Years engineering</div>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div>
+              <div class="hero-stat-num">5<span>+</span></div>
+              <div class="hero-stat-label">Tech stacks</div>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div>
+              <div class="hero-stat-num">3<span>+</span></div>
+              <div class="hero-stat-label">Languages spoken</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- ─── ABOUT ────────────────────────────────────────────────────────── -->
+    <section id="about">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-label">Profile</span>
+          <h2 class="section-title">About me</h2>
+        </div>
+
+        <div class="about-grid">
+          <!-- Photo -->
+          <div class="about-photo-col reveal reveal-delay-1">
+            <div class="about-photo-wrap">
+              <img
+                src="images/IMG_1372.JPEG"
+                alt="Alan Teixidó"
+                class="about-photo"
+              />
+              <div class="about-photo-overlay"></div>
+            </div>
+          </div>
+
+          <!-- Bio + contact -->
+          <div class="about-left reveal reveal-delay-2">
+            <p class="about-bio">
+              Young software engineer focused on building
+              <strong>scalable backend systems</strong>, mobile applications,
+              and reliable production environments. Strong experience with
+              <strong>.NET, APIs, CI/CD, PostgreSQL, React Native</strong>, and
+              modern engineering practices.
+            </p>
+            <ul class="about-contact-list">
+              <li>
+                <i class="fa-solid fa-location-dot"></i>
+                Barcelona, Spain
+              </li>
+              <li>
+                <i class="fa-regular fa-envelope"></i>
+                <a href="mailto:teixido.alan@gmail.com"
+                  >teixido.alan@gmail.com</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Languages -->
+          <div class="about-right reveal reveal-delay-3">
+            <div class="about-card">
+              <div class="about-card-title">Language proficiency</div>
+              <div class="langs-grid">
+                <div class="lang-item">
+                  <div class="lang-top">
+                    <span class="lang-name">Catalan</span>
+                    <span class="lang-level">Native</span>
+                  </div>
+                  <div class="lang-bar">
+                    <div class="lang-bar-fill" data-width="1"></div>
+                  </div>
+                </div>
+                <div class="lang-item">
+                  <div class="lang-top">
+                    <span class="lang-name">Spanish</span>
+                    <span class="lang-level">Native</span>
+                  </div>
+                  <div class="lang-bar">
+                    <div class="lang-bar-fill" data-width="1"></div>
+                  </div>
+                </div>
+                <div class="lang-item">
+                  <div class="lang-top">
+                    <span class="lang-name">English</span>
+                    <span class="lang-level">C1 — Advanced</span>
+                  </div>
+                  <div class="lang-bar">
+                    <div class="lang-bar-fill" data-width="0.85"></div>
+                  </div>
+                </div>
+                <div class="lang-item">
+                  <div class="lang-top">
+                    <span class="lang-name">French</span>
+                    <span class="lang-level">Notions</span>
+                  </div>
+                  <div class="lang-bar">
+                    <div class="lang-bar-fill" data-width="0.25"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIENCE ────────────────────────────────────────────────────── -->
+    <section id="experience">
+      <div class="container">
+        <div class="experience-header reveal">
+          <span class="section-label">Career</span>
+          <h2 class="section-title">Experience</h2>
+        </div>
+
+        <div class="timeline">
+          <!-- Plain Concepts -->
+          <div class="timeline-item reveal reveal-delay-1">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <div class="timeline-company-wrap">
+                  <div class="timeline-logo">
+                    <img src="images/logo_plain.png" alt="Plain Concepts" />
+                  </div>
+                  <div class="timeline-company">Plain Concepts</div>
+                </div>
+                <div class="timeline-period">2025 — Present</div>
+              </div>
+              <div class="timeline-role">Software Engineer — Fullstack</div>
+              <div class="timeline-location">
+                <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
+                Remote · Barcelona, Spain
+              </div>
+              <div class="timeline-stack">
+                <span class="stack-pill">.NET (C#)</span>
+                <span class="stack-pill">React Native</span>
+                <span class="stack-pill">PostgreSQL</span>
+                <span class="stack-pill">Azure DevOps</span>
+                <span class="stack-pill">Firebase</span>
+                <span class="stack-pill">Docker</span>
+                <span class="stack-pill">CQRS</span>
+                <span class="stack-pill">MediatR</span>
+              </div>
+              <ul class="timeline-bullets">
+                <li>
+                  Designed and implemented scalable REST APIs using CQRS +
+                  MediatR patterns
+                </li>
+                <li>
+                  Developed versioned APIs (v1) with integration and contract
+                  testing suites
+                </li>
+                <li>
+                  Built and maintained CI/CD pipelines in Azure DevOps for
+                  Android &amp; iOS builds
+                </li>
+                <li>
+                  Led migration to Firebase App Distribution, integrating
+                  Analytics and Crashlytics
+                </li>
+                <li>
+                  Designed and optimized PostgreSQL databases with Entity
+                  Framework Core
+                </li>
+                <li>
+                  Contributed to production systems with a focus on performance,
+                  reliability, and clean architecture
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Quantion -->
+          <div class="timeline-item reveal reveal-delay-2">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-header">
+                <div class="timeline-company-wrap">
+                  <div class="timeline-logo">
+                    <img src="images/logo_quantion.png" alt="Quantion" />
+                  </div>
+                  <div class="timeline-company">Quantion</div>
+                </div>
+                <div class="timeline-period">Oct 2024 — Mar 2025</div>
+              </div>
+              <div class="timeline-role">
+                Backend Developer (.NET) — Internship
+              </div>
+              <div class="timeline-location">
+                <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
+                Barcelona, Spain
+              </div>
+              <div class="timeline-stack">
+                <span class="stack-pill">.NET (C#)</span>
+                <span class="stack-pill">REST APIs</span>
+                <span class="stack-pill">Azure DevOps</span>
+                <span class="stack-pill">Git</span>
+              </div>
+              <ul class="timeline-bullets">
+                <li>
+                  Developed backend features using .NET and C# in a production
+                  codebase
+                </li>
+                <li>
+                  Built and validated REST API endpoints, ensuring reliability
+                  and coverage
+                </li>
+                <li>
+                  Refactored code following Clean Code principles and
+                  established design patterns
+                </li>
+                <li>
+                  Worked in a Scrum team, contributing to iterative delivery
+                  cycles
+                </li>
+                <li>Adapted legacy code to improved architectural standards</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- SJAS -->
+          <div class="timeline-item reveal reveal-delay-3">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card non-tech">
+              <div class="timeline-header">
+                <div class="timeline-company">SJAS Summer Camp</div>
+                <div class="timeline-period">Jul — Aug 2024</div>
+              </div>
+              <div class="timeline-role">Camp Counselor</div>
+              <div class="timeline-location">
+                <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
+                Lucerne, Switzerland
+              </div>
+              <ul class="timeline-bullets">
+                <li>
+                  Led international groups in structured outdoor and team-based
+                  activities
+                </li>
+                <li>
+                  Strengthened leadership, communication, and cross-cultural
+                  teamwork skills
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- CamperXpress -->
+          <div class="timeline-item reveal reveal-delay-4">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card non-tech">
+              <div class="timeline-header">
+                <div class="timeline-company-wrap">
+                  <div class="timeline-logo">
+                    <img src="images/logo_camper.png" alt="CamperXpress" />
+                  </div>
+                  <div class="timeline-company">CamperXpress</div>
+                </div>
+                <div class="timeline-period">May — Jul 2022</div>
+              </div>
+              <div class="timeline-role">
+                Sales Representative &amp; Web Developer
+              </div>
+              <div class="timeline-location">
+                <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
+                Barcelona, Spain
+              </div>
+              <ul class="timeline-bullets">
+                <li>
+                  Managed sales pipeline and client support for a growing
+                  business
+                </li>
+                <li>Developed and maintained the company website</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Pista Cero -->
+          <div class="timeline-item reveal reveal-delay-5">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card non-tech">
+              <div class="timeline-header">
+                <div class="timeline-company-wrap">
+                  <div class="timeline-logo">
+                    <img
+                      src="images/logo_pistazero.png"
+                      alt="Pista Cero Informática"
+                    />
+                  </div>
+                  <div class="timeline-company">Pista Cero Informática</div>
+                </div>
+                <div class="timeline-period">Jun 2021 — Apr 2022</div>
+              </div>
+              <div class="timeline-role">Hardware Technician</div>
+              <div class="timeline-location">
+                <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
+                Barcelona, Spain
+              </div>
+              <ul class="timeline-bullets">
+                <li>Assembled, repaired, and upgraded computer systems</li>
+                <li>
+                  Assisted with server maintenance and infrastructure support
+                </li>
+                <li>Provided technical support to end users</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── EDUCATION ─────────────────────────────────────────────────────── -->
+    <section id="education">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-label">Academics</span>
+          <h2 class="section-title">Education</h2>
+        </div>
+
+        <div class="edu-grid">
+          <div class="edu-card reveal reveal-delay-1">
+            <div class="edu-card-logo">
+              <img
+                src="images/logo_ITB.png"
+                alt="Institut Tecnològic de Barcelona"
+              />
+            </div>
+            <div class="edu-degree">DAW — Web Application Development</div>
+            <div class="edu-institution">Institut Tecnològic de Barcelona</div>
+            <div class="edu-period">2024 — 2025</div>
+            <div class="edu-location">
+              <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
+              Barcelona, Spain
+            </div>
+          </div>
+
+          <div class="edu-card reveal reveal-delay-2">
+            <div class="edu-card-logo">
+              <img src="images/logo_ifp.png" alt="IFP Hospitalet" />
+            </div>
+            <div class="edu-degree">
+              CFGM SMX — Microcomputer Systems &amp; Networks
+            </div>
+            <div class="edu-institution">IFP Hospitalet</div>
+            <div class="edu-period">2021 — 2023</div>
+            <div class="edu-location">
+              <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
+              Hospitalet, Spain
+            </div>
+          </div>
+
+          <div class="edu-card reveal reveal-delay-3">
+            <div class="edu-card-logo">
+              <img src="images/logo_sek.png" alt="SEK Catalunya" />
+            </div>
+            <div class="edu-degree">Primary &amp; Secondary Education</div>
+            <div class="edu-institution">SEK Catalunya</div>
+            <div class="edu-period">Sep 2013 — Apr 2020</div>
+            <div class="edu-location">
+              <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
+              La Garriga, Spain
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SKILLS ────────────────────────────────────────────────────────── -->
+    <section id="skills">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-label">Stack</span>
+          <h2 class="section-title">Technical skills</h2>
+        </div>
+
+        <div class="skills-grid">
+          <div class="skill-group reveal reveal-delay-1">
+            <div class="skill-group-header">
+              <div class="skill-group-icon">
+                <i class="fa-solid fa-server"></i>
+              </div>
+              <div class="skill-group-name">Backend &amp; Architecture</div>
+            </div>
+            <div class="skill-pills">
+              <span class="skill-pill">.NET (C#)</span>
+              <span class="skill-pill">REST APIs</span>
+              <span class="skill-pill">CQRS</span>
+              <span class="skill-pill">MediatR</span>
+              <span class="skill-pill">API Versioning</span>
+              <span class="skill-pill">Clean Architecture</span>
+            </div>
+          </div>
+
+          <div class="skill-group reveal reveal-delay-2">
+            <div class="skill-group-header">
+              <div class="skill-group-icon">
+                <i class="fa-solid fa-mobile-screen"></i>
+              </div>
+              <div class="skill-group-name">Frontend &amp; Mobile</div>
+            </div>
+            <div class="skill-pills">
+              <span class="skill-pill">React Native</span>
+              <span class="skill-pill">Expo</span>
+              <span class="skill-pill">React</span>
+              <span class="skill-pill">Vue.js</span>
+              <span class="skill-pill">TypeScript</span>
+              <span class="skill-pill">JavaScript</span>
+            </div>
+          </div>
+
+          <div class="skill-group reveal reveal-delay-3">
+            <div class="skill-group-header">
+              <div class="skill-group-icon">
+                <i class="fa-solid fa-cloud"></i>
+              </div>
+              <div class="skill-group-name">DevOps &amp; Cloud</div>
+            </div>
+            <div class="skill-pills">
+              <span class="skill-pill">Azure DevOps</span>
+              <span class="skill-pill">CI/CD Pipelines</span>
+              <span class="skill-pill">Docker</span>
+              <span class="skill-pill">Git</span>
+            </div>
+          </div>
+
+          <div class="skill-group reveal reveal-delay-4">
+            <div class="skill-group-header">
+              <div class="skill-group-icon">
+                <i class="fa-solid fa-database"></i>
+              </div>
+              <div class="skill-group-name">Databases</div>
+            </div>
+            <div class="skill-pills">
+              <span class="skill-pill">PostgreSQL</span>
+              <span class="skill-pill">Entity Framework Core</span>
+              <span class="skill-pill">SQL</span>
+            </div>
+          </div>
+
+          <div class="skill-group reveal reveal-delay-5">
+            <div class="skill-group-header">
+              <div class="skill-group-icon">
+                <i class="fa-solid fa-layer-group"></i>
+              </div>
+              <div class="skill-group-name">Other Languages</div>
+            </div>
+            <div class="skill-pills">
+              <span class="skill-pill">Kotlin</span>
+              <span class="skill-pill">Python</span>
+              <span class="skill-pill">PyInstaller</span>
+            </div>
+          </div>
+
+          <div class="skill-group reveal reveal-delay-1">
+            <div class="skill-group-header">
+              <div class="skill-group-icon">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <div class="skill-group-name">Monitoring &amp; Analytics</div>
+            </div>
+            <div class="skill-pills">
+              <span class="skill-pill">Firebase Analytics</span>
+              <span class="skill-pill">Crashlytics</span>
+              <span class="skill-pill">Application Insights</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CONTACT / FOOTER ──────────────────────────────────────────────── -->
+    <section id="contact">
+      <div class="container">
+        <div class="contact-inner">
+          <div class="reveal">
+            <span class="section-label">Let's talk</span>
+            <h2 class="contact-heading">
+              Open to <span class="gradient-text">new<br />opportunities</span>
+            </h2>
+            <p class="contact-sub">
+              Whether it's a full-time role, freelance project, or just a
+              conversation about technology — I'd love to hear from you.
+            </p>
+          </div>
+
+          <div class="contact-links reveal reveal-delay-1">
+            <a href="mailto:teixido.alan@gmail.com" class="contact-link">
+              <i class="fa-regular fa-envelope"></i> teixido.alan@gmail.com
+            </a>
+            <a
+              href="https://www.linkedin.com/in/alanteixidosararols"
+              target="_blank"
+              rel="noopener"
+              class="contact-link"
+            >
+              <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+            </a>
+            <a
+              href="https://github.com/AlanTeixido"
+              target="_blank"
+              rel="noopener"
+              class="contact-link"
+            >
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+          </div>
+
+          <div class="footer-divider reveal reveal-delay-2"></div>
+          <div class="footer-bottom reveal reveal-delay-3">
+            <div class="footer-copy">
+              © 2026 <span>Alan Teixidó Sararols</span> · Barcelona, Spain
+            </div>
+            <div class="footer-built">Designed &amp; built with care</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="main.js"></script>
+  </body>
+</html>
