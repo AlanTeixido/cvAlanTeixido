@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projects — Alan Teixidó | Backend, Mobile &amp; Cloud Engineer</title>
+    <meta
+      name="description"
+      content="Personal projects by Alan Teixidó Sararols — software engineer building production-grade apps, APIs, and tools."
+    />
+
+    <!-- SEO / Open Graph -->
+    <link rel="canonical" href="https://alanteixido.dev/projects" />
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="https://alanteixido.dev/projects" />
+    <meta property="og:title"       content="Projects — Alan Teixidó | Backend, Mobile &amp; Cloud Engineer" />
+    <meta property="og:description" content="Personal projects by Alan Teixidó — production apps, APIs, and tools built with Next.js, TypeScript, .NET, and more." />
+    <meta property="og:image"       content="https://alanteixido.dev/images/og-projects.png" />
+    <meta name="twitter:card"       content="summary_large_image" />
+    <meta name="twitter:title"      content="Projects — Alan Teixidó" />
+    <meta name="twitter:description" content="Personal projects by Alan Teixidó — production apps and tools." />
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <!-- Devicons (tech logos) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/devicon.min.css"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <!-- ─── PAGE LOADER ──────────────────────────────────────────────────── -->
+    <div id="page-loader">
+      <div class="loader-crystals">
+        <div class="lc"></div>
+        <div class="lc"></div>
+        <div class="lc"></div>
+        <div class="lc"></div>
+        <div class="lc"></div>
+        <div class="lc"></div>
+      </div>
+      <div class="loader-name">Alan Teixidó</div>
+    </div>
+
+    <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
+    <nav id="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">AT<span>.</span></a>
+        <ul class="nav-links">
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#experience">Experience</a></li>
+          <li><a href="index.html#work">Work</a></li>
+          <li><a href="index.html#education">Education</a></li>
+          <li><a href="index.html#skills">Skills</a></li>
+          <li><a href="index.html#goals">Goals</a></li>
+          <li><a href="projects.html" class="nav-active">Projects</a></li>
+          <li><a href="index.html#contact" class="nav-cta">Contact</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile nav -->
+    <nav class="mobile-menu" id="mobileMenu">
+      <a href="index.html#about"      onclick="closeMobile()">About</a>
+      <a href="index.html#experience" onclick="closeMobile()">Experience</a>
+      <a href="index.html#work"       onclick="closeMobile()">Work</a>
+      <a href="index.html#education"  onclick="closeMobile()">Education</a>
+      <a href="index.html#skills"     onclick="closeMobile()">Skills</a>
+      <a href="index.html#goals"      onclick="closeMobile()">Goals</a>
+      <a href="projects.html"         onclick="closeMobile()">Projects</a>
+      <a href="index.html#contact"    onclick="closeMobile()">Contact</a>
+    </nav>
+
+    <!-- ─── PAGE HEADER ───────────────────────────────────────────────────── -->
+    <div class="projects-header">
+      <div class="container">
+        <a href="index.html" class="back-link reveal">
+          <i class="fa-solid fa-arrow-left"></i> Back to CV
+        </a>
+        <div class="reveal reveal-delay-1">
+          <span class="section-label">Personal Work</span>
+          <h1>Projects</h1>
+          <p class="projects-sub">
+            Side projects and personal builds — things I designed, built, and
+            shipped outside of professional work.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PROJECTS GRID ─────────────────────────────────────────────────── -->
+    <section id="projects-section">
+      <div class="container">
+        <div class="projects-grid">
+
+          <!-- Pokédex App -->
+          <div class="project-card reveal reveal-delay-1">
+            <div class="project-card-visual project-card-visual--img">
+              <img src="images/pokedex_project.png" alt="Pokédex App screenshot" class="project-thumb" />
+            </div>
+            <div class="project-card-body">
+              <div class="project-meta">
+                <span class="project-status">Live</span>
+              </div>
+              <h2 class="project-title">Pokédex App</h2>
+              <p class="project-desc">
+                Full-featured Pokédex built with Next.js and TypeScript,
+                consuming the free PokéAPI. Includes real-time search, type
+                and generation filters, detailed Pokémon pages with evolution
+                chains, shiny toggle, type matchup charts, and a side-by-side
+                stat comparison with radar chart.
+              </p>
+              <div class="project-tech">
+                <span class="project-tech-pill">
+                  <i class="devicon-nextjs-plain"></i>Next.js
+                </span>
+                <span class="project-tech-pill">
+                  <i class="devicon-typescript-original colored"></i>TypeScript
+                </span>
+                <span class="project-tech-pill">
+                  <i class="devicon-tailwindcss-plain colored"></i>Tailwind CSS
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-rotate" style="color:var(--accent-cyan);font-size:11px"></i>SWR
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent-cyan);font-size:11px"></i>Framer Motion
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-database" style="color:var(--accent-cyan);font-size:11px"></i>PokéAPI
+                </span>
+              </div>
+              <div class="project-links">
+                <a
+                  href="https://pokedex.alanteixido.dev"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-primary btn-sm"
+                >
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Live
+                </a>
+                <a
+                  href="https://github.com/AlanTeixido/pokedex"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-secondary btn-sm"
+                >
+                  <i class="fa-brands fa-github"></i> GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
+    <section id="contact">
+      <div class="container">
+        <div class="contact-inner">
+          <div class="reveal">
+            <span class="section-label">Let's talk</span>
+            <h2 class="contact-heading">
+              Open to <span class="gradient-text">new<br />opportunities</span>
+            </h2>
+            <p class="contact-sub">
+              Whether it's a full-time role, freelance project, or just a
+              conversation about technology — I'd love to hear from you.
+            </p>
+          </div>
+
+          <div class="contact-links reveal reveal-delay-1">
+            <a href="mailto:teixido.alan@gmail.com" class="contact-link">
+              <i class="fa-regular fa-envelope"></i> teixido.alan@gmail.com
+            </a>
+            <a
+              href="https://www.linkedin.com/in/alanteixidosararols"
+              target="_blank"
+              rel="noopener"
+              class="contact-link"
+            >
+              <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+            </a>
+            <a
+              href="https://github.com/AlanTeixido"
+              target="_blank"
+              rel="noopener"
+              class="contact-link"
+            >
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+          </div>
+
+          <div class="footer-divider reveal reveal-delay-2"></div>
+          <div class="footer-bottom reveal reveal-delay-3">
+            <div class="footer-copy">
+              © 2026 <span>Alan Teixidó Sararols</span> · Barcelona, Spain
+            </div>
+            <div class="footer-built">Designed &amp; built with care</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="main.js"></script>
+  </body>
+</html>
