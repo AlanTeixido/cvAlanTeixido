@@ -53,6 +53,7 @@
         <ul class="nav-links">
           <li><a href="#about">About</a></li>
           <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
           <li><a href="#work">Work</a></li>
           <li><a href="#education">Education</a></li>
           <li><a href="#skills">Skills</a></li>
@@ -69,6 +70,7 @@
     <nav class="mobile-menu" id="mobileMenu">
       <a href="#about" onclick="closeMobile()">About</a>
       <a href="#experience" onclick="closeMobile()">Experience</a>
+      <a href="#projects" onclick="closeMobile()">Projects</a>
       <a href="#work" onclick="closeMobile()">Work</a>
       <a href="#education" onclick="closeMobile()">Education</a>
       <a href="#skills" onclick="closeMobile()">Skills</a>
@@ -431,6 +433,50 @@
       </div>
     </section>
 
+    <!-- ─── PERSONAL PROJECTS ────────────────────────────────────────────── -->
+    <section id="projects">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-label">Personal Work</span>
+          <h2 class="section-title">Projects</h2>
+        </div>
+
+        <a href="projects.html" class="featured-project reveal reveal-delay-1">
+          <div class="fp-image">
+            <img src="images/pokedex_project.png" alt="Pokédex App" loading="lazy" />
+          </div>
+          <div class="fp-content">
+            <div class="fp-badge">
+              <span class="fp-live-dot"></span> Live
+            </div>
+            <h3 class="fp-title">Pokédex App</h3>
+            <p class="fp-desc">
+              Full-featured Pokédex built with Next.js and TypeScript. Real-time
+              search, type &amp; generation filters, evolution chains, shiny toggle,
+              type matchup charts, and side-by-side stat comparison with radar chart.
+            </p>
+            <div class="fp-tech">
+              <span><i class="devicon-nextjs-plain"></i> Next.js</span>
+              <span><i class="devicon-typescript-original colored"></i> TypeScript</span>
+              <span><i class="devicon-tailwindcss-plain colored"></i> Tailwind</span>
+              <span><i class="fa-solid fa-wand-magic-sparkles"></i> Framer Motion</span>
+            </div>
+            <div class="fp-cta">
+              View project <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+        </a>
+
+        <div class="work-cta reveal">
+          <a href="projects.html" class="btn btn-secondary">
+            <i class="fa-solid fa-folder-open"></i> View all projects
+            <i class="fa-solid fa-arrow-right" style="font-size:11px;opacity:0.7"></i>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
     <!-- ─── SELECTED WORK ────────────────────────────────────────────────── -->
     <section id="work">
       <div class="container">
@@ -542,6 +588,7 @@
           </div>
 
         </div>
+
       </div>
     </section>
 
