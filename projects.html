@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Projects | Alan Teixidó</title>
-    <meta name="description" content="Projects by Alan Teixidó — a Software Engineer from Barcelona building backend systems, mobile apps and cloud solutions with .NET, React Native and TypeScript." />
-    <meta name="keywords" content="Alan Teixidó, projects, software engineer, Barcelona, .NET, React Native, TypeScript" />
+    <meta name="description" content="Personal projects by Alan Teixidó — Pokédex App and Crypto Tracker built with Next.js, TypeScript and Tailwind CSS." />
+    <meta name="keywords" content="Alan Teixidó, projects, Pokédex, Crypto Tracker, Next.js, TypeScript, software engineer, Barcelona" />
     <meta name="author" content="Alan Teixidó" />
     <meta name="robots" content="index, follow" />
 
@@ -16,14 +16,14 @@
     <meta property="og:type"        content="website" />
     <meta property="og:url"         content="https://alanteixido.dev/projects.html" />
     <meta property="og:title"       content="Projects | Alan Teixidó" />
-    <meta property="og:description" content="Projects by Alan Teixidó — a Software Engineer from Barcelona building backend systems, mobile apps and cloud solutions with .NET, React Native and TypeScript." />
-    <meta property="og:image"       content="https://alanteixido.dev/images/IMG_1372.JPEG" />
+    <meta property="og:description" content="Personal projects by Alan Teixidó — Pokédex App and Crypto Tracker built with Next.js, TypeScript and Tailwind CSS." />
+    <meta property="og:image"       content="https://alanteixido.dev/images/pokedex_project.png" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card"        content="summary_large_image" />
     <meta name="twitter:title"       content="Projects | Alan Teixidó" />
-    <meta name="twitter:description" content="Projects by Alan Teixidó — a Software Engineer from Barcelona building backend systems, mobile apps and cloud solutions." />
-    <meta name="twitter:image"       content="https://alanteixido.dev/images/IMG_1372.JPEG" />
+    <meta name="twitter:description" content="Personal projects by Alan Teixidó — Pokédex App and Crypto Tracker built with Next.js, TypeScript and Tailwind CSS." />
+    <meta name="twitter:image"       content="https://alanteixido.dev/images/pokedex_project.png" />
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
@@ -166,6 +166,71 @@
                 </a>
                 <a
                   href="https://github.com/AlanTeixido/pokedex"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-secondary btn-sm"
+                >
+                  <i class="fa-brands fa-github"></i> GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Crypto Tracker -->
+          <div class="project-card reveal reveal-delay-2">
+            <div class="project-card-visual project-card-visual--img">
+              <img src="images/crypto_preview.png" alt="Crypto Tracker screenshot" class="project-thumb" />
+            </div>
+            <div class="project-card-body">
+              <div class="project-meta">
+                <span class="project-status">Live</span>
+              </div>
+              <h2 class="project-title">Crypto Tracker</h2>
+              <p class="project-desc">
+                Live cryptocurrency tracker built with Next.js and TypeScript,
+                consuming the free CoinGecko API. Features real-time prices for
+                the top 100 coins, 7-day sparkline charts, market cap and volume
+                stats, search and filters (Gainers, Losers, Top 10), auto-refresh
+                every 60 seconds, coin detail pages with interactive price charts,
+                and a personal watchlist saved in localStorage.
+              </p>
+              <div class="project-tech">
+                <span class="project-tech-pill">
+                  <i class="devicon-nextjs-plain"></i>Next.js
+                </span>
+                <span class="project-tech-pill">
+                  <i class="devicon-typescript-original colored"></i>TypeScript
+                </span>
+                <span class="project-tech-pill">
+                  <i class="devicon-tailwindcss-plain colored"></i>Tailwind CSS
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-rotate" style="color:var(--accent-cyan);font-size:11px"></i>SWR
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent-cyan);font-size:11px"></i>Framer Motion
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-chart-line" style="color:var(--accent-cyan);font-size:11px"></i>CoinGecko API
+                </span>
+              </div>
+              <ul class="project-bullets">
+                <li>Built live market dashboard with real-time data for top 100 cryptocurrencies</li>
+                <li>Implemented 7-day sparkline charts and interactive price history charts (7d, 30d, 90d, 1y)</li>
+                <li>Added search, filters, sorting and auto-refresh with countdown timer</li>
+                <li>Deployed on Vercel with automatic deploys on every push to master</li>
+              </ul>
+              <div class="project-links">
+                <a
+                  href="https://crypto.alanteixido.dev"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-primary btn-sm"
+                >
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Live
+                </a>
+                <a
+                  href="https://github.com/AlanTeixido/crypto-tracker"
                   target="_blank"
                   rel="noopener"
                   class="btn btn-secondary btn-sm"
