@@ -85,6 +85,7 @@ document.querySelectorAll('.about-card').forEach(el => langObserver.observe(el))
 /* ── 05. Hero canvas — particle network ───────────────────────── */
 (function initCanvas() {
   const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
   const ctx    = canvas.getContext('2d');
   const HERO   = document.getElementById('hero');
   const COUNT  = 80;
