@@ -612,6 +612,38 @@ if (!isTouch) {
   })();
 })();
 
+/* ── 20. Text scramble on hero name ─────────────────────────────────────────────── */
+(function initScramble() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const line1 = document.querySelector('.hero-line1');
+  const line2 = document.querySelector('.hero-name .line2');
+  if (!line1 || !line2) return;
+
+  const CHARS = '!<>-_\\/[]{}—=+*^?#@$%&';
+
+  function scramble(el, final, duration, delay) {
+    const chars = [...final];
+    const N = chars.length;
+    setTimeout(() => {
+      const start = performance.now();
+      (function step(now) {
+        const prog   = Math.min((now - start) / duration, 1);
+        const locked = Math.floor(prog * N);
+        el.textContent = chars.map((c, i) =>
+          (i < locked || c === ' ') ? c : CHARS[Math.floor(Math.random() * CHARS.length)]
+        ).join('');
+        if (prog < 1) requestAnimationFrame(step);
+        else el.textContent = final;
+      })(performance.now());
+    }, delay);
+  }
+
+  window.addEventListener('load', () => {
+    scramble(line1, 'Alan',      900, 450);
+    scramble(line2, 'Teixidó.', 1100, 650);
+  });
+})();
+
 /* ── 19. 3D rotating skill tag sphere ───────────────────────────── */
 (function initSkillSphere() {
   const container = document.getElementById('skillsSphere');
@@ -727,4 +759,36 @@ if (!isTouch) {
       tags[i].style.color     = depth > 0.55 ? '#a5b4fc' : '#4338ca';
     });
   })();
+})();
+
+/* ── 21. Copy-to-clipboard with toast ───────────────────────────── */
+(function initClipboard() {
+  const toast    = document.getElementById('clipboard-toast');
+  const toastTxt = document.getElementById('toast-text');
+  if (!toast) return;
+
+  let hideTimer;
+  function showToast(msg) {
+    toastTxt.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+  }
+
+  document.querySelectorAll('[data-copy]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      const text = el.dataset.copy;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => showToast(text));
+      } else {
+        const ta = Object.assign(document.createElement('textarea'), { value: text });
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showToast(text);
+      }
+    });
+  });
 })();
