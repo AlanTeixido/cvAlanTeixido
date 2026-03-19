@@ -128,6 +128,8 @@
       <canvas id="hero-canvas"></canvas>
       <div class="hero-glow-1"></div>
       <div class="hero-glow-2"></div>
+      <!-- Three.js 3D torus knot — desktop only -->
+      <div id="hero-3d" class="hero-3d-overlay"></div>
 
       <div class="container">
         <div class="hero-content">
@@ -748,6 +750,12 @@
           <h2 class="section-title">Technical skills</h2>
         </div>
 
+        <!-- 3D rotating skill tag sphere -->
+        <div class="skills-sphere-wrap reveal">
+          <div id="skillsSphere"></div>
+          <p class="sphere-hint">drag or hover to explore</p>
+        </div>
+
         <div class="skills-grid">
           <!-- Backend & Architecture -->
           <div class="skill-group reveal reveal-delay-1">
@@ -965,6 +973,9 @@
         </div>
       </div>
     </section>
+
+    <!-- Three.js CDN (for 3D hero element) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
 
     <!-- Scripts -->
     <script src="main.js"></script>

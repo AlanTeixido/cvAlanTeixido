@@ -459,3 +459,229 @@ if (!isTouch) {
 
   document.querySelectorAll('.skill-group').forEach(g => groupObserver.observe(g));
 })();
+
+/* ── 18. Three.js hero — 3D torus knot (right side, desktop) ─── */
+(function initHero3D() {
+  if (isTouch) return;
+  if (typeof THREE === 'undefined') { console.warn('[hero3D] Three.js not loaded'); return; }
+
+  const container = document.getElementById('hero-3d');
+  if (!container) return;
+
+  const scene    = new THREE.Scene();
+  const getSize  = () => ({ w: container.offsetWidth, h: container.offsetHeight });
+  let { w, h }   = getSize();
+
+  const camera   = new THREE.PerspectiveCamera(50, w / h, 0.1, 100);
+  camera.position.z = 5;
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+  container.appendChild(renderer.domElement);
+
+  /* ── meshes ── */
+  // Main indigo wireframe torus knot
+  const mainKnot = new THREE.Mesh(
+    new THREE.TorusKnotGeometry(1.2, 0.38, 160, 20, 2, 3),
+    new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.70 })
+  );
+  scene.add(mainKnot);
+
+  // Outer ghost shell (depth / glow illusion)
+  const outerKnot = new THREE.Mesh(
+    new THREE.TorusKnotGeometry(1.28, 0.41, 80, 10, 2, 3),
+    new THREE.MeshBasicMaterial({ color: 0xa5b4fc, wireframe: true, transparent: true, opacity: 0.12 })
+  );
+  scene.add(outerKnot);
+
+  // Inner cyan accent knot (different p/q → different shape)
+  const innerKnot = new THREE.Mesh(
+    new THREE.TorusKnotGeometry(0.78, 0.24, 100, 14, 3, 4),
+    new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.35 })
+  );
+  scene.add(innerKnot);
+
+  /* ── particle cloud ── */
+  const PC   = 450;
+  const pPos = new Float32Array(PC * 3);
+  for (let i = 0; i < PC; i++) {
+    const phi   = Math.acos(2 * Math.random() - 1);
+    const theta = Math.random() * Math.PI * 2;
+    const r     = 1.9 + Math.random() * 1.4;
+    pPos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
+    pPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+    pPos[i * 3 + 2] = r * Math.cos(phi);
+  }
+  const pGeom = new THREE.BufferGeometry();
+  pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const pts = new THREE.Points(
+    pGeom,
+    new THREE.PointsMaterial({ color: 0xa5b4fc, size: 0.022, transparent: true, opacity: 0.55 })
+  );
+  scene.add(pts);
+
+  /* ── mouse ── */
+  let targetX = 0, targetY = 0, curX = 0, curY = 0;
+  document.addEventListener('mousemove', e => {
+    targetX = (e.clientX / window.innerWidth  - 0.5) * 2;
+    targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+  }, { passive: true });
+
+  /* ── resize ── */
+  window.addEventListener('resize', () => {
+    const s = getSize();
+    camera.aspect = s.w / s.h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(s.w, s.h);
+  }, { passive: true });
+
+  /* ── animate ── */
+  const clock = new THREE.Clock();
+  const heroEl = document.getElementById('hero');
+
+  (function frame() {
+    requestAnimationFrame(frame);
+    const t = clock.getElapsedTime();
+
+    // Smooth mouse lerp
+    curX += (targetX - curX) * 0.04;
+    curY += (targetY - curY) * 0.04;
+
+    // Rotation — auto spin + subtle mouse tilt
+    mainKnot.rotation.x  =  t * 0.12 + curY * 0.5;
+    mainKnot.rotation.y  =  t * 0.18 + curX * 0.5;
+    outerKnot.rotation.x = -t * 0.08 + curY * 0.3;
+    outerKnot.rotation.y = -t * 0.14 + curX * 0.3;
+    innerKnot.rotation.x =  t * 0.20 - curY * 0.4;
+    innerKnot.rotation.y = -t * 0.15 - curX * 0.4;
+    pts.rotation.y = t * 0.05;
+    pts.rotation.x = t * 0.02;
+
+    // Fade out as user scrolls past hero
+    if (heroEl) {
+      const fade = Math.max(0, 1 - (window.scrollY / heroEl.offsetHeight) * 1.8);
+      renderer.domElement.style.opacity = fade;
+    }
+
+    renderer.render(scene, camera);
+  })();
+})();
+
+/* ── 19. 3D rotating skill tag sphere ───────────────────────────── */
+(function initSkillSphere() {
+  const container = document.getElementById('skillsSphere');
+  if (!container) return;
+
+  const SKILLS_LIST = [
+    '.NET / C#', 'ASP.NET Core', 'REST APIs', 'CQRS', 'MediatR',
+    'Clean Arch', 'React Native', 'React', 'Vue.js', 'TypeScript',
+    'JavaScript', 'Expo', 'Azure DevOps', 'Docker', 'Git',
+    'CI/CD', 'PostgreSQL', 'Entity FW', 'SQL Server',
+    'Kotlin', 'Python', 'Swift', 'API Versioning', 'Microservices',
+  ];
+
+  const N   = SKILLS_LIST.length;
+  const R   = 140;   // sphere radius in px
+  const FOV = 320;   // perspective strength
+
+  /* Fibonacci sphere — evenly distributed points on a unit sphere */
+  const pts = SKILLS_LIST.map((name, i) => {
+    const phi   = Math.acos(1 - 2 * (i + 0.5) / N);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+    return {
+      ox: Math.sin(phi) * Math.cos(theta),
+      oy: Math.sin(phi) * Math.sin(theta),
+      oz: Math.cos(phi),
+      name,
+    };
+  });
+
+  /* Create DOM tags */
+  const tags = pts.map(p => {
+    const span = document.createElement('span');
+    span.className   = 'sphere-tag';
+    span.textContent = p.name;
+    container.appendChild(span);
+    return span;
+  });
+
+  /* State */
+  let rotX = 0.3, rotY = 0;
+  let velX = 0.0008, velY = 0.003;
+  let dragging = false, lastMX = 0, lastMY = 0;
+
+  /* Drag / mouse interactions */
+  container.addEventListener('mousedown', e => {
+    dragging = true;
+    lastMX = e.clientX;
+    lastMY = e.clientY;
+  });
+  window.addEventListener('mouseup',   () => { dragging = false; });
+  window.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    velY = (e.clientX - lastMX) * 0.006;
+    velX = (e.clientY - lastMY) * 0.006;
+    lastMX = e.clientX;
+    lastMY = e.clientY;
+  }, { passive: true });
+
+  /* Touch swipe */
+  container.addEventListener('touchstart', e => {
+    lastMX = e.touches[0].clientX;
+    lastMY = e.touches[0].clientY;
+    dragging = true;
+  }, { passive: true });
+  container.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    velY = (e.touches[0].clientX - lastMX) * 0.004;
+    velX = (e.touches[0].clientY - lastMY) * 0.004;
+    lastMX = e.touches[0].clientX;
+    lastMY = e.touches[0].clientY;
+  }, { passive: true });
+  container.addEventListener('touchend', () => { dragging = false; });
+
+  /* Rotate a unit-sphere point by (rotX, rotY) Euler angles */
+  function rotate(ox, oy, oz, rx, ry) {
+    // Y-axis rotation
+    const cy = Math.cos(ry), sy = Math.sin(ry);
+    const x1 =  ox * cy + oz * sy;
+    const z1 = -ox * sy + oz * cy;
+    // X-axis rotation
+    const cx = Math.cos(rx), sx = Math.sin(rx);
+    const y2 =  oy * cx - z1 * sx;
+    const z2 =  oy * sx + z1 * cx;
+    return { x: x1, y: y2, z: z2 };
+  }
+
+  (function frame() {
+    requestAnimationFrame(frame);
+
+    // Auto-drift when not dragging; decelerate drag momentum
+    if (!dragging) {
+      velX *= 0.95;
+      velY *= 0.95;
+      velY += (0.003 - velY) * 0.01; // drift back to base speed
+    }
+    rotX += velX;
+    rotY += velY;
+
+    const cw = container.offsetWidth  / 2;
+    const ch = container.offsetHeight / 2;
+
+    pts.forEach((p, i) => {
+      const r     = rotate(p.ox, p.oy, p.oz, rotX, rotY);
+      const scale = FOV / (FOV + r.z * R);
+      const px    = r.x * R * scale + cw;
+      const py    = r.y * R * scale + ch;
+      const depth = (r.z + 1) / 2;  // 0 = back, 1 = front
+
+      tags[i].style.transform = `translate(${px}px,${py}px) translate(-50%,-50%)`;
+      tags[i].style.fontSize  = `${(9 + depth * 5).toFixed(1)}px`;
+      tags[i].style.opacity   = (0.22 + depth * 0.78).toFixed(2);
+      tags[i].style.zIndex    = Math.round(depth * 10);
+      tags[i].style.color     = depth > 0.55 ? '#a5b4fc' : '#4338ca';
+    });
+  })();
+})();
