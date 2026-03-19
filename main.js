@@ -460,112 +460,155 @@ if (!isTouch) {
   document.querySelectorAll('.skill-group').forEach(g => groupObserver.observe(g));
 })();
 
-/* ── 18. Three.js hero — 3D torus knot (right side, desktop) ─── */
+/* ── 18. Hero 3D — wireframe torus knot (Canvas 2D, zero deps) ── */
 (function initHero3D() {
   if (isTouch) return;
-  if (typeof THREE === 'undefined') { console.warn('[hero3D] Three.js not loaded'); return; }
+  const wrap = document.getElementById('hero-3d');
+  if (!wrap) return;
 
-  const container = document.getElementById('hero-3d');
-  if (!container) return;
+  /* Create canvas and fill the overlay div */
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'width:100%;height:100%;display:block;';
+  wrap.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
 
-  const scene    = new THREE.Scene();
-  const getSize  = () => ({ w: container.offsetWidth, h: container.offsetHeight });
-  let { w, h }   = getSize();
-
-  const camera   = new THREE.PerspectiveCamera(50, w / h, 0.1, 100);
-  camera.position.z = 4;
-
-  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-  renderer.setSize(w, h);
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.setClearColor(0x000000, 0);
-  container.appendChild(renderer.domElement);
-
-  /* ── meshes ── */
-  // Main indigo wireframe torus knot
-  const mainKnot = new THREE.Mesh(
-    new THREE.TorusKnotGeometry(1.2, 0.38, 160, 20, 2, 3),
-    new THREE.MeshBasicMaterial({ color: 0x818cf8, wireframe: true, transparent: true, opacity: 0.90 })
-  );
-  scene.add(mainKnot);
-
-  // Outer ghost shell (depth / glow illusion)
-  const outerKnot = new THREE.Mesh(
-    new THREE.TorusKnotGeometry(1.28, 0.41, 80, 10, 2, 3),
-    new THREE.MeshBasicMaterial({ color: 0xa5b4fc, wireframe: true, transparent: true, opacity: 0.22 })
-  );
-  scene.add(outerKnot);
-
-  // Inner cyan accent knot (different p/q → different shape)
-  const innerKnot = new THREE.Mesh(
-    new THREE.TorusKnotGeometry(0.78, 0.24, 100, 14, 3, 4),
-    new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.60 })
-  );
-  scene.add(innerKnot);
-
-  /* ── particle cloud ── */
-  const PC   = 450;
-  const pPos = new Float32Array(PC * 3);
-  for (let i = 0; i < PC; i++) {
-    const phi   = Math.acos(2 * Math.random() - 1);
-    const theta = Math.random() * Math.PI * 2;
-    const r     = 1.9 + Math.random() * 1.4;
-    pPos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
-    pPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-    pPos[i * 3 + 2] = r * Math.cos(phi);
+  let W, H;
+  function resize() {
+    W = canvas.width  = wrap.offsetWidth;
+    H = canvas.height = wrap.offsetHeight;
   }
-  const pGeom = new THREE.BufferGeometry();
-  pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-  const pts = new THREE.Points(
-    pGeom,
-    new THREE.PointsMaterial({ color: 0xc7d2fe, size: 0.030, transparent: true, opacity: 0.75 })
-  );
-  scene.add(pts);
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
 
-  /* ── mouse ── */
-  let targetX = 0, targetY = 0, curX = 0, curY = 0;
+  /* ── Build torus-knot tube geometry (CPU, once) ────────────── */
+  function buildTube(p, q, NC, NT, sc, tr) {
+    // Sample curve
+    const cv = [];
+    for (let i = 0; i <= NC; i++) {
+      const t = (i / NC) * Math.PI * 2;
+      const r = (Math.cos(q * t) + 2) * sc;
+      cv.push([r * Math.cos(p * t), r * Math.sin(p * t), -Math.sin(q * t) * sc]);
+    }
+    // Build rings using Frenet frame (T × world-up approximation)
+    const rings = [];
+    for (let i = 0; i <= NC; i++) {
+      const nxt = cv[(i + 1) % (NC + 1)];
+      const prv = cv[i > 0 ? i - 1 : NC];
+      let tx = nxt[0]-prv[0], ty = nxt[1]-prv[1], tz = nxt[2]-prv[2];
+      const tl = Math.sqrt(tx*tx+ty*ty+tz*tz) || 1;
+      tx /= tl; ty /= tl; tz /= tl;
+      // Binormal  B = T × (0,1,0) = [-tz, 0, tx]
+      let bx = -tz, bz = tx;
+      const bl = Math.sqrt(bx*bx + bz*bz);
+      if (bl < 0.001) { bx = 1; bz = 0; } else { bx /= bl; bz /= bl; }
+      // Normal  N = B × T
+      const nx = -bz*ty, ny = bz*tx - bx*tz, nz = bx*ty;
+      const ring = [];
+      for (let j = 0; j < NT; j++) {
+        const a = (j / NT) * Math.PI * 2, ca = Math.cos(a), sa = Math.sin(a);
+        ring.push([
+          cv[i][0] + tr*(ca*nx + sa*bx),
+          cv[i][1] + tr*(ca*ny),           // by = 0
+          cv[i][2] + tr*(ca*nz + sa*bz),
+        ]);
+      }
+      rings.push(ring);
+    }
+    return { rings, NC, NT };
+  }
+
+  const k1 = buildTube(2, 3, 160, 12, 88, 23); // main knot  (p2,q3)
+  const k2 = buildTube(3, 5, 100,  8, 58, 15); // accent knot (p3,q5)
+
+  /* ── Fast perspective projection (trig precomputed per frame) ── */
+  function makeProj(rx, ry) {
+    const cy = Math.cos(ry), sy = Math.sin(ry);
+    const cx = Math.cos(rx), sx = Math.sin(rx);
+    const fov = Math.min(W, H) * 0.88;
+    return (x, y, z) => {
+      const x1 = x*cy - z*sy, z1 = x*sy + z*cy;
+      const y2 = y*cx - z1*sx, z2 = y*sx + z1*cx;
+      const s = fov / (fov + z2);
+      return [W/2 + x1*s, H/2 + y2*s, z2, s];
+    };
+  }
+
+  /* ── Draw one knot (pre-project all verts once) ─────────────── */
+  function drawKnot({ rings, NC, NT }, pfn, color, alpha, rStep, cStep) {
+    // Pre-project every vertex
+    const P = rings.map(ring => ring.map(([x, y, z]) => pfn(x, y, z)));
+
+    ctx.strokeStyle = color;
+    ctx.globalAlpha = alpha;
+    ctx.lineWidth   = 0.8;
+
+    // Longitudinal lines (along the path)
+    for (let j = 0; j < NT; j += rStep) {
+      ctx.beginPath();
+      for (let i = 0; i <= NC; i++) {
+        const [px, py] = P[i][j];
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+    // Cross-section rings
+    for (let i = 0; i <= NC; i += cStep) {
+      ctx.beginPath();
+      for (let j = 0; j <= NT; j++) {
+        const [px, py] = P[i][j % NT];
+        j === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+  }
+
+  /* ── Fibonacci-sphere particles ─────────────────────────────── */
+  const PARTS = Array.from({ length: 180 }, (_, i) => {
+    const phi = Math.acos(1 - 2*(i+0.5)/180), theta = Math.PI*(1+Math.sqrt(5))*i;
+    const r = 115 + (i % 5)*9;
+    return [r*Math.sin(phi)*Math.cos(theta), r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi)];
+  });
+
+  /* ── Mouse tracking ──────────────────────────────────────────── */
+  let mx = 0, my = 0, cmx = 0, cmy = 0;
   document.addEventListener('mousemove', e => {
-    targetX = (e.clientX / window.innerWidth  - 0.5) * 2;
-    targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+    mx = (e.clientX/window.innerWidth  - 0.5) * 2;
+    my = (e.clientY/window.innerHeight - 0.5) * 2;
   }, { passive: true });
 
-  /* ── resize ── */
-  window.addEventListener('resize', () => {
-    const s = getSize();
-    camera.aspect = s.w / s.h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(s.w, s.h);
-  }, { passive: true });
-
-  /* ── animate ── */
-  const clock = new THREE.Clock();
   const heroEl = document.getElementById('hero');
+  let t = 0;
 
+  /* ── Render loop ────────────────────────────────────────────── */
   (function frame() {
     requestAnimationFrame(frame);
-    const t = clock.getElapsedTime();
+    t += 0.007;
+    cmx += (mx - cmx) * 0.04;
+    cmy += (my - cmy) * 0.04;
 
-    // Smooth mouse lerp
-    curX += (targetX - curX) * 0.04;
-    curY += (targetY - curY) * 0.04;
+    const ry   = t * 0.20 + cmx * 0.5;
+    const rx   = t * 0.13 + cmy * 0.5;
+    const fade = heroEl ? Math.max(0, 1 - window.scrollY/heroEl.offsetHeight*1.8) : 1;
+    if (fade <= 0.01) return;
 
-    // Rotation — auto spin + subtle mouse tilt
-    mainKnot.rotation.x  =  t * 0.12 + curY * 0.5;
-    mainKnot.rotation.y  =  t * 0.18 + curX * 0.5;
-    outerKnot.rotation.x = -t * 0.08 + curY * 0.3;
-    outerKnot.rotation.y = -t * 0.14 + curX * 0.3;
-    innerKnot.rotation.x =  t * 0.20 - curY * 0.4;
-    innerKnot.rotation.y = -t * 0.15 - curX * 0.4;
-    pts.rotation.y = t * 0.05;
-    pts.rotation.x = t * 0.02;
+    ctx.clearRect(0, 0, W, H);
 
-    // Fade out as user scrolls past hero
-    if (heroEl) {
-      const fade = Math.max(0, 1 - (window.scrollY / heroEl.offsetHeight) * 1.8);
-      renderer.domElement.style.opacity = fade;
-    }
+    // Main knot — indigo/lavender
+    drawKnot(k1, makeProj(rx, ry),                   '#818cf8', 0.88 * fade, 2, 8);
+    // Accent knot — cyan, counter-rotated
+    drawKnot(k2, makeProj(-rx*0.8+0.4, ry*0.9+1.1), '#22d3ee', 0.52 * fade, 2, 6);
 
-    renderer.render(scene, camera);
+    // Particles
+    const pfn = makeProj(rx*0.22, ry*0.22);
+    ctx.fillStyle   = '#c7d2fe';
+    ctx.globalAlpha = 0.48 * fade;
+    PARTS.forEach(([ox, oy, oz]) => {
+      const [px, py, , ps] = pfn(ox, oy, oz);
+      if (ps > 0) { const sz = Math.max(0.5, ps*1.6); ctx.fillRect(px-sz/2, py-sz/2, sz, sz); }
+    });
+
+    ctx.globalAlpha = 1;
   })();
 })();
 
