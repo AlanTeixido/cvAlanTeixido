@@ -473,7 +473,7 @@ if (!isTouch) {
   let { w, h }   = getSize();
 
   const camera   = new THREE.PerspectiveCamera(50, w / h, 0.1, 100);
-  camera.position.z = 5;
+  camera.position.z = 4;
 
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setSize(w, h);
@@ -485,21 +485,21 @@ if (!isTouch) {
   // Main indigo wireframe torus knot
   const mainKnot = new THREE.Mesh(
     new THREE.TorusKnotGeometry(1.2, 0.38, 160, 20, 2, 3),
-    new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.70 })
+    new THREE.MeshBasicMaterial({ color: 0x818cf8, wireframe: true, transparent: true, opacity: 0.90 })
   );
   scene.add(mainKnot);
 
   // Outer ghost shell (depth / glow illusion)
   const outerKnot = new THREE.Mesh(
     new THREE.TorusKnotGeometry(1.28, 0.41, 80, 10, 2, 3),
-    new THREE.MeshBasicMaterial({ color: 0xa5b4fc, wireframe: true, transparent: true, opacity: 0.12 })
+    new THREE.MeshBasicMaterial({ color: 0xa5b4fc, wireframe: true, transparent: true, opacity: 0.22 })
   );
   scene.add(outerKnot);
 
   // Inner cyan accent knot (different p/q → different shape)
   const innerKnot = new THREE.Mesh(
     new THREE.TorusKnotGeometry(0.78, 0.24, 100, 14, 3, 4),
-    new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.35 })
+    new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.60 })
   );
   scene.add(innerKnot);
 
@@ -518,7 +518,7 @@ if (!isTouch) {
   pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
   const pts = new THREE.Points(
     pGeom,
-    new THREE.PointsMaterial({ color: 0xa5b4fc, size: 0.022, transparent: true, opacity: 0.55 })
+    new THREE.PointsMaterial({ color: 0xc7d2fe, size: 0.030, transparent: true, opacity: 0.75 })
   );
   scene.add(pts);
 
