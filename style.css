@@ -1019,6 +1019,115 @@ nav.scrolled {
 /* ─── PERSONAL PROJECTS (index teaser) ────────────────────────── */
 #projects { background: var(--bg-surface); }
 
+/* Compact 3-column preview grid */
+.projects-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.pp-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  position: relative;
+}
+.pp-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+  z-index: 1;
+}
+.pp-card:hover {
+  border-color: var(--border-h);
+  box-shadow: var(--glow);
+  transform: translateY(-5px);
+}
+.pp-card:hover::before { transform: scaleX(1); }
+.pp-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: var(--bg-surface);
+}
+.pp-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.pp-card:hover .pp-thumb img { transform: scale(1.04); }
+.pp-body {
+  padding: 22px 22px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.pp-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #4ade80;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.pp-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-1);
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+}
+.pp-desc {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.65;
+  margin-bottom: 16px;
+  flex: 1;
+}
+.pp-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-size: 12px;
+  color: var(--text-3);
+}
+.pp-tech span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.pp-tech i { font-size: 14px; }
+.pp-cta {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap var(--transition), color var(--transition);
+}
+.pp-card:hover .pp-cta {
+  gap: 10px;
+  color: var(--accent-cyan);
+}
+
 .featured-project {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1570,6 +1679,7 @@ nav.scrolled {
   .edu-grid     { grid-template-columns: 1fr 1fr; }
   .work-grid    { grid-template-columns: 1fr; }
   .goals-layout { grid-template-columns: 1fr; gap: 40px; }
+  .projects-preview-grid { grid-template-columns: 1fr 1fr; }
 }
 
 /* ── Large phone / small tablet ── */
@@ -1603,6 +1713,9 @@ nav.scrolled {
   /* Work */
   .work-grid  { grid-template-columns: 1fr; }
   .work-card  { padding: 24px 20px; }
+
+  /* Projects preview */
+  .projects-preview-grid { grid-template-columns: 1fr; }
 
   /* Goals */
   .goals-layout  { grid-template-columns: 1fr; gap: 36px; }
