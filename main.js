@@ -302,7 +302,92 @@ if (!isTouch) {
   });
 }
 
-/* ── 13. Electric card borders (from 3D_Electric_Cards resource) ─ */
+/* ── 13. Projects 3D carousel (from carousel resource) ──────────── */
+(function initProjCarousel() {
+  const wrap    = document.querySelector('.proj-car-wrap');
+  const slides  = Array.from(document.querySelectorAll('.proj-slide'));
+  const dots    = Array.from(document.querySelectorAll('.proj-dot'));
+  const prevBtn = document.getElementById('projPrev');
+  const nextBtn = document.getElementById('projNext');
+  if (!wrap || !slides.length) return;
+
+  const N = slides.length;
+  let active = 0;
+
+  /* 3D positions per slot: -1 = left, 0 = center, +1 = right */
+  const POS = {
+    '-1': { tx: -375, ry:  20, sc: 0.78, op: 0.50 },
+     '0': { tx:    0, ry:   0, sc: 1.00, op: 1.00 },
+     '1': { tx:  375, ry: -20, sc: 0.78, op: 0.50 },
+  };
+
+  function setPositions() {
+    slides.forEach((slide, i) => {
+      let diff = i - active;
+      /* wrap-around normalise */
+      if (diff < -(N / 2)) diff += N;
+      if (diff >  (N / 2)) diff -= N;
+
+      const slot = Math.max(-1, Math.min(1, diff));
+      const p    = POS[slot];
+      const zi   = diff === 0 ? 10 : 5 - Math.abs(diff);
+
+      slide.style.transform    = `translateX(${p.tx}px) rotateY(${p.ry}deg) scale(${p.sc})`;
+      slide.style.opacity      = diff === 0 || Math.abs(diff) === 1 ? p.op : 0;
+      slide.style.zIndex       = zi;
+      slide.style.pointerEvents = diff === 0 ? 'auto' : 'none';
+      slide.classList.toggle('proj-active', diff === 0);
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === active));
+  }
+
+  function goTo(idx) {
+    active = ((idx % N) + N) % N;
+    setPositions();
+  }
+
+  prevBtn.addEventListener('click', () => goTo(active - 1));
+  nextBtn.addEventListener('click', () => goTo(active + 1));
+  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+
+  /* Click on side card → go to it (don't follow link) */
+  slides.forEach((slide, i) => {
+    slide.addEventListener('click', e => {
+      if (i !== active) { e.preventDefault(); goTo(i); }
+    });
+  });
+
+  /* Drag / swipe */
+  let startX = 0, pointerDown = false;
+  wrap.addEventListener('mousedown',  e => { startX = e.clientX; pointerDown = true; });
+  wrap.addEventListener('mouseup',    e => {
+    if (!pointerDown) return;
+    pointerDown = false;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 55) goTo(active + (dx < 0 ? 1 : -1));
+  });
+  wrap.addEventListener('mouseleave', () => { pointerDown = false; });
+  wrap.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  wrap.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 50) goTo(active + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+
+  /* Arrow keys when projects section is visible */
+  document.addEventListener('keydown', e => {
+    const sec = document.getElementById('projects');
+    if (!sec) return;
+    const r = sec.getBoundingClientRect();
+    if (r.top < window.innerHeight && r.bottom > 0) {
+      if (e.key === 'ArrowLeft')  goTo(active - 1);
+      if (e.key === 'ArrowRight') goTo(active + 1);
+    }
+  });
+
+  setPositions();
+})();
+
+/* ── 15. Electric card borders (from 3D_Electric_Cards resource) ─ */
 (function initElectricCards() {
   document.querySelectorAll('.work-card').forEach(card => {
     const border = document.createElement('div');
@@ -314,7 +399,7 @@ if (!isTouch) {
   });
 })();
 
-/* ── 14. Cursor particle trail (from cursor-particle-trail resource) ─ */
+/* ── 16. Cursor particle trail (from cursor-particle-trail resource) ─ */
 if (!isTouch) {
   const TRAIL_COLORS = ['#6366f1', '#818cf8', '#22d3ee', '#a5b4fc', '#67e8f9', '#c4b5fd'];
   let trailLastX = 0, trailLastY = 0;
@@ -358,7 +443,7 @@ if (!isTouch) {
   }, { passive: true });
 }
 
-/* ── 12. Skill pills stagger entrance ────────────────────────── */
+/* ── 17. Skill pills stagger entrance ────────────────────────── */
 (function initPillStagger() {
   const groupObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
