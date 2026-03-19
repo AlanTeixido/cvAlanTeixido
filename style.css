@@ -1970,3 +1970,38 @@ nav.scrolled {
   .projects-header { padding: 120px 0 48px; }
   .projects-grid { grid-template-columns: 1fr; }
 }
+
+/* ─── ELECTRIC CARD BORDERS ─────────────────────────────────────── */
+.work-card-electric {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 2px solid rgba(99, 102, 241, 0.85);
+  filter: url(#cv-turbulent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  z-index: 2;
+}
+.work-card-electric-glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 3px solid rgba(99, 102, 241, 0.5);
+  filter: blur(7px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  z-index: 1;
+}
+.work-card:hover .work-card-electric,
+.work-card:hover .work-card-electric-glow { opacity: 1; }
+
+/* ─── CURSOR PARTICLE TRAIL ─────────────────────────────────────── */
+.cursor-particle {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9997;
+  transform-origin: center center;
+}

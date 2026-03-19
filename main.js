@@ -302,6 +302,62 @@ if (!isTouch) {
   });
 }
 
+/* ── 13. Electric card borders (from 3D_Electric_Cards resource) ─ */
+(function initElectricCards() {
+  document.querySelectorAll('.work-card').forEach(card => {
+    const border = document.createElement('div');
+    border.className = 'work-card-electric';
+    const glow = document.createElement('div');
+    glow.className = 'work-card-electric-glow';
+    card.appendChild(border);
+    card.appendChild(glow);
+  });
+})();
+
+/* ── 14. Cursor particle trail (from cursor-particle-trail resource) ─ */
+if (!isTouch) {
+  const TRAIL_COLORS = ['#6366f1', '#818cf8', '#22d3ee', '#a5b4fc', '#67e8f9', '#c4b5fd'];
+  let trailLastX = 0, trailLastY = 0;
+  const TRAIL_MIN_DIST = 22; /* px between spawns */
+
+  function spawnTrailParticle(x, y) {
+    const el = document.createElement('div');
+    el.className = 'cursor-particle';
+    const size = Math.random() * 5 + 3;
+    el.style.cssText = `left:${x}px;top:${y}px;width:${size}px;height:${size}px;background:${TRAIL_COLORS[Math.floor(Math.random() * TRAIL_COLORS.length)]};`;
+    document.body.appendChild(el);
+
+    const angle  = Math.random() * Math.PI * 2;
+    const speed  = Math.random() * 2.2 + 0.8;
+    let vx = Math.cos(angle) * speed;
+    let vy = Math.sin(angle) * speed - 1.2; /* slight upward bias */
+    let cx = 0, cy = 0, life = 1;
+
+    function step() {
+      life -= 0.032;
+      vy   += 0.07; /* gravity */
+      vx   *= 0.97;
+      cx   += vx;
+      cy   += vy;
+      if (life <= 0) { el.remove(); return; }
+      el.style.opacity   = (life * 0.85).toFixed(3);
+      el.style.transform = `translate(${cx}px,${cy}px) scale(${life.toFixed(3)})`;
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  document.addEventListener('mousemove', e => {
+    const dx = e.clientX - trailLastX;
+    const dy = e.clientY - trailLastY;
+    if (dx * dx + dy * dy > TRAIL_MIN_DIST * TRAIL_MIN_DIST) {
+      spawnTrailParticle(e.clientX, e.clientY);
+      trailLastX = e.clientX;
+      trailLastY = e.clientY;
+    }
+  }, { passive: true });
+}
+
 /* ── 12. Skill pills stagger entrance ────────────────────────── */
 (function initPillStagger() {
   const groupObserver = new IntersectionObserver((entries) => {
