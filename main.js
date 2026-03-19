@@ -651,10 +651,11 @@ if (!isTouch) {
 
   const SKILLS_LIST = [
     '.NET / C#', 'ASP.NET Core', 'REST APIs', 'CQRS', 'MediatR',
-    'Clean Arch', 'React Native', 'React', 'Vue.js', 'TypeScript',
-    'JavaScript', 'Expo', 'Azure DevOps', 'Docker', 'Git',
-    'CI/CD', 'PostgreSQL', 'Entity FW', 'SQL Server',
-    'Kotlin', 'Python', 'Swift', 'API Versioning', 'Microservices',
+    'Clean Arch', 'React', 'React Native', 'Vue.js', 'TypeScript',
+    'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Expo',
+    'Azure DevOps', 'Docker', 'Git', 'CI/CD', 'Firebase',
+    'PostgreSQL', 'Entity FW', 'SQL', 'Kotlin', 'Python',
+    'API Versioning', 'Microservices', 'Android', 'iOS',
   ];
 
   const N   = SKILLS_LIST.length;
