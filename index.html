@@ -486,9 +486,10 @@
           <h2 class="section-title">Projects</h2>
         </div>
 
-        <div class="projects-preview-grid">
+        <!-- ─── 3D PROJECTS CAROUSEL ──────────────────────────────────── -->
+        <div class="proj-car-wrap reveal">
 
-          <a href="https://pokedex.alanteixido.dev" target="_blank" rel="noopener" class="pp-card reveal reveal-delay-1">
+          <a href="https://pokedex.alanteixido.dev" target="_blank" rel="noopener" class="pp-card proj-slide" data-idx="0">
             <div class="pp-thumb">
               <img src="images/pokedex_project.png" alt="Pokédex App" loading="lazy" />
             </div>
@@ -505,7 +506,7 @@
             </div>
           </a>
 
-          <a href="https://crypto.alanteixido.dev" target="_blank" rel="noopener" class="pp-card reveal reveal-delay-2">
+          <a href="https://crypto.alanteixido.dev" target="_blank" rel="noopener" class="pp-card proj-slide" data-idx="1">
             <div class="pp-thumb">
               <img src="images/crypto_preview.png" alt="Crypto Tracker" loading="lazy" />
             </div>
@@ -522,7 +523,7 @@
             </div>
           </a>
 
-          <a href="https://minesweeper.alanteixido.dev" target="_blank" rel="noopener" class="pp-card reveal reveal-delay-3">
+          <a href="https://minesweeper.alanteixido.dev" target="_blank" rel="noopener" class="pp-card proj-slide" data-idx="2">
             <div class="pp-thumb">
               <img src="images/minesweeper_preview.png" alt="Minesweeper" loading="lazy" />
             </div>
@@ -538,6 +539,21 @@
               <div class="pp-cta">View project <i class="fa-solid fa-arrow-right"></i></div>
             </div>
           </a>
+
+          <!-- Navigation -->
+          <button class="proj-nav-btn proj-prev" id="projPrev" aria-label="Previous project">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button class="proj-nav-btn proj-next" id="projNext" aria-label="Next project">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+
+          <!-- Dots -->
+          <div class="proj-dots" id="projDots">
+            <button class="proj-dot" data-idx="0" aria-label="Pokédex App"></button>
+            <button class="proj-dot" data-idx="1" aria-label="Crypto Tracker"></button>
+            <button class="proj-dot" data-idx="2" aria-label="Minesweeper"></button>
+          </div>
 
         </div>
 

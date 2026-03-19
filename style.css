@@ -1971,6 +1971,110 @@ nav.scrolled {
   .projects-grid { grid-template-columns: 1fr; }
 }
 
+/* ─── PROJECTS 3D CAROUSEL ──────────────────────────────────────── */
+.proj-car-wrap {
+  position: relative;
+  height: 460px;
+  margin: 40px 0 48px;
+  perspective: 1200px;
+  overflow: hidden;
+}
+.proj-slide {
+  position: absolute;
+  width: 320px;
+  top: 0;
+  left: 50%;
+  margin-left: -160px;
+  will-change: transform, opacity;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity   0.65s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.65s;
+  /* cancel pp-card hover translateY so JS controls position */
+  pointer-events: none;
+}
+/* Active card: allow hover glow + link follow */
+.proj-slide.proj-active { pointer-events: auto; }
+.proj-slide.proj-active:hover {
+  box-shadow: var(--glow);
+  border-color: var(--border-h);
+}
+/* Nav arrow buttons */
+.proj-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-1);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--transition), background var(--transition),
+              box-shadow var(--transition), transform 0.2s;
+}
+.proj-nav-btn:hover {
+  border-color: var(--accent);
+  background: var(--bg-card-h);
+  box-shadow: 0 0 14px rgba(99,102,241,0.35);
+  transform: translateY(-50%) scale(1.07);
+}
+.proj-prev { left:  8px; }
+.proj-next { right: 8px; }
+/* Dot indicators */
+.proj-dots {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 9px;
+  z-index: 30;
+}
+.proj-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: var(--border);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.25s, transform 0.25s;
+}
+.proj-dot.active {
+  background: var(--accent);
+  transform: scale(1.4);
+}
+/* Hint label */
+.proj-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.7;
+}
+@media (max-width: 900px) {
+  .proj-car-wrap { height: 500px; }
+  .proj-slide    { width: 280px; margin-left: -140px; }
+}
+@media (max-width: 640px) {
+  .proj-car-wrap { height: 480px; }
+  .proj-slide    { width: 260px; margin-left: -130px; }
+  .proj-nav-btn  { width: 36px; height: 36px; font-size: 12px; }
+  .proj-prev     { left:  2px; }
+  .proj-next     { right: 2px; }
+}
+
 /* ─── ELECTRIC CARD BORDERS ─────────────────────────────────────── */
 .work-card-electric {
   position: absolute;
