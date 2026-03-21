@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Projects | Alan Teixidó</title>
-    <meta name="description" content="Personal projects by Alan Teixidó — Pokédex App, Crypto Tracker, Minesweeper, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, TypeScript, Tailwind CSS and vanilla JavaScript." />
-    <meta name="keywords" content="Alan Teixidó, projects, Pokédex, Crypto Tracker, Minesweeper, AutoTech Demo, BarberStyle BCN, barbería, Next.js, Vue 3, TypeScript, JavaScript, software engineer, Barcelona" />
+    <meta name="description" content="Personal projects by Alan Teixidó — Pokédex App, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, Node.js, TypeScript, Tailwind CSS and vanilla JavaScript." />
+    <meta name="keywords" content="Alan Teixidó, projects, Pokédex, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo, BarberStyle BCN, Next.js, Vue 3, Node.js, TypeScript, JavaScript, software engineer, Barcelona" />
     <meta name="author" content="Alan Teixidó" />
     <meta name="robots" content="index, follow" />
 
@@ -16,13 +16,13 @@
     <meta property="og:type"        content="website" />
     <meta property="og:url"         content="https://alanteixido.dev/projects.html" />
     <meta property="og:title"       content="Projects | Alan Teixidó" />
-    <meta property="og:description" content="Personal projects by Alan Teixidó — Pokédex App, Crypto Tracker, Minesweeper, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, TypeScript, Tailwind CSS and vanilla JavaScript." />
+    <meta property="og:description" content="Personal projects by Alan Teixidó — Pokédex App, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, Node.js, TypeScript, Tailwind CSS and vanilla JavaScript." />
     <meta property="og:image"       content="https://alanteixido.dev/images/pokedex_project.png" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card"        content="summary_large_image" />
     <meta name="twitter:title"       content="Projects | Alan Teixidó" />
-    <meta name="twitter:description" content="Personal projects by Alan Teixidó — Pokédex App, Crypto Tracker, Minesweeper, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, TypeScript, Tailwind CSS and vanilla JavaScript." />
+    <meta name="twitter:description" content="Personal projects by Alan Teixidó — Pokédex App, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, Node.js, TypeScript, Tailwind CSS and vanilla JavaScript." />
     <meta name="twitter:image"       content="https://alanteixido.dev/images/pokedex_project.png" />
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -292,8 +292,67 @@
             </div>
           </div>
 
-          <!-- BarberStyle BCN -->
+          <!-- ProTactics -->
           <div class="project-card reveal reveal-delay-4">
+            <div class="project-card-visual project-card-visual--img">
+              <img src="images/protactics_preview.svg" alt="ProTactics — Football Club Management Platform" class="project-thumb" />
+            </div>
+            <div class="project-card-body">
+              <div class="project-meta">
+                <span class="project-status">GitHub</span>
+                <span class="project-tag">Fullstack</span>
+              </div>
+              <h2 class="project-title">ProTactics</h2>
+              <p class="project-desc">
+                Full-stack football club management platform. Clubs manage coaches and teams;
+                coaches plan training sessions, track players with stats and positions,
+                share publications with the club, and draw tactics on an interactive
+                Canvas board with drag-and-drop tokens and freehand drawing.
+                JWT auth with role-based access (club / coach).
+              </p>
+              <div class="project-tech">
+                <span class="project-tech-pill">
+                  <i class="devicon-vuejs-plain colored"></i>Vue 3
+                </span>
+                <span class="project-tech-pill">
+                  <i class="devicon-nodejs-plain colored"></i>Node.js
+                </span>
+                <span class="project-tech-pill">
+                  <i class="devicon-express-original" style="color:#e6edf3"></i>Express
+                </span>
+                <span class="project-tech-pill">
+                  <i class="devicon-postgresql-plain colored"></i>PostgreSQL
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-key" style="color:var(--accent-cyan);font-size:11px"></i>JWT
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-cloud" style="color:var(--accent-cyan);font-size:11px"></i>Cloudinary
+                </span>
+              </div>
+              <div class="project-links">
+                <a
+                  href="https://github.com/AlanTeixido/ProTactics"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-primary btn-sm"
+                >
+                  <i class="fa-brands fa-github"></i> Frontend
+                </a>
+                <a
+                  href="https://github.com/AlanTeixido/ProTactics-API"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-secondary btn-sm"
+                >
+                  <i class="fa-brands fa-github"></i> API
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- BarberStyle BCN -->
+          <div class="project-card reveal reveal-delay-5">
             <div class="project-card-visual project-card-visual--img">
               <img src="images/barberia_preview.png" alt="BarberStyle BCN — Barbería Demo screenshot" class="project-thumb" />
             </div>
@@ -348,7 +407,7 @@
           </div>
 
           <!-- AutoTech Demo -->
-          <div class="project-card reveal reveal-delay-5">
+          <div class="project-card reveal reveal-delay-1">
             <div class="project-card-visual project-card-visual--img">
               <img src="images/taller_preview.png" alt="AutoTech Demo — Taller Mecánico screenshot" class="project-thumb" />
             </div>
