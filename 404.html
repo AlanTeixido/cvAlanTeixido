@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 — Page not found · Alan Teixidó</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #07070f;
+        color: #e2e8f0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 40px 24px;
+        overflow: hidden;
+        position: relative;
+      }
+      .glow {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        filter: blur(80px);
+        opacity: 0.18;
+      }
+      .glow-1 { width: 500px; height: 500px; background: #6366f1; top: -120px; left: -120px; }
+      .glow-2 { width: 400px; height: 400px; background: #22d3ee; bottom: -100px; right: -100px; }
+      .code {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: #6366f1;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        opacity: 0.8;
+      }
+      h1 {
+        font-size: clamp(5rem, 18vw, 9rem);
+        font-weight: 900;
+        letter-spacing: -0.06em;
+        line-height: 1;
+        background: linear-gradient(135deg, #6366f1, #22d3ee);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 16px;
+      }
+      p {
+        font-size: 1.05rem;
+        color: #94a3b8;
+        max-width: 380px;
+        line-height: 1.7;
+        margin-bottom: 40px;
+      }
+      a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 28px;
+        border-radius: 100px;
+        background: #6366f1;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.2s ease, transform 0.2s ease;
+      }
+      a:hover { background: #4f46e5; transform: translateY(-2px); }
+      .logo {
+        position: absolute;
+        top: 28px; left: 32px;
+        font-size: 18px;
+        font-weight: 900;
+        text-decoration: none;
+        color: #e2e8f0;
+        letter-spacing: -0.03em;
+      }
+      .logo span { color: #6366f1; }
+    </style>
+  </head>
+  <body>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <a href="/" class="logo">AT<span>.</span></a>
+    <div class="code">Error 404</div>
+    <h1>404</h1>
+    <p>This page doesn't exist — or it moved somewhere else. Head back to the homepage.</p>
+    <a href="/">← Back to homepage</a>
+  </body>
+</html>
