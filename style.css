@@ -488,6 +488,17 @@ nav.scrolled {
   background: var(--accent-soft);
   transform: translateY(-2px);
 }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-2);
+  border: 1px dashed rgba(255,255,255,0.18);
+}
+.btn-ghost:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  background: rgba(34,211,238,0.06);
+  transform: translateY(-2px);
+}
 .hero-stats {
   display: flex;
   gap: 40px;
@@ -2230,4 +2241,14 @@ body::after {
 #clipboard-toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+/* ─── ACCESSIBILITY: REDUCED MOTION ────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
 }
