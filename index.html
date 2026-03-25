@@ -80,15 +80,9 @@
 
     <!-- ─── PAGE LOADER ──────────────────────────────────────────────────── -->
     <div id="page-loader">
-      <div class="loader-crystals">
-        <div class="lc"></div>
-        <div class="lc"></div>
-        <div class="lc"></div>
-        <div class="lc"></div>
-        <div class="lc"></div>
-        <div class="lc"></div>
-      </div>
-      <div class="loader-name">Alan Teixidó</div>
+      <div class="cine-title">Alan Teixidó</div>
+      <div class="cine-subtitle">Software Engineer</div>
+      <div class="cine-line"></div>
     </div>
 
     <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
@@ -124,10 +118,6 @@
     <!-- ─── HERO ─────────────────────────────────────────────────────────── -->
     <section id="hero">
       <canvas id="hero-canvas"></canvas>
-      <div class="hero-glow-1"></div>
-      <div class="hero-glow-2"></div>
-      <!-- Three.js 3D torus knot — desktop only -->
-      <div id="hero-3d" class="hero-3d-overlay"></div>
 
       <div class="container">
         <div class="hero-content">
@@ -142,7 +132,13 @@
           </h1>
 
           <p class="hero-role">
-            <strong>Software Engineer</strong> — Fullstack · Backend · Frontend · Mobile
+            <strong>Software Engineer</strong> —
+            <span class="hero-rotate-wrap">
+              <span class="hero-rotate-word active">Fullstack</span>
+              <span class="hero-rotate-word">Backend</span>
+              <span class="hero-rotate-word">Frontend</span>
+              <span class="hero-rotate-word">Mobile</span>
+            </span>
           </p>
 
           <p class="hero-tagline">
@@ -186,6 +182,43 @@
         <div class="scroll-line"></div>
       </div>
     </section>
+
+    <!-- ─── TECH MARQUEE ──────────────────────────────────────────────── -->
+    <div class="tech-marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span class="marquee-item"><i class="devicon-csharp-plain colored"></i> .NET</span>
+        <span class="marquee-item"><i class="devicon-react-original colored"></i> React</span>
+        <span class="marquee-item"><i class="devicon-nextjs-plain"></i> Next.js</span>
+        <span class="marquee-item"><i class="devicon-vuejs-plain colored"></i> Vue.js</span>
+        <span class="marquee-item"><i class="devicon-typescript-original colored"></i> TypeScript</span>
+        <span class="marquee-item"><i class="devicon-react-original colored"></i> React Native</span>
+        <span class="marquee-item"><i class="devicon-postgresql-plain colored"></i> PostgreSQL</span>
+        <span class="marquee-item"><i class="devicon-docker-plain colored"></i> Docker</span>
+        <span class="marquee-item"><i class="devicon-azure-plain colored"></i> Azure DevOps</span>
+        <span class="marquee-item"><i class="devicon-nodejs-plain colored"></i> Node.js</span>
+        <span class="marquee-item"><i class="devicon-firebase-plain colored"></i> Firebase</span>
+        <span class="marquee-item"><i class="devicon-tailwindcss-plain colored"></i> Tailwind</span>
+        <span class="marquee-item"><i class="devicon-python-plain colored"></i> Python</span>
+        <span class="marquee-item"><i class="devicon-kotlin-plain colored"></i> Kotlin</span>
+        <span class="marquee-item"><i class="devicon-git-plain colored"></i> Git</span>
+        <!-- duplicate set for seamless loop -->
+        <span class="marquee-item"><i class="devicon-csharp-plain colored"></i> .NET</span>
+        <span class="marquee-item"><i class="devicon-react-original colored"></i> React</span>
+        <span class="marquee-item"><i class="devicon-nextjs-plain"></i> Next.js</span>
+        <span class="marquee-item"><i class="devicon-vuejs-plain colored"></i> Vue.js</span>
+        <span class="marquee-item"><i class="devicon-typescript-original colored"></i> TypeScript</span>
+        <span class="marquee-item"><i class="devicon-react-original colored"></i> React Native</span>
+        <span class="marquee-item"><i class="devicon-postgresql-plain colored"></i> PostgreSQL</span>
+        <span class="marquee-item"><i class="devicon-docker-plain colored"></i> Docker</span>
+        <span class="marquee-item"><i class="devicon-azure-plain colored"></i> Azure DevOps</span>
+        <span class="marquee-item"><i class="devicon-nodejs-plain colored"></i> Node.js</span>
+        <span class="marquee-item"><i class="devicon-firebase-plain colored"></i> Firebase</span>
+        <span class="marquee-item"><i class="devicon-tailwindcss-plain colored"></i> Tailwind</span>
+        <span class="marquee-item"><i class="devicon-python-plain colored"></i> Python</span>
+        <span class="marquee-item"><i class="devicon-kotlin-plain colored"></i> Kotlin</span>
+        <span class="marquee-item"><i class="devicon-git-plain colored"></i> Git</span>
+      </div>
+    </div>
 
     <!-- ─── ABOUT ────────────────────────────────────────────────────────── -->
     <section id="about">
@@ -745,6 +778,19 @@
 
         </div>
 
+      </div>
+    </section>
+
+    <!-- ─── SCROLL EXPANSION (21st.dev / arunachalam0606) ─────────────── -->
+    <section class="scroll-expand-section">
+      <div class="scroll-expand-card">
+        <div class="expand-content">
+          <span class="expand-eyebrow">2+ years of production engineering</span>
+          <h2 class="expand-heading">
+            From <span class="gradient-text">API design</span> to
+            <span class="gradient-text">mobile apps</span> — built to ship.
+          </h2>
+        </div>
       </div>
     </section>
 

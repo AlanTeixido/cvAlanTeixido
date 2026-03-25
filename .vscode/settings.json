@@ -11,5 +11,6 @@
         "statusBar.debuggingForeground": "#FCFBFD",
         "statusBar.noFolderBackground": "#36225A",
         "statusBar.noFolderForeground": "#FCFBFD"
-    }
+    },
+    "claudeCodeChat.permissions.yoloMode": true
 }
