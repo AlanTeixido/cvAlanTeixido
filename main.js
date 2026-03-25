@@ -207,7 +207,7 @@ if (!isTouch) {
 
 /* ── 08. 3D card tilt ────────────────────────────────────────── */
 if (!isTouch) {
-  const tiltCards = document.querySelectorAll('.timeline-card, .skill-group, .edu-card, .about-card');
+  const tiltCards = document.querySelectorAll('.timeline-card, .skill-group, .edu-card, .about-card, .about-photo-wrap');
 
   tiltCards.forEach(card => {
     card.addEventListener('mousemove', e => {
@@ -424,17 +424,7 @@ if (!isTouch) {
   setPositions();
 })();
 
-/* ── 15. Electric card borders (from 3D_Electric_Cards resource) ─ */
-(function initElectricCards() {
-  document.querySelectorAll('.work-card').forEach(card => {
-    const border = document.createElement('div');
-    border.className = 'work-card-electric';
-    const glow = document.createElement('div');
-    glow.className = 'work-card-electric-glow';
-    card.appendChild(border);
-    card.appendChild(glow);
-  });
-})();
+/* ── 15. (electric borders removed — replaced by per-card accents) ── */
 
 /* ── 16. Cursor particle trail (from cursor-particle-trail resource) ─ */
 if (!isTouch) {
@@ -799,17 +789,38 @@ if (!isTouch) {
   })();
 })();
 
-/* ── 25. Timeline bullet stagger entrance ──────────────────────── */
-(function initBulletStagger() {
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('bullets-visible');
-        obs.unobserve(entry.target);
-      }
+/* ── 25. Timeline accordion (collapsible bullets) ────────────── */
+(function initTimelineAccordion() {
+  document.querySelectorAll('.timeline-card').forEach((card, i) => {
+    const bullets = card.querySelector('.timeline-bullets');
+    if (!bullets) return;
+
+    /* Non-tech cards: always expanded, no toggle (they're short) */
+    if (card.classList.contains('non-tech')) {
+      card.classList.add('expanded');
+      bullets.style.maxHeight = bullets.scrollHeight + 'px';
+      return;
+    }
+
+    /* Create toggle button */
+    const toggle = document.createElement('button');
+    toggle.className = 'timeline-toggle';
+    const isFirst = i === 0;
+    toggle.innerHTML = `<span>${isFirst ? 'Hide details' : 'Show details'}</span> <i class="fa-solid fa-chevron-down"></i>`;
+    bullets.before(toggle);
+
+    /* First tech card starts expanded */
+    if (isFirst) {
+      card.classList.add('expanded');
+      bullets.style.maxHeight = bullets.scrollHeight + 'px';
+    }
+
+    toggle.addEventListener('click', () => {
+      const expanding = card.classList.toggle('expanded');
+      toggle.querySelector('span').textContent = expanding ? 'Hide details' : 'Show details';
+      bullets.style.maxHeight = expanding ? bullets.scrollHeight + 'px' : '0';
     });
-  }, { threshold: 0.35 });
-  document.querySelectorAll('.timeline-card').forEach(c => obs.observe(c));
+  });
 })();
 
 /* ── 22. Card spotlight effect (21st.dev / aceternity) ──────────── */
