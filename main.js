@@ -15,16 +15,28 @@
      12. Skill pills stagger entrance
 ───────────────────────────────────────────────────────────────── */
 
-/* ── 00. Page loader ─────────────────────────────────────────── */
-(function initLoader() {
+/* ── 00. Cinematic entry (21st.dev / easemize) ───────────────── */
+(function initCinematic() {
   const loader = document.getElementById('page-loader');
   if (!loader) return;
-  /* hide after content paints + short delay */
+
   window.addEventListener('load', () => {
-    setTimeout(() => loader.classList.add('hidden'), 900);
+    setTimeout(() => loader.classList.add('phase-2'), 300);
+    setTimeout(() => loader.classList.add('phase-3'), 1400);
+    setTimeout(() => loader.classList.add('hidden'),  2600);
   });
-  /* fallback: always hide after 3s */
-  setTimeout(() => loader.classList.add('hidden'), 3000);
+
+  /* click to skip intro */
+  loader.addEventListener('click', () => {
+    loader.classList.add('phase-2', 'phase-3');
+    setTimeout(() => loader.classList.add('hidden'), 200);
+  });
+
+  /* fallback: always hide after 4.5s */
+  setTimeout(() => {
+    loader.classList.add('phase-2', 'phase-3');
+    setTimeout(() => loader.classList.add('hidden'), 400);
+  }, 4500);
 })();
 
 const isTouch = !window.matchMedia('(pointer: fine)').matches;
@@ -82,91 +94,68 @@ const langObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.about-card').forEach(el => langObserver.observe(el));
 
-/* ── 05. Hero canvas — particle network ───────────────────────── */
-(function initCanvas() {
+/* ── 05. Hero canvas — dotted surface (21st.dev / efferd) ─────── */
+(function initDottedSurface() {
   const canvas = document.getElementById('hero-canvas');
   if (!canvas) return;
-  const ctx    = canvas.getContext('2d');
-  const HERO   = document.getElementById('hero');
-  const COUNT  = 80;
-  const DIST   = 120;
+  const ctx  = canvas.getContext('2d');
+  const HERO = document.getElementById('hero');
 
-  let w, h, particles;
-  let mouse = { x: -9999, y: -9999 };
-
+  let W, H;
   function resize() {
-    w = canvas.width  = HERO.offsetWidth;
-    h = canvas.height = HERO.offsetHeight;
+    W = canvas.width  = HERO.offsetWidth;
+    H = canvas.height = HERO.offsetHeight;
   }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
 
-  function createParticles() {
-    particles = Array.from({ length: COUNT }, () => ({
-      x:  Math.random() * w,
-      y:  Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      r:  Math.random() * 1.5 + 0.5,
-    }));
-  }
+  const AMTX = isTouch ? 25 : 35;
+  const AMTY = isTouch ? 40 : 55;
+  const SEP  = 140;
+  const CAM_Y = 340, CAM_Z = 1100;
+  let count = 0;
 
-  function draw() {
-    ctx.clearRect(0, 0, w, h);
+  (function frame() {
+    requestAnimationFrame(frame);
 
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0 || p.x > w) p.vx *= -1;
-      if (p.y < 0 || p.y > h) p.vy *= -1;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(99,102,241,0.35)';
-      ctx.fill();
-    });
+    const fade = HERO ? Math.max(0, 1 - window.scrollY / HERO.offsetHeight * 1.5) : 1;
+    if (fade <= 0.01) return;
 
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx   = particles[i].x - particles[j].x;
-        const dy   = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < DIST) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(99,102,241,${(1 - dist / DIST) * 0.12})`;
-          ctx.lineWidth   = 0.8;
-          ctx.stroke();
-        }
+    ctx.clearRect(0, 0, W, H);
+    count += 0.07;
+
+    const fovF = H / (2 * Math.tan(30 * Math.PI / 180));
+
+    for (let ix = 0; ix < AMTX; ix++) {
+      for (let iy = 0; iy < AMTY; iy++) {
+        const x  = ix * SEP - (AMTX * SEP) / 2;
+        const y  = Math.sin((ix + count) * 0.3) * 50
+                 + Math.sin((iy + count) * 0.5) * 50;
+        const z  = iy * SEP - (AMTY * SEP) / 2;
+
+        const rz = z - CAM_Z;
+        if (rz >= -1) continue;
+
+        const ry    = y - CAM_Y;
+        const scale = fovF / (-rz);
+        const sx    = W / 2 + x * scale;
+        const sy    = H / 2 + ry * scale;
+
+        if (sx < -10 || sx > W + 10 || sy < -10 || sy > H + 10) continue;
+
+        const depth = -rz;
+        const alpha = Math.max(0, Math.min(0.7, (1 - depth / 8000) * 0.8)) * fade;
+        if (alpha < 0.02) continue;
+
+        const dotSz = Math.max(0.8, 3.5 * scale);
+
+        ctx.beginPath();
+        ctx.arc(sx, sy, dotSz, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(130,140,210,${alpha.toFixed(3)})`;
+        ctx.fill();
       }
     }
-
-    particles.forEach(p => {
-      const dx   = p.x - mouse.x;
-      const dy   = p.y - mouse.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 160) {
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(mouse.x, mouse.y);
-        ctx.strokeStyle = `rgba(34,211,238,${(1 - dist / 160) * 0.25})`;
-        ctx.lineWidth   = 0.8;
-        ctx.stroke();
-      }
-    });
-
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', () => { resize(); createParticles(); }, { passive: true });
-
-  HERO.addEventListener('mousemove', e => {
-    const rect = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
-  }, { passive: true });
-
-  HERO.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
-
-  resize(); createParticles(); draw();
+  })();
 })();
 
 /* ── 06. Scroll progress bar ─────────────────────────────────── */
@@ -760,6 +749,93 @@ if (!isTouch) {
       tags[i].style.color     = depth > 0.55 ? '#a5b4fc' : '#4338ca';
     });
   })();
+})();
+
+/* ── 22. Card spotlight effect (21st.dev / aceternity) ──────────── */
+if (!isTouch) {
+  const spotTargets = document.querySelectorAll(
+    '.work-card, .skill-group, .edu-card, .goals-focus-card, .timeline-card'
+  );
+  spotTargets.forEach(card => {
+    card.classList.add('spotlight-card');
+    const spot = document.createElement('div');
+    spot.className = 'card-spotlight';
+    const inner = document.createElement('div');
+    inner.className = 'card-spotlight-inner';
+    spot.appendChild(inner);
+    card.prepend(spot);
+
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      spot.style.setProperty('--spot-x', `${e.clientX - rect.left}px`);
+      spot.style.setProperty('--spot-y', `${e.clientY - rect.top}px`);
+    }, { passive: true });
+  });
+}
+
+/* ── 23. Rotating words in hero (21st.dev / animated-hero) ─────── */
+(function initRotatingWords() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const wrap  = document.querySelector('.hero-rotate-wrap');
+  const words = Array.from(document.querySelectorAll('.hero-rotate-word'));
+  if (!wrap || words.length < 2) return;
+
+  /* Measure each word's natural width */
+  const measure = document.createElement('span');
+  measure.style.cssText =
+    'position:absolute;visibility:hidden;white-space:nowrap;' +
+    'font-weight:600;font-size:inherit;pointer-events:none;';
+  wrap.appendChild(measure);
+
+  const widths = words.map(w => {
+    measure.textContent = w.textContent;
+    return measure.offsetWidth;
+  });
+  measure.remove();
+
+  let current = 0;
+  wrap.style.width = widths[0] + 'px';
+
+  /* Start cycling after hero animations finish */
+  setTimeout(() => {
+    setInterval(() => {
+      const prev = current;
+      current = (current + 1) % words.length;
+
+      words[prev].classList.remove('active');
+      words[prev].classList.add('exit');
+      words[current].classList.add('active');
+      wrap.style.width = widths[current] + 'px';
+
+      setTimeout(() => words[prev].classList.remove('exit'), 500);
+    }, 2500);
+  }, 2200);
+})();
+
+/* ── 24. Scroll expansion section (21st.dev / arunachalam0606) ── */
+(function initScrollExpand() {
+  const section = document.querySelector('.scroll-expand-section');
+  const card    = section && section.querySelector('.scroll-expand-card');
+  if (!section || !card) return;
+
+  const MAX_W = 1100; /* matches .container max-width */
+
+  function update() {
+    const rect       = section.getBoundingClientRect();
+    const center     = rect.top + rect.height / 2;
+    const viewCenter = window.innerHeight / 2;
+    const dist       = Math.abs(center - viewCenter);
+    const range      = window.innerHeight * 0.8;
+    const progress   = Math.max(0, Math.min(1, 1 - dist / range));
+
+    const targetW = Math.min(MAX_W, window.innerWidth - 56);
+    card.style.width        = (340 + progress * (targetW - 340)) + 'px';
+    card.style.borderRadius = (32 - progress * 28) + 'px';
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
 })();
 
 /* ── 21. Copy-to-clipboard with toast ───────────────────────────── */
