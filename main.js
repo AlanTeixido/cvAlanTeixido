@@ -751,6 +751,19 @@ if (!isTouch) {
   })();
 })();
 
+/* ── 25. Timeline bullet stagger entrance ──────────────────────── */
+(function initBulletStagger() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('bullets-visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.35 });
+  document.querySelectorAll('.timeline-card').forEach(c => obs.observe(c));
+})();
+
 /* ── 22. Card spotlight effect (21st.dev / aceternity) ──────────── */
 if (!isTouch) {
   const spotTargets = document.querySelectorAll(
