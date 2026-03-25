@@ -291,43 +291,57 @@ if (!isTouch) {
   });
 }
 
-/* ── 13. Projects 3D carousel (from carousel resource) ──────────── */
+/* ── 13. Projects 3D carousel — enhanced ──────────────────────── */
 (function initProjCarousel() {
   const wrap    = document.querySelector('.proj-car-wrap');
   const slides  = Array.from(document.querySelectorAll('.proj-slide'));
   const dots    = Array.from(document.querySelectorAll('.proj-dot'));
   const prevBtn = document.getElementById('projPrev');
   const nextBtn = document.getElementById('projNext');
+  const counter = document.getElementById('projCounter');
+  const progBar = document.getElementById('projProgress');
   if (!wrap || !slides.length) return;
 
   const N = slides.length;
   let active = 0;
+  const AUTO_MS = 5000;
 
-  /* 3D positions per slot: -1 = left, 0 = center, +1 = right */
+  /* 5-slot depth positions with blur depth-of-field */
   const POS = {
-    '-1': { tx: -375, ry:  20, sc: 0.78, op: 0.50 },
-     '0': { tx:    0, ry:   0, sc: 1.00, op: 1.00 },
-     '1': { tx:  375, ry: -20, sc: 0.78, op: 0.50 },
+    '-2': { tx: -600, ry:  35, sc: 0.58, op: 0.18, blur: 5 },
+    '-1': { tx: -330, ry:  18, sc: 0.82, op: 0.55, blur: 2 },
+     '0': { tx:    0, ry:   0, sc: 1.00, op: 1.00, blur: 0 },
+     '1': { tx:  330, ry: -18, sc: 0.82, op: 0.55, blur: 2 },
+     '2': { tx:  600, ry: -35, sc: 0.58, op: 0.18, blur: 5 },
   };
+
+  function resetProgress() {
+    if (!progBar) return;
+    progBar.classList.remove('filling');
+    void progBar.offsetWidth;
+    progBar.classList.add('filling');
+  }
 
   function setPositions() {
     slides.forEach((slide, i) => {
       let diff = i - active;
-      /* wrap-around normalise */
       if (diff < -(N / 2)) diff += N;
       if (diff >  (N / 2)) diff -= N;
 
-      const slot = Math.max(-1, Math.min(1, diff));
+      const slot = Math.max(-2, Math.min(2, diff));
       const p    = POS[slot];
-      const zi   = diff === 0 ? 10 : 5 - Math.abs(diff);
+      const zi   = diff === 0 ? 10 : 8 - Math.abs(diff);
 
-      slide.style.transform    = `translateX(${p.tx}px) rotateY(${p.ry}deg) scale(${p.sc})`;
-      slide.style.opacity      = diff === 0 || Math.abs(diff) === 1 ? p.op : 0;
-      slide.style.zIndex       = zi;
+      slide.style.transform     = `translateX(${p.tx}px) rotateY(${p.ry}deg) scale(${p.sc})`;
+      slide.style.opacity       = Math.abs(diff) <= 2 ? p.op : 0;
+      slide.style.filter        = `blur(${p.blur}px)`;
+      slide.style.zIndex        = zi;
       slide.style.pointerEvents = diff === 0 ? 'auto' : 'none';
       slide.classList.toggle('proj-active', diff === 0);
     });
     dots.forEach((d, i) => d.classList.toggle('active', i === active));
+    if (counter) counter.textContent = `${active + 1} / ${N}`;
+    resetProgress();
   }
 
   function goTo(idx) {
@@ -335,14 +349,30 @@ if (!isTouch) {
     setPositions();
   }
 
-  prevBtn.addEventListener('click', () => goTo(active - 1));
-  nextBtn.addEventListener('click', () => goTo(active + 1));
-  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+  /* ── Auto-play ─────────────────────────────────────────────── */
+  let autoTimer = setInterval(() => goTo(active + 1), AUTO_MS);
+  function restartAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => goTo(active + 1), AUTO_MS);
+  }
 
-  /* Click on side card → go to it (don't follow link) */
+  wrap.addEventListener('mouseenter', () => {
+    clearInterval(autoTimer);
+    if (progBar) progBar.style.animationPlayState = 'paused';
+  });
+  wrap.addEventListener('mouseleave', () => {
+    restartAuto();
+    if (progBar) progBar.style.animationPlayState = 'running';
+  });
+
+  /* ── Controls ──────────────────────────────────────────────── */
+  prevBtn.addEventListener('click', () => { restartAuto(); goTo(active - 1); });
+  nextBtn.addEventListener('click', () => { restartAuto(); goTo(active + 1); });
+  dots.forEach((d, i) => d.addEventListener('click', () => { restartAuto(); goTo(i); }));
+
   slides.forEach((slide, i) => {
     slide.addEventListener('click', e => {
-      if (i !== active) { e.preventDefault(); goTo(i); }
+      if (i !== active) { e.preventDefault(); restartAuto(); goTo(i); }
     });
   });
 
@@ -353,25 +383,43 @@ if (!isTouch) {
     if (!pointerDown) return;
     pointerDown = false;
     const dx = e.clientX - startX;
-    if (Math.abs(dx) > 55) goTo(active + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 55) { restartAuto(); goTo(active + (dx < 0 ? 1 : -1)); }
   });
   wrap.addEventListener('mouseleave', () => { pointerDown = false; });
   wrap.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
   wrap.addEventListener('touchend',   e => {
     const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 50) goTo(active + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 50) { restartAuto(); goTo(active + (dx < 0 ? 1 : -1)); }
   }, { passive: true });
 
-  /* Arrow keys when projects section is visible */
+  /* Arrow keys */
   document.addEventListener('keydown', e => {
     const sec = document.getElementById('projects');
     if (!sec) return;
     const r = sec.getBoundingClientRect();
     if (r.top < window.innerHeight && r.bottom > 0) {
-      if (e.key === 'ArrowLeft')  goTo(active - 1);
-      if (e.key === 'ArrowRight') goTo(active + 1);
+      if (e.key === 'ArrowLeft')  { restartAuto(); goTo(active - 1); }
+      if (e.key === 'ArrowRight') { restartAuto(); goTo(active + 1); }
     }
   });
+
+  /* ── Parallax on active card hover ─────────────────────────── */
+  if (!isTouch) {
+    slides.forEach(slide => {
+      slide.addEventListener('mousemove', e => {
+        if (!slide.classList.contains('proj-active')) return;
+        const rect = slide.getBoundingClientRect();
+        const cx = (e.clientX - rect.left) / rect.width - 0.5;
+        const cy = (e.clientY - rect.top) / rect.height - 0.5;
+        const thumb = slide.querySelector('.pp-thumb img');
+        if (thumb) thumb.style.transform = `scale(1.06) translate(${cx * -12}px, ${cy * -8}px)`;
+      }, { passive: true });
+      slide.addEventListener('mouseleave', () => {
+        const thumb = slide.querySelector('.pp-thumb img');
+        if (thumb) thumb.style.transform = '';
+      });
+    });
+  }
 
   setPositions();
 })();
