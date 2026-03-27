@@ -122,15 +122,15 @@ document.querySelectorAll('.about-card').forEach(el => langObserver.observe(el))
     if (fade <= 0.01) return;
 
     ctx.clearRect(0, 0, W, H);
-    count += 0.07;
+    count += 0.015;
 
     const fovF = H / (2 * Math.tan(30 * Math.PI / 180));
 
     for (let ix = 0; ix < AMTX; ix++) {
       for (let iy = 0; iy < AMTY; iy++) {
         const x  = ix * SEP - (AMTX * SEP) / 2;
-        const y  = Math.sin((ix + count) * 0.3) * 50
-                 + Math.sin((iy + count) * 0.5) * 50;
+        const y  = Math.sin((ix + count) * 0.15) * 30
+                 + Math.sin((iy + count) * 0.2) * 25;
         const z  = iy * SEP - (AMTY * SEP) / 2;
 
         const rz = z - CAM_Z;
@@ -144,14 +144,14 @@ document.querySelectorAll('.about-card').forEach(el => langObserver.observe(el))
         if (sx < -10 || sx > W + 10 || sy < -10 || sy > H + 10) continue;
 
         const depth = -rz;
-        const alpha = Math.max(0, Math.min(0.7, (1 - depth / 8000) * 0.8)) * fade;
+        const alpha = Math.max(0, Math.min(0.55, (1 - depth / 8000) * 0.65)) * fade;
         if (alpha < 0.02) continue;
 
-        const dotSz = Math.max(0.8, 3.5 * scale);
+        const dotSz = Math.max(0.6, 3 * scale);
 
         ctx.beginPath();
         ctx.arc(sx, sy, dotSz, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(130,140,210,${alpha.toFixed(3)})`;
+        ctx.fillStyle = `rgba(140,150,220,${alpha.toFixed(3)})`;
         ctx.fill();
       }
     }
