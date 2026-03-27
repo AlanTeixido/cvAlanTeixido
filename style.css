@@ -152,7 +152,7 @@ body {
   --accent-soft:  rgba(99,102,241,0.12);
   --text-1:       #f1f5f9;
   --text-2:       #94a3b8;
-  --text-3:       #64748b;
+  --text-3:       #8896a8;
   --glow:         0 0 60px rgba(99,102,241,0.18);
   --glow-sm:      0 0 24px rgba(99,102,241,0.22);
   --radius:       16px;
@@ -870,8 +870,15 @@ nav.scrolled {
   border-radius: 50%;
   background: var(--accent);
 }
-.timeline-card.non-tech { opacity: 0.75; }
-.timeline-card.non-tech:hover { opacity: 1; }
+.timeline-card.non-tech {
+  opacity: 0.55;
+  transform: scale(0.97);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.timeline-card.non-tech:hover {
+  opacity: 0.85;
+  transform: scale(1);
+}
 
 /* ─── SELECTED WORK ────────────────────────────────────────────── */
 .work-grid {
@@ -2794,6 +2801,7 @@ body::after {
   overflow: hidden;
   padding: 22px 0;
   background: var(--bg);
+  border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   position: relative;
 }
@@ -2819,7 +2827,7 @@ body::after {
   display: flex;
   gap: 48px;
   width: max-content;
-  animation: marqueeScroll 40s linear infinite;
+  animation: marqueeScroll 22s linear infinite;
   will-change: transform;
 }
 .marquee-track:hover {
@@ -2892,10 +2900,16 @@ body::after {
 
 /* ─── ACCESSIBILITY: REDUCED MOTION ────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *:not(.marquee-track):not(.hero-rotate-word), *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  .marquee-track {
+    animation: marqueeScroll 35s linear infinite !important;
+  }
+  .hero-rotate-word {
+    transition: transform 0.5s cubic-bezier(.4,0,.2,1), opacity 0.4s ease !important;
   }
   html { scroll-behavior: auto; }
 }
