@@ -122,15 +122,15 @@ document.querySelectorAll('.about-card').forEach(el => langObserver.observe(el))
     if (fade <= 0.01) return;
 
     ctx.clearRect(0, 0, W, H);
-    count += 0.015;
+    count += 0.028;
 
     const fovF = H / (2 * Math.tan(30 * Math.PI / 180));
 
     for (let ix = 0; ix < AMTX; ix++) {
       for (let iy = 0; iy < AMTY; iy++) {
         const x  = ix * SEP - (AMTX * SEP) / 2;
-        const y  = Math.sin((ix + count) * 0.15) * 30
-                 + Math.sin((iy + count) * 0.2) * 25;
+        const y  = Math.sin((ix + count) * 0.12) * 22
+                 + Math.sin((iy + count) * 0.14) * 18;
         const z  = iy * SEP - (AMTY * SEP) / 2;
 
         const rz = z - CAM_Z;
@@ -847,7 +847,7 @@ if (!isTouch) {
 
 /* ── 23. Rotating words in hero (21st.dev / animated-hero) ─────── */
 (function initRotatingWords() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  /* keep rotating words active even with reduced-motion — subtle text swap */
   const wrap  = document.querySelector('.hero-rotate-wrap');
   const words = Array.from(document.querySelectorAll('.hero-rotate-word'));
   if (!wrap || words.length < 2) return;
