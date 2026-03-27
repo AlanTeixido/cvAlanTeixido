@@ -2749,8 +2749,8 @@ body::after {
   display: inline-block;
   position: relative;
   overflow: hidden;
-  vertical-align: bottom;
-  height: 1.3em;
+  vertical-align: baseline;
+  height: 1.25em;
   transition: width 0.45s cubic-bezier(.4,0,.2,1);
 }
 .hero-rotate-word {
