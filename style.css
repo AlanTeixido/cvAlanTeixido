@@ -2,12 +2,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   background: #07070f;
   color: #e2e8f0;
   overflow-x: hidden;
-  line-height: 1.6;
-  cursor: none; /* hidden on desktop; shown on touch via media query */
+  line-height: 1.65;
+  cursor: none;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 @media (pointer: coarse) { body { cursor: auto; } }
 
@@ -159,6 +163,17 @@ body {
   --radius-sm:    10px;
   --radius-pill:  999px;
   --transition:   0.35s cubic-bezier(.4,0,.2,1);
+
+  /* Type system */
+  --font-display: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body:    'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  /* Tinted elevation — shadows carry the background hue, never pure black */
+  --shadow-sm:    0 2px 8px rgba(4,4,12,0.4);
+  --shadow-md:    0 12px 32px -8px rgba(4,4,16,0.55);
+  --shadow-lg:    0 28px 64px -16px rgba(4,4,20,0.6);
+  --ring:         0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
 }
 
 /* ─── SCROLLBAR ────────────────────────────────────────────────── */
@@ -446,13 +461,10 @@ nav.scrolled {
 }
 .btn-primary {
   background-color: var(--accent);
-  background-image: linear-gradient(110deg, transparent 40%, rgba(255,255,255,0.13) 50%, transparent 60%);
-  background-size: 250% 100%;
-  background-position: 200% 0;
   color: #fff;
   position: relative;
   z-index: 1;
-  animation: btnShimmer 4s ease-in-out infinite;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset, 0 6px 20px -6px rgba(99,102,241,0.5);
 }
 /* Neon glow halo — inspired by uiverse.io */
 .btn-primary::after {
@@ -571,13 +583,9 @@ nav.scrolled {
   align-items: start;
 }
 
-/* Photo column */
+/* Photo column — static tinted glow (no perpetual pulse) */
 .about-photo-col {
-  animation: photoPulse 4s ease-in-out infinite;
-}
-@keyframes photoPulse {
-  0%, 100% { filter: drop-shadow(0 0 16px rgba(99,102,241,0.18)); }
-  50%      { filter: drop-shadow(0 0 22px rgba(34,211,238,0.22)); }
+  filter: drop-shadow(0 8px 28px rgba(99,102,241,0.16));
 }
 .about-photo-wrap {
   position: relative;
@@ -919,7 +927,7 @@ nav.scrolled {
 .work-card::after {
   position: absolute;
   top: -12px; right: -4px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-display);
   font-size: 110px;
   font-weight: 900;
   color: rgba(255,255,255,0.02);
@@ -1413,10 +1421,12 @@ nav.scrolled {
 }
 /* Secondary education card — reduced visual weight */
 .edu-card-secondary {
-  opacity: 0.7;
+  opacity: 0.5;
   border-style: dashed;
+  transform: scale(0.96);
+  transition: opacity 0.3s ease, transform 0.3s ease, border-color var(--transition), box-shadow var(--transition);
 }
-.edu-card-secondary:hover { opacity: 1; }
+.edu-card-secondary:hover { opacity: 0.85; transform: scale(1); }
 .edu-card-secondary .edu-degree {
   font-size: 14px;
   font-weight: 600;
@@ -2453,7 +2463,7 @@ body::after {
   font-weight: 600;
 }
 
-/* ─── TIMELINE DOT BEACON PULSE ────────────────────────────────── */
+/* ─── TIMELINE DOT — beacon pings only on row hover (not perpetually) ── */
 .timeline-dot::after {
   content: '';
   position: absolute;
@@ -2461,32 +2471,18 @@ body::after {
   border-radius: 50%;
   border: 1.5px solid var(--accent);
   opacity: 0;
-  animation: dotBeacon 2.5s ease-out infinite;
 }
-.timeline-item:nth-child(2) .timeline-dot::after { animation-delay: 0.4s; }
-.timeline-item:nth-child(3) .timeline-dot::after { animation-delay: 0.8s; }
-.timeline-item:nth-child(4) .timeline-dot::after { animation-delay: 1.2s; }
-.timeline-item:nth-child(5) .timeline-dot::after { animation-delay: 1.6s; }
+.timeline-item:hover .timeline-dot::after {
+  animation: dotBeacon 1.6s ease-out;
+}
 @keyframes dotBeacon {
   0%   { transform: scale(1); opacity: 0.5; }
   100% { transform: scale(2.5); opacity: 0; }
 }
 
-/* ─── PRIMARY CTA SHIMMER ──────────────────────────────────────── */
-@keyframes btnShimmer {
-  0%, 25% { background-position: 200% 0; }
-  75%, 100% { background-position: -200% 0; }
-}
-
-/* ─── FOOTER DIVIDER FLOWING GRADIENT ──────────────────────────── */
+/* ─── FOOTER DIVIDER — static, centered gradient seam ──────────── */
 .footer-divider {
-  background: linear-gradient(90deg, transparent, var(--accent), var(--accent-cyan), var(--accent), transparent) !important;
-  background-size: 200% 100% !important;
-  animation: dividerFlow 4s ease infinite;
-}
-@keyframes dividerFlow {
-  0%, 100% { background-position: 100% 0; }
-  50% { background-position: -100% 0; }
+  background: linear-gradient(90deg, transparent, rgba(99,102,241,0.55) 35%, rgba(34,211,238,0.45) 65%, transparent) !important;
 }
 
 /* ─── CONTACT LINK BORDER BEAM ON HOVER ────────────────────────── */
@@ -2526,23 +2522,17 @@ body::after {
   to { --beam-angle: 360deg; }
 }
 
-/* ─── WORK CARD NUMBER GLOW PULSE ──────────────────────────────── */
-.work-num {
-  animation: numGlow 3s ease-in-out infinite;
-}
-@keyframes numGlow {
-  0%, 100% { text-shadow: 0 0 6px rgba(99,102,241,0); }
-  50%      { text-shadow: 0 0 14px rgba(99,102,241,0.5); }
+/* ─── WORK CARD NUMBER — glow only on card hover ───────────────── */
+.work-card:hover .work-num {
+  text-shadow: 0 0 14px rgba(99,102,241,0.5);
 }
 
 /* ─── GOALS QUOTE GRADIENT TEXT FLOW ───────────────────────────── */
 .goals-quote .gradient-text {
-  background: linear-gradient(90deg, #c7d2fe, #818cf8, #22d3ee, #818cf8, #c7d2fe);
-  background-size: 300% 100%;
+  background: linear-gradient(105deg, #c7d2fe 0%, #818cf8 45%, var(--accent-cyan) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: flowGradient 4s ease infinite;
 }
 
 /* ─── ABOUT SECTION DOT GRID (cyan) ───────────────────────────── */
@@ -2627,7 +2617,7 @@ body::after {
 .timeline-card.expanded .timeline-bullets li:nth-child(6) { transition-delay: 0.30s; }
 .timeline-card.expanded .timeline-bullets li:nth-child(7) { transition-delay: 0.35s; }
 
-/* ─── EDUCATION CARD AUTO LIGHT SWEEP ──────────────────────────── */
+/* ─── EDUCATION CARD — light sweep on hover only ───────────────── */
 .edu-card::after {
   content: '';
   position: absolute;
@@ -2635,32 +2625,19 @@ body::after {
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.045) 50%, transparent 80%);
+  background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.055) 50%, transparent 80%);
   transform: skewX(-15deg);
   pointer-events: none;
-  animation: eduSweep 5s ease-in-out infinite;
-  animation-delay: var(--sweep-delay, 0s);
+  transition: left 0.7s cubic-bezier(.4,0,.2,1);
 }
-.edu-card:nth-child(1) { --sweep-delay: 0s; }
-.edu-card:nth-child(2) { --sweep-delay: 1.6s; }
-.edu-card:nth-child(3) { --sweep-delay: 3.2s; }
-@keyframes eduSweep {
-  0%, 25% { left: -100%; }
-  75%, 100% { left: 200%; }
-}
+.edu-card:hover::after { left: 200%; }
 
 /* ─── CONTACT HEADING FLOWING GRADIENT ─────────────────────────── */
 .contact-heading .gradient-text {
-  background: linear-gradient(90deg, #c7d2fe, #818cf8, #22d3ee, #818cf8, #c7d2fe);
-  background-size: 300% 100%;
+  background: linear-gradient(105deg, #c7d2fe 0%, #818cf8 45%, var(--accent-cyan) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: flowGradient 4s ease infinite;
-}
-@keyframes flowGradient {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
 }
 
 /* ─── SKILL GROUP ICON RIPPLE PULSE ────────────────────────────── */
@@ -2913,3 +2890,88 @@ body::after {
   }
   html { scroll-behavior: auto; }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   REFINEMENT PASS — typography system, accessibility & polish
+   Layered last so it tunes the design without touching the rules above.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Anchor jumps shouldn't hide their target under the fixed navbar */
+html { scroll-padding-top: 92px; }
+
+/* Hero: use dynamic viewport height (no jump on mobile browser chrome) */
+#hero { min-height: 100vh; min-height: 100dvh; }
+
+/* ── Type tiers: mono = labels · display = headings · sans = body ── */
+.cine-title,
+.hero-name,
+.section-title,
+.contact-heading,
+.fp-title,
+.project-title,
+.projects-header h1,
+.expand-heading,
+.work-title,
+.pp-title,
+.timeline-company,
+.edu-degree,
+.goals-quote {
+  font-family: var(--font-display);
+}
+
+/* Space Grotesk reads best a touch tighter at display sizes */
+.hero-name,
+.contact-heading,
+.fp-title,
+.projects-header h1 { letter-spacing: -0.035em; }
+
+/* Balance headline line breaks; avoid orphans in body copy */
+.hero-name,
+.section-title,
+.contact-heading,
+.fp-title,
+.project-title,
+.projects-header h1,
+.expand-heading,
+.goals-quote { text-wrap: balance; }
+
+.about-bio,
+.hero-tagline,
+.goals-body,
+.fp-desc,
+.project-desc,
+.contact-sub,
+.work-desc,
+.pp-desc,
+.projects-sub,
+.timeline-bullets li,
+.work-highlights li,
+.project-bullets li,
+.goals-focus-desc { text-wrap: pretty; }
+
+/* Align all figures on a common width so numbers don't shimmy */
+.hero-stat-num,
+.proj-counter,
+.timeline-period,
+.edu-period,
+.lang-level,
+.footer-copy { font-variant-numeric: tabular-nums; }
+
+/* ── Accessibility: visible keyboard focus ──────────────────────────
+   The site hides the native cursor, so a clear focus ring is essential
+   for keyboard and screen-reader users. */
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+.proj-dot:focus-visible,
+.proj-nav-btn:focus-visible,
+.contact-link:focus-visible { outline-offset: 4px; }
+/* Mouse users keep the polished hover-only treatment */
+:focus:not(:focus-visible) { outline: none; }
+
+/* Skip-link target safety for reduced-motion already handled above */
