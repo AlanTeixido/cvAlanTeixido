@@ -207,7 +207,7 @@ if (!isTouch) {
 
 /* ── 08. 3D card tilt ────────────────────────────────────────── */
 if (!isTouch) {
-  const tiltCards = document.querySelectorAll('.timeline-card, .skill-group, .edu-card, .about-card, .about-photo-wrap');
+  const tiltCards = document.querySelectorAll('.timeline-card, .skill-group, .edu-card, .about-card');
 
   tiltCards.forEach(card => {
     card.addEventListener('mousemove', e => {
@@ -940,4 +940,147 @@ if (!isTouch) {
       }
     });
   });
+})();
+
+/* ── 26. Scroll word-reveal — text brightens as it scrolls through ──
+   Adapted from the 3d-portfolio reference (AnimatedText / framer-motion).
+   Reimplemented in vanilla: split into per-word spans, drive opacity by
+   the element's scroll progress. Preserves inner markup (<strong>, spans). */
+(function initScrollWordReveal() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  function wrapWords(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    const textNodes = [];
+    while (walker.nextNode()) {
+      if (walker.currentNode.textContent.trim()) textNodes.push(walker.currentNode);
+    }
+    const spans = [];
+    textNodes.forEach(node => {
+      const frag = document.createDocumentFragment();
+      node.textContent.split(/(\s+)/).forEach(part => {
+        if (!part) return;
+        if (!part.trim()) { frag.appendChild(document.createTextNode(part)); return; }
+        const s = document.createElement('span');
+        s.className = 'srt-word';
+        s.textContent = part;
+        frag.appendChild(s);
+        spans.push(s);
+      });
+      node.parentNode.replaceChild(frag, node);
+    });
+    return spans;
+  }
+
+  const targets = [];
+  document.querySelectorAll('.about-bio, .goals-body').forEach(el => {
+    const words = wrapWords(el);
+    if (words.length) targets.push({ el, words });
+  });
+  if (!targets.length) return;
+
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  function update() {
+    const vh = window.innerHeight;
+    targets.forEach(({ el, words }) => {
+      const r = el.getBoundingClientRect();
+      const denom = (0.85 * vh - (0.25 * vh - r.height)) || 1;
+      const progress = clamp((0.85 * vh - r.top) / denom, 0, 1);
+      const n = words.length;
+      words.forEach((w, i) => {
+        const cp = i / n;
+        const start = Math.max(0, cp - 0.12);
+        const end = Math.min(1, cp + 0.12);
+        let o;
+        if (progress <= start) o = 0.16;
+        else if (progress >= end) o = 1;
+        else o = 0.16 + ((progress - start) / (end - start)) * 0.84;
+        w.style.opacity = o.toFixed(3);
+      });
+    });
+  }
+
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { update(); ticking = false; });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
+})();
+
+/* ── 27. Magnetic photo — the About portrait drifts toward the cursor ──
+   Adapted from the 3d-portfolio reference (Magnet). Spring-like easing
+   via per-frame lerp toward the pointer offset. Desktop pointers only. */
+(function initMagnetPhoto() {
+  if (isTouch) return;
+  const el = document.querySelector('.about-photo-col');
+  if (!el) return;
+
+  const PAD = 130, STR = 0.22, EASE = 0.14;
+  let tx = 0, ty = 0, cx = 0, cy = 0, active = false, raf = null;
+
+  function loop() {
+    cx += (tx - cx) * EASE;
+    cy += (ty - cy) * EASE;
+    el.style.transform = `translate(${cx.toFixed(2)}px, ${cy.toFixed(2)}px)`;
+    if (active || Math.abs(cx - tx) > 0.1 || Math.abs(cy - ty) > 0.1) {
+      raf = requestAnimationFrame(loop);
+    } else {
+      el.style.transform = '';
+      raf = null;
+    }
+  }
+  function kick() { if (!raf) raf = requestAnimationFrame(loop); }
+
+  window.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width / 2);
+    const dy = e.clientY - (r.top + r.height / 2);
+    const max = Math.max(r.width, r.height) / 2 + PAD;
+    if (Math.hypot(dx, dy) < max) { active = true; tx = dx * STR; ty = dy * STR; }
+    else if (active) { active = false; tx = 0; ty = 0; }
+    kick();
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', () => { active = false; tx = 0; ty = 0; kick(); });
+})();
+
+/* ── 28. Sticky stacking deck — "Selected work" cards pin and scale ──
+   Adapted from the 3d-portfolio reference (ProjectsSection scroll-scale).
+   CSS handles the sticky pinning; this adds progressive depth on scroll.
+   Desktop + motion-allowed only; otherwise transforms are cleared. */
+(function initWorkStack() {
+  const cards = Array.from(document.querySelectorAll('#work .work-card'));
+  if (cards.length < 2) return;
+  const rm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const stackable = () => window.innerWidth > 900 && !rm.matches;
+
+  function update() {
+    if (!stackable()) { cards.forEach(c => { c.style.transform = ''; }); return; }
+    const vh = window.innerHeight, stick = 120;
+    cards.forEach((card, i) => {
+      let shrink = 0;
+      for (let j = i + 1; j < cards.length; j++) {
+        const nr = cards[j].getBoundingClientRect();
+        shrink += clamp((vh - nr.top) / (vh - stick), 0, 1);
+      }
+      const scale = 1 - Math.min(shrink, 3) * 0.035;
+      card.style.transform = `scale(${scale.toFixed(3)})`;
+    });
+  }
+
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { update(); ticking = false; });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
 })();

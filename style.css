@@ -2975,3 +2975,48 @@ button:focus-visible,
 :focus:not(:focus-visible) { outline: none; }
 
 /* Skip-link target safety for reduced-motion already handled above */
+
+/* ══════════════════════════════════════════════════════════════════
+   IMPORT PASS — effects adapted from the 3d-portfolio reference
+   (scroll word-reveal · magnetic photo · sticky stacking work deck)
+   All are scroll/pointer rewards — no perpetual ambient motion added.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Scroll-driven word reveal (ref: AnimatedText) ─────────────────
+   Words start dim and brighten as the paragraph scrolls through view. */
+.srt-word {
+  opacity: 1;                        /* readable default if JS is absent */
+  will-change: opacity;
+  transition: opacity 0.12s linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .srt-word { opacity: 1 !important; }
+}
+
+/* ── Magnetic photo (ref: Magnet) — JS drives the transform ──────── */
+.about-photo-col { will-change: transform; }
+
+/* ── Sticky stacking deck for "Selected work" (ref: ProjectsSection) ─
+   Desktop only; cards pin and stack with a slight scale-back for depth.
+   Pure CSS sticky works on its own — JS only adds the scale polish. */
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  #work .work-grid {
+    display: block;
+    position: relative;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  #work .work-card {
+    position: sticky;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 34vh;
+    background: #0a0a16;            /* opaque so cards cover cleanly when stacked */
+    box-shadow: var(--shadow-lg);
+    transform-origin: center top;
+  }
+  #work .work-card:nth-child(1) { top: 110px; }
+  #work .work-card:nth-child(2) { top: 124px; }
+  #work .work-card:nth-child(3) { top: 138px; }
+  #work .work-card:nth-child(4) { top: 152px; margin-bottom: 0; }
+}
