@@ -48,36 +48,30 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="style.css" />
+
+    <meta name="theme-color" content="#07070f" />
+
+    <!-- Structured data (SEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Alan Teixidó",
+      "url": "https://alanteixido.dev/",
+      "image": "https://alanteixido.dev/images/IMG_1372.JPEG",
+      "jobTitle": "Software Engineer — Fullstack",
+      "worksFor": { "@type": "Organization", "name": "Plain Concepts" },
+      "address": { "@type": "PostalAddress", "addressLocality": "Barcelona", "addressCountry": "ES" },
+      "email": "mailto:teixido.alan@gmail.com",
+      "sameAs": [
+        "https://www.linkedin.com/in/alanteixidosararols",
+        "https://github.com/AlanTeixido"
+      ],
+      "knowsAbout": [".NET", "C#", "ASP.NET Core", "React", "Next.js", "React Native", "TypeScript", "Vue.js", "PostgreSQL", "Azure DevOps", "Docker"]
+    }
+    </script>
   </head>
   <body>
-    <!-- ─── SVG FILTERS (Electric card borders) ──────────────────────────── -->
-    <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;">
-      <defs>
-        <filter id="cv-turbulent" colorInterpolationFilters="sRGB" x="-20%" y="-20%" width="140%" height="140%">
-          <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise1" seed="1" />
-          <feOffset in="noise1" dx="0" dy="0" result="offsetNoise1">
-            <animate attributeName="dy" values="700; 0" dur="6s" repeatCount="indefinite" calcMode="linear" />
-          </feOffset>
-          <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise2" seed="1" />
-          <feOffset in="noise2" dx="0" dy="0" result="offsetNoise2">
-            <animate attributeName="dy" values="0; -700" dur="6s" repeatCount="indefinite" calcMode="linear" />
-          </feOffset>
-          <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise3" seed="2" />
-          <feOffset in="noise3" dx="0" dy="0" result="offsetNoise3">
-            <animate attributeName="dx" values="490; 0" dur="6s" repeatCount="indefinite" calcMode="linear" />
-          </feOffset>
-          <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise4" seed="2" />
-          <feOffset in="noise4" dx="0" dy="0" result="offsetNoise4">
-            <animate attributeName="dx" values="0; -490" dur="6s" repeatCount="indefinite" calcMode="linear" />
-          </feOffset>
-          <feComposite in="offsetNoise1" in2="offsetNoise2" result="part1" />
-          <feComposite in="offsetNoise3" in2="offsetNoise4" result="part2" />
-          <feBlend in="part1" in2="part2" mode="color-dodge" result="combinedNoise" />
-          <feDisplacementMap in="SourceGraphic" in2="combinedNoise" scale="30" xChannelSelector="R" yChannelSelector="B" />
-        </filter>
-      </defs>
-    </svg>
-
     <!-- ─── PAGE LOADER ──────────────────────────────────────────────────── -->
     <div id="page-loader">
       <div class="cine-title">Alan Teixidó</div>
@@ -98,7 +92,7 @@
           <li><a href="#goals">Goals</a></li>
           <li><a href="#contact" class="nav-cta">Contact</a></li>
         </ul>
-        <button class="hamburger" id="hamburger" aria-label="Menu">
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
           <span></span><span></span><span></span>
         </button>
       </div>
@@ -118,12 +112,15 @@
     <!-- ─── HERO ─────────────────────────────────────────────────────────── -->
     <section id="hero">
       <canvas id="hero-canvas"></canvas>
+      <div class="hero-glow hero-glow-1" aria-hidden="true"></div>
+      <div class="hero-glow hero-glow-2" aria-hidden="true"></div>
+      <div id="hero-3d" aria-hidden="true"></div>
 
       <div class="container">
         <div class="hero-content">
           <div class="hero-eyebrow">
             <div class="hero-eyebrow-dot"></div>
-            Open to side projects & collaborations
+            Open to new opportunities
           </div>
 
           <h1 class="hero-name">
@@ -143,18 +140,19 @@
 
           <p class="hero-tagline">
             Backend APIs, React &amp; Next.js frontends, and cross-platform
-            mobile apps — built to production standard. Based in Barcelona.
+            mobile apps — built to production standard. Based in Barcelona,
+            open to remote and relocation.
           </p>
 
           <div class="hero-actions">
             <a href="#experience" class="btn btn-primary">
-              <i class="fa-solid fa-code-branch"></i> View Experience
+              <i class="fa-solid fa-code-branch"></i> View experience
             </a>
             <a href="#contact" class="btn btn-secondary">
               <i class="fa-regular fa-paper-plane"></i> Get in touch
             </a>
-            <a href="images/Alan_Teixido_CV.pdf" download class="btn btn-ghost">
-              <i class="fa-solid fa-download"></i> Download CV
+            <a href="projects.html" class="btn btn-ghost">
+              <i class="fa-solid fa-folder-open"></i> View projects
             </a>
           </div>
 
@@ -245,8 +243,8 @@
           <!-- Bio + contact -->
           <div class="about-left reveal reveal-delay-2">
             <p class="about-bio">
-              Fullstack software engineer with strong focus on both
-              <strong>backend development and frontend</strong> — building
+              Fullstack software engineer with a strong focus on both
+              <strong>backend and frontend development</strong> — building
               <strong>.NET APIs</strong>, <strong>React &amp; Next.js
               interfaces</strong>, and <strong>React Native</strong> mobile
               apps. I care about the full picture: clean architecture on the
@@ -832,7 +830,7 @@
             <div class="edu-period">2021 — 2023</div>
             <div class="edu-location">
               <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
-              Hospitalet, Spain
+              L'Hospitalet de Llobregat, Spain
             </div>
           </div>
 
@@ -1118,6 +1116,10 @@
     </section>
 
     <div id="clipboard-toast"><i class="fa-solid fa-check"></i> <span id="toast-text"></span></div>
+
+    <button id="back-to-top" aria-label="Back to top">
+      <i class="fa-solid fa-arrow-up"></i>
+    </button>
 
     <!-- Scripts -->
     <script src="main.js"></script>

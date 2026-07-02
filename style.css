@@ -1,6 +1,6 @@
 /* ─── RESET & BASE ─────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
+html { scroll-behavior: smooth; font-size: 16px; scroll-padding-top: 84px; }
 body {
   font-family: var(--font-body);
   background: #07070f;
@@ -2045,7 +2045,6 @@ nav.scrolled {
 }
 
 /* ─── PROJECTS 3D CAROUSEL ──────────────────────────────────────── */
-/* ─── PROJECTS 3D CAROUSEL — ENHANCED ──────────────────────────── */
 .proj-car-wrap {
   position: relative;
   height: 480px;
@@ -2873,6 +2872,91 @@ body::after {
 @keyframes glowRotate {
   from { --glow-angle: 0deg; }
   to   { --glow-angle: 360deg; }
+}
+
+/* ─── HERO GLOW ORBS (parallax targets) ────────────────────────── */
+.hero-glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(90px);
+  z-index: 0;
+  will-change: transform;
+}
+.hero-glow-1 {
+  width: 560px; height: 560px;
+  background: radial-gradient(circle, rgba(99,102,241,0.22) 0%, transparent 70%);
+  top: -140px; left: -160px;
+  animation: glowDrift 12s ease-in-out infinite alternate;
+}
+.hero-glow-2 {
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, rgba(34,211,238,0.14) 0%, transparent 70%);
+  bottom: -120px; right: -140px;
+  animation: glowDrift 14s 2s ease-in-out infinite alternate-reverse;
+}
+@keyframes glowDrift {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
+
+/* ─── HERO 3D WIREFRAME (torus knot canvas) ────────────────────── */
+#hero-3d {
+  position: absolute;
+  top: 0; right: -4%;
+  width: 52%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeIn 1.4s 1.2s ease forwards;
+  -webkit-mask-image: radial-gradient(ellipse 65% 60% at 55% 50%, #000 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse 65% 60% at 55% 50%, #000 45%, transparent 100%);
+}
+@media (max-width: 900px) {
+  #hero-3d { display: none; }
+}
+
+/* ─── BACK TO TOP ──────────────────────────────────────────────── */
+#back-to-top {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(13,13,26,0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-2);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s,
+              border-color var(--transition), color var(--transition), box-shadow var(--transition);
+}
+#back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+#back-to-top:hover {
+  border-color: var(--accent);
+  color: var(--accent-cyan);
+  box-shadow: var(--glow-sm);
+}
+
+/* ─── FOCUS VISIBLE (keyboard navigation) ──────────────────────── */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 /* ─── ACCESSIBILITY: REDUCED MOTION ────────────────────────────── */

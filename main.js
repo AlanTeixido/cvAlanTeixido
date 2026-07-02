@@ -39,7 +39,8 @@
   }, 4500);
 })();
 
-const isTouch = !window.matchMedia('(pointer: fine)').matches;
+const isTouch        = !window.matchMedia('(pointer: fine)').matches;
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ── 01. Navbar scroll + active section ──────────────────────── */
 const navbar      = document.getElementById('navbar');
@@ -64,13 +65,17 @@ const hamburger  = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 
 hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  mobileMenu.classList.toggle('open');
+  const open = hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open', open);
+  hamburger.setAttribute('aria-expanded', String(open));
+  hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
 });
 
 function closeMobile() {
   hamburger.classList.remove('open');
   mobileMenu.classList.remove('open');
+  hamburger.setAttribute('aria-expanded', 'false');
+  hamburger.setAttribute('aria-label', 'Open menu');
 }
 
 /* ── 03. Scroll reveal ────────────────────────────────────────── */
@@ -194,12 +199,13 @@ if (!isTouch) {
     requestAnimationFrame(animRing);
   })();
 
-  /* cursor states */
-  const hoverEls = document.querySelectorAll('a, button, .timeline-card, .skill-group, .edu-card, .about-photo-wrap, .btn');
-  hoverEls.forEach(el => {
-    el.addEventListener('mouseenter', () => { ring.classList.add('hovered'); dot.classList.add('hovered'); });
-    el.addEventListener('mouseleave', () => { ring.classList.remove('hovered'); dot.classList.remove('hovered'); });
-  });
+  /* cursor states — delegated so dynamically created elements (toggles, dots…) also react */
+  const HOVER_SELECTOR = 'a, button, .timeline-card, .skill-group, .edu-card, .about-photo-wrap, .btn';
+  document.addEventListener('mouseover', e => {
+    const hovered = !!e.target.closest(HOVER_SELECTOR);
+    ring.classList.toggle('hovered', hovered);
+    dot.classList.toggle('hovered', hovered);
+  }, { passive: true });
 
   document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
   document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
@@ -229,11 +235,6 @@ if (!isTouch) {
 
 /* ── 09. Count-up for hero stats ─────────────────────────────── */
 (function initCountUp() {
-  const targets = [
-    { el: document.querySelector('.hero-stat-num:nth-child(1)'), end: 2,  suffix: '+' },
-  ];
-
-  /* grab all stat nums dynamically */
   const statNums = document.querySelectorAll('.hero-stat-num');
   const data     = [{ end: 2, suffix: '+' }, { end: 5, suffix: '+' }, { end: 3, suffix: '+' }];
 
@@ -349,11 +350,11 @@ if (!isTouch) {
     setPositions();
   }
 
-  /* ── Auto-play ─────────────────────────────────────────────── */
-  let autoTimer = setInterval(() => goTo(active + 1), AUTO_MS);
+  /* ── Auto-play (disabled for users preferring reduced motion) ── */
+  let autoTimer = prefersReduced ? null : setInterval(() => goTo(active + 1), AUTO_MS);
   function restartAuto() {
     clearInterval(autoTimer);
-    autoTimer = setInterval(() => goTo(active + 1), AUTO_MS);
+    if (!prefersReduced) autoTimer = setInterval(() => goTo(active + 1), AUTO_MS);
   }
 
   wrap.addEventListener('mouseenter', () => {
@@ -427,7 +428,7 @@ if (!isTouch) {
 /* ── 15. (electric borders removed — replaced by per-card accents) ── */
 
 /* ── 16. Cursor particle trail (from cursor-particle-trail resource) ─ */
-if (!isTouch) {
+if (!isTouch && !prefersReduced) {
   const TRAIL_COLORS = ['#6366f1', '#818cf8', '#22d3ee', '#a5b4fc', '#67e8f9', '#c4b5fd'];
   let trailLastX = 0, trailLastY = 0;
   const TRAIL_MIN_DIST = 22; /* px between spawns */
@@ -908,6 +909,20 @@ if (!isTouch) {
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update, { passive: true });
   update();
+})();
+
+/* ── 26. Back to top button ─────────────────────────────────────── */
+(function initBackToTop() {
+  const btn = document.getElementById('back-to-top');
+  if (!btn) return;
+
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('show', window.scrollY > window.innerHeight * 0.8);
+  }, { passive: true });
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' });
+  });
 })();
 
 /* ── 21. Copy-to-clipboard with toast ───────────────────────────── */
