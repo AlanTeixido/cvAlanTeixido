@@ -106,10 +106,17 @@ document.querySelectorAll('.about-card').forEach(el => langObserver.observe(el))
   const ctx  = canvas.getContext('2d');
   const HERO = document.getElementById('hero');
 
+  /* Cap internal resolution — large monitors upscale via CSS instead of
+     paying full-res canvas work every frame */
+  const MAX_W = 1600;
   let W, H;
   function resize() {
-    W = canvas.width  = HERO.offsetWidth;
-    H = canvas.height = HERO.offsetHeight;
+    const w = HERO.offsetWidth, h = HERO.offsetHeight;
+    const k = Math.min(1, MAX_W / (w || 1));
+    W = canvas.width  = Math.max(1, Math.round(w * k));
+    H = canvas.height = Math.max(1, Math.round(h * k));
+    canvas.style.width  = '100%';
+    canvas.style.height = '100%';
   }
   resize();
   window.addEventListener('resize', resize, { passive: true });
@@ -156,7 +163,7 @@ document.querySelectorAll('.about-card').forEach(el => langObserver.observe(el))
 
         ctx.beginPath();
         ctx.arc(sx, sy, dotSz, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(140,150,220,${alpha.toFixed(3)})`;
+        ctx.fillStyle = `rgba(155,140,230,${alpha.toFixed(3)})`;
         ctx.fill();
       }
     }
@@ -429,7 +436,7 @@ if (!isTouch) {
 
 /* ── 16. Cursor particle trail (from cursor-particle-trail resource) ─ */
 if (!isTouch && !prefersReduced) {
-  const TRAIL_COLORS = ['#6366f1', '#818cf8', '#22d3ee', '#a5b4fc', '#67e8f9', '#c4b5fd'];
+  const TRAIL_COLORS = ['#7c5cff', '#9d85ff', '#ffb347', '#b8a8ff', '#ffce7d', '#f9a8d4'];
   let trailLastX = 0, trailLastY = 0;
   const TRAIL_MIN_DIST = 22; /* px between spawns */
 
@@ -500,10 +507,14 @@ if (!isTouch && !prefersReduced) {
   wrap.appendChild(canvas);
   const ctx = canvas.getContext('2d');
 
+  /* Cap internal resolution — upscale via CSS on large monitors */
+  const MAX_W = 1100;
   let W, H;
   function resize() {
-    W = canvas.width  = wrap.offsetWidth;
-    H = canvas.height = wrap.offsetHeight;
+    const w = wrap.offsetWidth, h = wrap.offsetHeight;
+    const k = Math.min(1, MAX_W / (w || 1));
+    W = canvas.width  = Math.max(1, Math.round(w * k));
+    H = canvas.height = Math.max(1, Math.round(h * k));
   }
   resize();
   window.addEventListener('resize', resize, { passive: true });
@@ -623,13 +634,13 @@ if (!isTouch && !prefersReduced) {
     ctx.clearRect(0, 0, W, H);
 
     // Main knot — indigo/lavender
-    drawKnot(k1, makeProj(rx, ry),                   '#818cf8', 0.88 * fade, 2, 8);
+    drawKnot(k1, makeProj(rx, ry),                   '#9d85ff', 0.88 * fade, 2, 8);
     // Accent knot — cyan, counter-rotated
-    drawKnot(k2, makeProj(-rx*0.8+0.4, ry*0.9+1.1), '#22d3ee', 0.52 * fade, 2, 6);
+    drawKnot(k2, makeProj(-rx*0.8+0.4, ry*0.9+1.1), '#ffb347', 0.52 * fade, 2, 6);
 
     // Particles
     const pfn = makeProj(rx*0.22, ry*0.22);
-    ctx.fillStyle   = '#c7d2fe';
+    ctx.fillStyle   = '#d9ceff';
     ctx.globalAlpha = 0.48 * fade;
     PARTS.forEach(([ox, oy, oz]) => {
       const [px, py, , ps] = pfn(ox, oy, oz);
@@ -785,7 +796,7 @@ if (!isTouch && !prefersReduced) {
       tags[i].style.fontSize  = `${(9 + depth * 5).toFixed(1)}px`;
       tags[i].style.opacity   = (0.22 + depth * 0.78).toFixed(2);
       tags[i].style.zIndex    = Math.round(depth * 10);
-      tags[i].style.color     = depth > 0.55 ? '#a5b4fc' : '#4338ca';
+      tags[i].style.color     = depth > 0.55 ? '#b8a8ff' : '#5b3bd6';
     });
   })();
 })();
