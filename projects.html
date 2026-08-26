@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Projects | Alan Teixidó</title>
-    <meta name="description" content="Personal projects by Alan Teixidó — Pokédex App, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, Node.js, TypeScript, Tailwind CSS and vanilla JavaScript." />
-    <meta name="keywords" content="Alan Teixidó, projects, Pokédex, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo, BarberStyle BCN, Next.js, Vue 3, Node.js, TypeScript, JavaScript, software engineer, Barcelona" />
+    <meta name="description" content="Personal projects by Alan Teixidó — GenAI Data Platform, Pokédex App, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, Node.js, TypeScript, Tailwind CSS and vanilla JavaScript." />
+    <meta name="keywords" content="Alan Teixidó, projects, GenAI, Text-to-SQL, LLM, Metabase, Pokédex, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo, BarberStyle BCN, Next.js, Vue 3, Node.js, TypeScript, JavaScript, software engineer, Barcelona" />
     <meta name="author" content="Alan Teixidó" />
     <meta name="robots" content="index, follow" />
 
@@ -16,13 +16,13 @@
     <meta property="og:type"        content="website" />
     <meta property="og:url"         content="https://alanteixido.dev/projects.html" />
     <meta property="og:title"       content="Projects | Alan Teixidó" />
-    <meta property="og:description" content="Personal projects by Alan Teixidó — Pokédex App, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, Node.js, TypeScript, Tailwind CSS and vanilla JavaScript." />
+    <meta property="og:description" content="Personal projects by Alan Teixidó — GenAI Data Platform, Pokédex App, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, Node.js, TypeScript, Tailwind CSS and vanilla JavaScript." />
     <meta property="og:image"       content="https://alanteixido.dev/images/pokedex_project.png" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card"        content="summary_large_image" />
     <meta name="twitter:title"       content="Projects | Alan Teixidó" />
-    <meta name="twitter:description" content="Personal projects by Alan Teixidó — Pokédex App, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, Node.js, TypeScript, Tailwind CSS and vanilla JavaScript." />
+    <meta name="twitter:description" content="Personal projects by Alan Teixidó — GenAI Data Platform, Pokédex App, Crypto Tracker, Minesweeper, ProTactics, AutoTech Demo and BarberStyle BCN, built with Next.js, Vue 3, Node.js, TypeScript, Tailwind CSS and vanilla JavaScript." />
     <meta name="twitter:image"       content="https://alanteixido.dev/images/pokedex_project.png" />
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -102,8 +102,8 @@
           <span class="section-label">Personal Work</span>
           <h1>Projects</h1>
           <p class="projects-sub">
-            Side projects and personal builds — things I designed, built, and
-            shipped outside of professional work.
+            Side projects, professional case studies and personal builds —
+            things I designed, built, and shipped.
           </p>
         </div>
       </div>
@@ -113,6 +113,52 @@
     <section id="projects-section">
       <div class="container">
         <div class="projects-grid">
+
+          <!-- GenAI Data Platform -->
+          <div class="project-card reveal reveal-delay-1">
+            <div class="project-card-visual">
+              <i class="fa-solid fa-database" style="font-size:56px;color:var(--accent-cyan);" aria-hidden="true"></i>
+            </div>
+            <div class="project-card-body">
+              <div class="project-meta">
+                <span class="project-status">Case Study</span>
+              </div>
+              <h2 class="project-title">GenAI Data Platform</h2>
+              <p class="project-desc">
+                Natural-language analytics platform built during a corporate
+                GenAI mentorship program. Business users ask questions in plain
+                language; an LLM translates them into SQL, a governed semantic
+                layer validates every query (read-only, row-level security),
+                and the result is executed on a PostgreSQL warehouse and
+                published automatically as charts and dashboards in Metabase
+                through its REST API. I authored the semantic business-term
+                definitions, built the Metabase integration bridge and
+                automated dashboard composition, and developed the Streamlit
+                web interface — working hands-on with AI agents as part of the
+                development workflow.
+              </p>
+              <div class="project-tech">
+                <span class="project-tech-pill">
+                  <i class="devicon-python-plain colored"></i>Python
+                </span>
+                <span class="project-tech-pill">
+                  <i class="devicon-postgresql-plain colored"></i>PostgreSQL
+                </span>
+                <span class="project-tech-pill">
+                  <i class="devicon-docker-plain colored"></i>Docker
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-robot" style="color:var(--accent-cyan);font-size:11px"></i>LLM · Text-to-SQL
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-chart-column" style="color:var(--accent-cyan);font-size:11px"></i>Metabase API
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-bolt" style="color:var(--accent-cyan);font-size:11px"></i>Streamlit
+                </span>
+              </div>
+            </div>
+          </div>
 
           <!-- Pokédex App -->
           <div class="project-card reveal reveal-delay-1">
