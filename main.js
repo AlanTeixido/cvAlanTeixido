@@ -5,41 +5,16 @@
      02. Mobile hamburger menu
      03. Scroll reveal (IntersectionObserver)
      04. Language bar fill animation
-     05. Hero canvas — particle network
      06. Scroll progress bar
-     07. Custom cursor (desktop only)
-     08. 3D card tilt on hover
-     09. Count-up animation for hero stats
-     10. Parallax on hero glow orbs
-     11. Magnetic buttons
-     12. Skill pills stagger entrance
+     13. Projects 3D carousel
+     17. Skill pills stagger entrance
+     18. Hero 3D torus knot (desktop; still frame with reduced motion)
+     25. Timeline accordion
+     26. Back to top
+     21. Copy-to-clipboard toast
 ───────────────────────────────────────────────────────────────── */
 
-/* ── 00. Cinematic entry (21st.dev / easemize) ───────────────── */
-(function initCinematic() {
-  const loader = document.getElementById('page-loader');
-  if (!loader) return;
-
-  window.addEventListener('load', () => {
-    setTimeout(() => loader.classList.add('phase-2'), 300);
-    setTimeout(() => loader.classList.add('phase-3'), 1400);
-    setTimeout(() => loader.classList.add('hidden'),  2600);
-  });
-
-  /* click to skip intro */
-  loader.addEventListener('click', () => {
-    loader.classList.add('phase-2', 'phase-3');
-    setTimeout(() => loader.classList.add('hidden'), 200);
-  });
-
-  /* fallback: always hide after 4.5s */
-  setTimeout(() => {
-    loader.classList.add('phase-2', 'phase-3');
-    setTimeout(() => loader.classList.add('hidden'), 400);
-  }, 4500);
-})();
-
-const isTouch        = !window.matchMedia('(pointer: fine)').matches;
+const isTouch       = !window.matchMedia('(pointer: fine)').matches;
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ── 01. Navbar scroll + active section ──────────────────────── */
@@ -99,77 +74,6 @@ const langObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.about-card').forEach(el => langObserver.observe(el));
 
-/* ── 05. Hero canvas — dotted surface (21st.dev / efferd) ─────── */
-(function initDottedSurface() {
-  const canvas = document.getElementById('hero-canvas');
-  if (!canvas) return;
-  const ctx  = canvas.getContext('2d');
-  const HERO = document.getElementById('hero');
-
-  /* Cap internal resolution — large monitors upscale via CSS instead of
-     paying full-res canvas work every frame */
-  const MAX_W = 1600;
-  let W, H;
-  function resize() {
-    const w = HERO.offsetWidth, h = HERO.offsetHeight;
-    const k = Math.min(1, MAX_W / (w || 1));
-    W = canvas.width  = Math.max(1, Math.round(w * k));
-    H = canvas.height = Math.max(1, Math.round(h * k));
-    canvas.style.width  = '100%';
-    canvas.style.height = '100%';
-  }
-  resize();
-  window.addEventListener('resize', resize, { passive: true });
-
-  const AMTX = isTouch ? 25 : 35;
-  const AMTY = isTouch ? 40 : 55;
-  const SEP  = 140;
-  const CAM_Y = 340, CAM_Z = 1100;
-  let count = 0;
-
-  (function frame() {
-    requestAnimationFrame(frame);
-
-    const fade = HERO ? Math.max(0, 1 - window.scrollY / HERO.offsetHeight * 1.5) : 1;
-    if (fade <= 0.01) return;
-
-    ctx.clearRect(0, 0, W, H);
-    count += 0.028;
-
-    const fovF = H / (2 * Math.tan(30 * Math.PI / 180));
-
-    for (let ix = 0; ix < AMTX; ix++) {
-      for (let iy = 0; iy < AMTY; iy++) {
-        const x  = ix * SEP - (AMTX * SEP) / 2;
-        const y  = Math.sin((ix + count) * 0.12) * 22
-                 + Math.sin((iy + count) * 0.14) * 18;
-        const z  = iy * SEP - (AMTY * SEP) / 2;
-
-        const rz = z - CAM_Z;
-        if (rz >= -1) continue;
-
-        const ry    = y - CAM_Y;
-        const scale = fovF / (-rz);
-        const sx    = W / 2 + x * scale;
-        const sy    = H / 2 + ry * scale;
-
-        if (sx < -10 || sx > W + 10 || sy < -10 || sy > H + 10) continue;
-
-        const depth = -rz;
-        const alpha = Math.max(0, Math.min(0.55, (1 - depth / 8000) * 0.65)) * fade;
-        if (alpha < 0.02) continue;
-
-        const dotSz = Math.max(0.6, 3 * scale);
-
-        ctx.beginPath();
-        ctx.arc(sx, sy, dotSz, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(155,140,230,${alpha.toFixed(3)})`;
-        ctx.fill();
-      }
-    }
-  })();
-})();
-
 /* ── 06. Scroll progress bar ─────────────────────────────────── */
 const progressBar = document.createElement('div');
 progressBar.id = 'scroll-progress';
@@ -180,124 +84,6 @@ window.addEventListener('scroll', () => {
   const pct  = max > 0 ? (window.scrollY / max) * 100 : 0;
   progressBar.style.width = `${pct}%`;
 }, { passive: true });
-
-/* ── 07. Custom cursor (desktop only) ────────────────────────── */
-if (!isTouch) {
-  const dot  = document.createElement('div');
-  const ring = document.createElement('div');
-  dot.id  = 'cursor-dot';
-  ring.id = 'cursor-ring';
-  document.body.append(dot, ring);
-
-  let mx = -100, my = -100;
-  let rx = -100, ry = -100;
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX;
-    my = e.clientY;
-    dot.style.transform = `translate(${mx}px, ${my}px)`;
-  });
-
-  /* lerp ring toward dot */
-  (function animRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.transform = `translate(${rx}px, ${ry}px)`;
-    requestAnimationFrame(animRing);
-  })();
-
-  /* cursor states — delegated so dynamically created elements (toggles, dots…) also react */
-  const HOVER_SELECTOR = 'a, button, .timeline-card, .skill-group, .edu-card, .about-photo-wrap, .btn';
-  document.addEventListener('mouseover', e => {
-    const hovered = !!e.target.closest(HOVER_SELECTOR);
-    ring.classList.toggle('hovered', hovered);
-    dot.classList.toggle('hovered', hovered);
-  }, { passive: true });
-
-  document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
-  document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
-}
-
-/* ── 08. 3D card tilt ────────────────────────────────────────── */
-if (!isTouch) {
-  const tiltCards = document.querySelectorAll('.timeline-card, .skill-group, .edu-card, .about-card');
-
-  tiltCards.forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect   = card.getBoundingClientRect();
-      const cx     = rect.left + rect.width  / 2;
-      const cy     = rect.top  + rect.height / 2;
-      const dx     = (e.clientX - cx) / (rect.width  / 2);
-      const dy     = (e.clientY - cy) / (rect.height / 2);
-      const rotX   = (-dy * 5).toFixed(2);
-      const rotY   = ( dx * 5).toFixed(2);
-      card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(4px)`;
-    });
-
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-    });
-  });
-}
-
-/* ── 09. Count-up for hero stats ─────────────────────────────── */
-(function initCountUp() {
-  const statNums = document.querySelectorAll('.hero-stat-num');
-  const data     = [{ end: 2, suffix: '+' }, { end: 5, suffix: '+' }, { end: 3, suffix: '+' }];
-
-  function countUp(el, end, suffix, duration = 1200) {
-    const start     = performance.now();
-    const startVal  = 0;
-    function step(now) {
-      const elapsed  = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease     = 1 - Math.pow(1 - progress, 3); /* ease-out cubic */
-      const val      = Math.floor(startVal + (end - startVal) * ease);
-      el.innerHTML   = `${val}<span>${suffix}</span>`;
-      if (progress < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-
-  /* trigger when hero stats become visible */
-  const statsEl = document.querySelector('.hero-stats');
-  if (statsEl) {
-    const once = new IntersectionObserver((entries) => {
-      if (!entries[0].isIntersecting) return;
-      statNums.forEach((el, i) => countUp(el, data[i].end, data[i].suffix));
-      once.disconnect();
-    }, { threshold: 0.5 });
-    once.observe(statsEl);
-  }
-})();
-
-/* ── 10. Parallax on hero glow orbs ─────────────────────────── */
-(function initParallax() {
-  const glow1 = document.querySelector('.hero-glow-1');
-  const glow2 = document.querySelector('.hero-glow-2');
-  if (!glow1 || !glow2) return;
-
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    glow1.style.transform = `translate(0, ${y * 0.15}px) scale(1)`;
-    glow2.style.transform = `translate(0, ${-y * 0.1}px) scale(1)`;
-  }, { passive: true });
-})();
-
-/* ── 11. Magnetic buttons ────────────────────────────────────── */
-if (!isTouch) {
-  document.querySelectorAll('.btn').forEach(btn => {
-    btn.addEventListener('mousemove', e => {
-      const rect = btn.getBoundingClientRect();
-      const dx   = e.clientX - (rect.left + rect.width  / 2);
-      const dy   = e.clientY - (rect.top  + rect.height / 2);
-      btn.style.transform = `translate(${dx * 0.22}px, ${dy * 0.22}px)`;
-    });
-    btn.addEventListener('mouseleave', () => {
-      btn.style.transform = '';
-    });
-  });
-}
 
 /* ── 13. Projects 3D carousel — enhanced ──────────────────────── */
 (function initProjCarousel() {
@@ -431,52 +217,6 @@ if (!isTouch) {
 
   setPositions();
 })();
-
-/* ── 15. (electric borders removed — replaced by per-card accents) ── */
-
-/* ── 16. Cursor particle trail (from cursor-particle-trail resource) ─ */
-if (!isTouch && !prefersReduced) {
-  const TRAIL_COLORS = ['#7c5cff', '#9d85ff', '#ffb347', '#b8a8ff', '#ffce7d', '#f9a8d4'];
-  let trailLastX = 0, trailLastY = 0;
-  const TRAIL_MIN_DIST = 22; /* px between spawns */
-
-  function spawnTrailParticle(x, y) {
-    const el = document.createElement('div');
-    el.className = 'cursor-particle';
-    const size = Math.random() * 5 + 3;
-    el.style.cssText = `left:${x}px;top:${y}px;width:${size}px;height:${size}px;background:${TRAIL_COLORS[Math.floor(Math.random() * TRAIL_COLORS.length)]};`;
-    document.body.appendChild(el);
-
-    const angle  = Math.random() * Math.PI * 2;
-    const speed  = Math.random() * 2.2 + 0.8;
-    let vx = Math.cos(angle) * speed;
-    let vy = Math.sin(angle) * speed - 1.2; /* slight upward bias */
-    let cx = 0, cy = 0, life = 1;
-
-    function step() {
-      life -= 0.032;
-      vy   += 0.07; /* gravity */
-      vx   *= 0.97;
-      cx   += vx;
-      cy   += vy;
-      if (life <= 0) { el.remove(); return; }
-      el.style.opacity   = (life * 0.85).toFixed(3);
-      el.style.transform = `translate(${cx}px,${cy}px) scale(${life.toFixed(3)})`;
-      requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-
-  document.addEventListener('mousemove', e => {
-    const dx = e.clientX - trailLastX;
-    const dy = e.clientY - trailLastY;
-    if (dx * dx + dy * dy > TRAIL_MIN_DIST * TRAIL_MIN_DIST) {
-      spawnTrailParticle(e.clientX, e.clientY);
-      trailLastX = e.clientX;
-      trailLastY = e.clientY;
-    }
-  }, { passive: true });
-}
 
 /* ── 17. Skill pills stagger entrance ────────────────────────── */
 (function initPillStagger() {
@@ -619,17 +359,10 @@ if (!isTouch && !prefersReduced) {
   const heroEl = document.getElementById('hero');
   let t = 0;
 
-  /* ── Render loop ────────────────────────────────────────────── */
-  (function frame() {
-    requestAnimationFrame(frame);
-    t += 0.007;
-    cmx += (mx - cmx) * 0.04;
-    cmy += (my - cmy) * 0.04;
-
-    const ry   = t * 0.20 + cmx * 0.5;
-    const rx   = t * 0.13 + cmy * 0.5;
-    const fade = heroEl ? Math.max(0, 1 - window.scrollY/heroEl.offsetHeight*1.8) : 1;
-    if (fade <= 0.01) return;
+  /* ── Draw one frame at the current angle ────────────────────── */
+  function draw(fade) {
+    const ry = t * 0.20 + cmx * 0.5;
+    const rx = t * 0.13 + cmy * 0.5;
 
     ctx.clearRect(0, 0, W, H);
 
@@ -648,156 +381,27 @@ if (!isTouch && !prefersReduced) {
     });
 
     ctx.globalAlpha = 1;
-  })();
-})();
-
-/* ── 20. Text scramble on hero name ─────────────────────────────────────────────── */
-(function initScramble() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const line1 = document.querySelector('.hero-line1');
-  const line2 = document.querySelector('.hero-name .line2');
-  if (!line1 || !line2) return;
-
-  const CHARS = '!<>-_\\/[]{}—=+*^?#@$%&';
-
-  function scramble(el, final, duration, delay) {
-    const chars = [...final];
-    const N = chars.length;
-    setTimeout(() => {
-      const start = performance.now();
-      (function step(now) {
-        const prog   = Math.min((now - start) / duration, 1);
-        const locked = Math.floor(prog * N);
-        el.textContent = chars.map((c, i) =>
-          (i < locked || c === ' ') ? c : CHARS[Math.floor(Math.random() * CHARS.length)]
-        ).join('');
-        if (prog < 1) requestAnimationFrame(step);
-        else el.textContent = final;
-      })(performance.now());
-    }, delay);
   }
 
-  window.addEventListener('load', () => {
-    scramble(line1, 'Alan',      900, 450);
-    scramble(line2, 'Teixidó.', 1100, 650);
-  });
-})();
-
-/* ── 19. 3D rotating skill tag sphere ───────────────────────────── */
-(function initSkillSphere() {
-  const container = document.getElementById('skillsSphere');
-  if (!container) return;
-
-  const SKILLS_LIST = [
-    '.NET / C#', 'ASP.NET Core', 'REST APIs', 'CQRS', 'MediatR',
-    'Clean Arch', 'React', 'React Native', 'Vue.js', 'TypeScript',
-    'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Expo',
-    'Azure DevOps', 'Docker', 'Git', 'CI/CD', 'Firebase',
-    'PostgreSQL', 'Entity FW', 'SQL', 'Kotlin', 'Python',
-    'API Versioning', 'Microservices', 'Android', 'iOS',
-  ];
-
-  const N   = SKILLS_LIST.length;
-  const R   = 140;   // sphere radius in px
-  const FOV = 320;   // perspective strength
-
-  /* Fibonacci sphere — evenly distributed points on a unit sphere */
-  const pts = SKILLS_LIST.map((name, i) => {
-    const phi   = Math.acos(1 - 2 * (i + 0.5) / N);
-    const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-    return {
-      ox: Math.sin(phi) * Math.cos(theta),
-      oy: Math.sin(phi) * Math.sin(theta),
-      oz: Math.cos(phi),
-      name,
-    };
-  });
-
-  /* Create DOM tags */
-  const tags = pts.map(p => {
-    const span = document.createElement('span');
-    span.className   = 'sphere-tag';
-    span.textContent = p.name;
-    container.appendChild(span);
-    return span;
-  });
-
-  /* State */
-  let rotX = 0.3, rotY = 0;
-  let velX = 0.0008, velY = 0.003;
-  let dragging = false, lastMX = 0, lastMY = 0;
-
-  /* Drag / mouse interactions */
-  container.addEventListener('mousedown', e => {
-    dragging = true;
-    lastMX = e.clientX;
-    lastMY = e.clientY;
-  });
-  window.addEventListener('mouseup',   () => { dragging = false; });
-  window.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    velY = (e.clientX - lastMX) * 0.006;
-    velX = (e.clientY - lastMY) * 0.006;
-    lastMX = e.clientX;
-    lastMY = e.clientY;
-  }, { passive: true });
-
-  /* Touch swipe */
-  container.addEventListener('touchstart', e => {
-    lastMX = e.touches[0].clientX;
-    lastMY = e.touches[0].clientY;
-    dragging = true;
-  }, { passive: true });
-  container.addEventListener('touchmove', e => {
-    if (!dragging) return;
-    velY = (e.touches[0].clientX - lastMX) * 0.004;
-    velX = (e.touches[0].clientY - lastMY) * 0.004;
-    lastMX = e.touches[0].clientX;
-    lastMY = e.touches[0].clientY;
-  }, { passive: true });
-  container.addEventListener('touchend', () => { dragging = false; });
-
-  /* Rotate a unit-sphere point by (rotX, rotY) Euler angles */
-  function rotate(ox, oy, oz, rx, ry) {
-    // Y-axis rotation
-    const cy = Math.cos(ry), sy = Math.sin(ry);
-    const x1 =  ox * cy + oz * sy;
-    const z1 = -ox * sy + oz * cy;
-    // X-axis rotation
-    const cx = Math.cos(rx), sx = Math.sin(rx);
-    const y2 =  oy * cx - z1 * sx;
-    const z2 =  oy * sx + z1 * cx;
-    return { x: x1, y: y2, z: z2 };
+  /* Reduced motion: a single still frame. Resizing clears the canvas
+     (resize() runs first, it was registered earlier), so draw it again. */
+  if (prefersReduced) {
+    t = 3;
+    draw(1);
+    window.addEventListener('resize', () => draw(1), { passive: true });
+    return;
   }
 
+  /* ── Render loop ────────────────────────────────────────────── */
   (function frame() {
     requestAnimationFrame(frame);
+    t += 0.007;
+    cmx += (mx - cmx) * 0.04;
+    cmy += (my - cmy) * 0.04;
 
-    // Auto-drift when not dragging; decelerate drag momentum
-    if (!dragging) {
-      velX *= 0.95;
-      velY *= 0.95;
-      velY += (0.003 - velY) * 0.01; // drift back to base speed
-    }
-    rotX += velX;
-    rotY += velY;
-
-    const cw = container.offsetWidth  / 2;
-    const ch = container.offsetHeight / 2;
-
-    pts.forEach((p, i) => {
-      const r     = rotate(p.ox, p.oy, p.oz, rotX, rotY);
-      const scale = FOV / (FOV + r.z * R);
-      const px    = r.x * R * scale + cw;
-      const py    = r.y * R * scale + ch;
-      const depth = (r.z + 1) / 2;  // 0 = back, 1 = front
-
-      tags[i].style.transform = `translate(${px}px,${py}px) translate(-50%,-50%)`;
-      tags[i].style.fontSize  = `${(9 + depth * 5).toFixed(1)}px`;
-      tags[i].style.opacity   = (0.22 + depth * 0.78).toFixed(2);
-      tags[i].style.zIndex    = Math.round(depth * 10);
-      tags[i].style.color     = depth > 0.55 ? '#b8a8ff' : '#5b3bd6';
-    });
+    const fade = heroEl ? Math.max(0, 1 - window.scrollY/heroEl.offsetHeight*1.8) : 1;
+    if (fade <= 0.01) return;
+    draw(fade);
   })();
 })();
 
@@ -852,89 +456,6 @@ if (!isTouch && !prefersReduced) {
   });
 })();
 
-/* ── 22. Card spotlight effect (21st.dev / aceternity) ──────────── */
-if (!isTouch) {
-  const spotTargets = document.querySelectorAll(
-    '.work-card, .skill-group, .edu-card, .goals-focus-card, .timeline-card'
-  );
-  spotTargets.forEach(card => {
-    card.classList.add('spotlight-card');
-    const spot = document.createElement('div');
-    spot.className = 'card-spotlight';
-    const inner = document.createElement('div');
-    inner.className = 'card-spotlight-inner';
-    spot.appendChild(inner);
-    card.prepend(spot);
-
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      spot.style.setProperty('--spot-x', `${e.clientX - rect.left}px`);
-      spot.style.setProperty('--spot-y', `${e.clientY - rect.top}px`);
-    }, { passive: true });
-  });
-}
-
-/* ── 23. Rotating words in hero (21st.dev / animated-hero) ─────── */
-(function initRotatingWords() {
-  /* keep rotating words active even with reduced-motion — subtle text swap */
-  const wrap  = document.querySelector('.hero-rotate-wrap');
-  const words = Array.from(document.querySelectorAll('.hero-rotate-word'));
-  if (!wrap || words.length < 2) return;
-
-  let current = 0;
-
-  /* Size the wrapper to the active word. Measured live instead of cached:
-     the width changes when the web font finishes loading (measuring earlier
-     clipped the last letters) and on resize (font-size is vw-based). */
-  function fitWidth() {
-    wrap.style.width = Math.ceil(words[current].getBoundingClientRect().width) + 2 + 'px';
-  }
-  fitWidth();
-  if (document.fonts) document.fonts.ready.then(fitWidth);
-  window.addEventListener('resize', fitWidth, { passive: true });
-
-  /* Start cycling after hero animations finish */
-  setTimeout(() => {
-    setInterval(() => {
-      const prev = current;
-      current = (current + 1) % words.length;
-
-      words[prev].classList.remove('active');
-      words[prev].classList.add('exit');
-      words[current].classList.add('active');
-      fitWidth();
-
-      setTimeout(() => words[prev].classList.remove('exit'), 500);
-    }, 2500);
-  }, 2200);
-})();
-
-/* ── 24. Scroll expansion section (21st.dev / arunachalam0606) ── */
-(function initScrollExpand() {
-  const section = document.querySelector('.scroll-expand-section');
-  const card    = section && section.querySelector('.scroll-expand-card');
-  if (!section || !card) return;
-
-  const MAX_W = 1100; /* matches .container max-width */
-
-  function update() {
-    const rect       = section.getBoundingClientRect();
-    const center     = rect.top + rect.height / 2;
-    const viewCenter = window.innerHeight / 2;
-    const dist       = Math.abs(center - viewCenter);
-    const range      = window.innerHeight * 0.8;
-    const progress   = Math.max(0, Math.min(1, 1 - dist / range));
-
-    const targetW = Math.min(MAX_W, window.innerWidth - 56);
-    card.style.width        = (340 + progress * (targetW - 340)) + 'px';
-    card.style.borderRadius = (32 - progress * 28) + 'px';
-  }
-
-  window.addEventListener('scroll', update, { passive: true });
-  window.addEventListener('resize', update, { passive: true });
-  update();
-})();
-
 /* ── 26. Back to top button ─────────────────────────────────────── */
 (function initBackToTop() {
   const btn = document.getElementById('back-to-top');
@@ -979,147 +500,4 @@ if (!isTouch) {
       }
     });
   });
-})();
-
-/* ── 26. Scroll word-reveal — text brightens as it scrolls through ──
-   Adapted from the 3d-portfolio reference (AnimatedText / framer-motion).
-   Reimplemented in vanilla: split into per-word spans, drive opacity by
-   the element's scroll progress. Preserves inner markup (<strong>, spans). */
-(function initScrollWordReveal() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  function wrapWords(root) {
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-    const textNodes = [];
-    while (walker.nextNode()) {
-      if (walker.currentNode.textContent.trim()) textNodes.push(walker.currentNode);
-    }
-    const spans = [];
-    textNodes.forEach(node => {
-      const frag = document.createDocumentFragment();
-      node.textContent.split(/(\s+)/).forEach(part => {
-        if (!part) return;
-        if (!part.trim()) { frag.appendChild(document.createTextNode(part)); return; }
-        const s = document.createElement('span');
-        s.className = 'srt-word';
-        s.textContent = part;
-        frag.appendChild(s);
-        spans.push(s);
-      });
-      node.parentNode.replaceChild(frag, node);
-    });
-    return spans;
-  }
-
-  const targets = [];
-  document.querySelectorAll('.about-bio, .goals-body').forEach(el => {
-    const words = wrapWords(el);
-    if (words.length) targets.push({ el, words });
-  });
-  if (!targets.length) return;
-
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-
-  function update() {
-    const vh = window.innerHeight;
-    targets.forEach(({ el, words }) => {
-      const r = el.getBoundingClientRect();
-      const denom = (0.85 * vh - (0.25 * vh - r.height)) || 1;
-      const progress = clamp((0.85 * vh - r.top) / denom, 0, 1);
-      const n = words.length;
-      words.forEach((w, i) => {
-        const cp = i / n;
-        const start = Math.max(0, cp - 0.12);
-        const end = Math.min(1, cp + 0.12);
-        let o;
-        if (progress <= start) o = 0.16;
-        else if (progress >= end) o = 1;
-        else o = 0.16 + ((progress - start) / (end - start)) * 0.84;
-        w.style.opacity = o.toFixed(3);
-      });
-    });
-  }
-
-  let ticking = false;
-  function onScroll() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => { update(); ticking = false; });
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
-  update();
-})();
-
-/* ── 27. Magnetic photo — the About portrait drifts toward the cursor ──
-   Adapted from the 3d-portfolio reference (Magnet). Spring-like easing
-   via per-frame lerp toward the pointer offset. Desktop pointers only. */
-(function initMagnetPhoto() {
-  if (isTouch) return;
-  const el = document.querySelector('.about-photo-col');
-  if (!el) return;
-
-  const PAD = 130, STR = 0.22, EASE = 0.14;
-  let tx = 0, ty = 0, cx = 0, cy = 0, active = false, raf = null;
-
-  function loop() {
-    cx += (tx - cx) * EASE;
-    cy += (ty - cy) * EASE;
-    el.style.transform = `translate(${cx.toFixed(2)}px, ${cy.toFixed(2)}px)`;
-    if (active || Math.abs(cx - tx) > 0.1 || Math.abs(cy - ty) > 0.1) {
-      raf = requestAnimationFrame(loop);
-    } else {
-      el.style.transform = '';
-      raf = null;
-    }
-  }
-  function kick() { if (!raf) raf = requestAnimationFrame(loop); }
-
-  window.addEventListener('mousemove', e => {
-    const r = el.getBoundingClientRect();
-    const dx = e.clientX - (r.left + r.width / 2);
-    const dy = e.clientY - (r.top + r.height / 2);
-    const max = Math.max(r.width, r.height) / 2 + PAD;
-    if (Math.hypot(dx, dy) < max) { active = true; tx = dx * STR; ty = dy * STR; }
-    else if (active) { active = false; tx = 0; ty = 0; }
-    kick();
-  }, { passive: true });
-
-  document.addEventListener('mouseleave', () => { active = false; tx = 0; ty = 0; kick(); });
-})();
-
-/* ── 28. Sticky stacking deck — "Selected work" cards pin and scale ──
-   Adapted from the 3d-portfolio reference (ProjectsSection scroll-scale).
-   CSS handles the sticky pinning; this adds progressive depth on scroll.
-   Desktop + motion-allowed only; otherwise transforms are cleared. */
-(function initWorkStack() {
-  const cards = Array.from(document.querySelectorAll('#work .work-card'));
-  if (cards.length < 2) return;
-  const rm = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const stackable = () => window.innerWidth > 900 && !rm.matches;
-
-  function update() {
-    if (!stackable()) { cards.forEach(c => { c.style.transform = ''; }); return; }
-    const vh = window.innerHeight, stick = 120;
-    cards.forEach((card, i) => {
-      let shrink = 0;
-      for (let j = i + 1; j < cards.length; j++) {
-        const nr = cards[j].getBoundingClientRect();
-        shrink += clamp((vh - nr.top) / (vh - stick), 0, 1);
-      }
-      const scale = 1 - Math.min(shrink, 3) * 0.035;
-      card.style.transform = `scale(${scale.toFixed(3)})`;
-    });
-  }
-
-  let ticking = false;
-  function onScroll() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => { update(); ticking = false; });
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
-  update();
 })();
