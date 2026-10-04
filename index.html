@@ -3,9 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      /* Hero intro runs once per session and never with reduced motion.
+         Without this class every hero element is visible from the first paint. */
+      try {
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sessionStorage.getItem('at-intro')) {
+          sessionStorage.setItem('at-intro', '1');
+          document.documentElement.classList.add('intro');
+        }
+      } catch (e) {}
+    </script>
     <title>Alan Teixidó | Fullstack &amp; AI Engineer — Agents, APIs &amp; Mobile Apps</title>
-    <meta name="description" content="Fullstack & AI Engineer building AI agents (Google ADK, Vertex AI, RAG), .NET and Python APIs, and React Native apps. Based in Barcelona, open to relocating to Switzerland." />
-    <meta name="keywords" content="Alan Teixidó, AI engineer, fullstack engineer, AI agents, Google ADK, Vertex AI, RAG, FastAPI, Python, .NET, React Native, TypeScript, Switzerland, Zurich, Barcelona" />
+    <meta name="description" content="Fullstack & AI Engineer building AI agents (Google ADK, Vertex AI, RAG), .NET and Python APIs, and React Native apps. Based in Barcelona, Spain." />
+    <meta name="keywords" content="Alan Teixidó, AI engineer, fullstack engineer, AI agents, Google ADK, Vertex AI, RAG, FastAPI, Python, .NET, React Native, TypeScript, Barcelona" />
     <meta name="author" content="Alan Teixidó" />
     <meta name="robots" content="index, follow" />
 
@@ -16,7 +26,7 @@
     <meta property="og:type"        content="website" />
     <meta property="og:url"         content="https://alanteixido.dev/" />
     <meta property="og:title"       content="Alan Teixidó | Fullstack & AI Engineer — Agents, APIs & Mobile Apps" />
-    <meta property="og:description" content="Fullstack & AI Engineer building AI agents (Google ADK, Vertex AI, RAG), .NET and Python APIs, and React Native apps. Based in Barcelona, open to relocating to Switzerland." />
+    <meta property="og:description" content="Fullstack & AI Engineer building AI agents (Google ADK, Vertex AI, RAG), .NET and Python APIs, and React Native apps. Based in Barcelona, Spain." />
     <meta property="og:image"       content="https://alanteixido.dev/images/og-image.jpg" />
     <meta property="og:image:width"  content="1200" />
     <meta property="og:image:height" content="630" />
@@ -25,7 +35,7 @@
     <!-- Twitter Card -->
     <meta name="twitter:card"        content="summary_large_image" />
     <meta name="twitter:title"       content="Alan Teixidó | Fullstack & AI Engineer — Agents, APIs & Mobile Apps" />
-    <meta name="twitter:description" content="Fullstack & AI Engineer building AI agents (Google ADK, Vertex AI, RAG), .NET and Python APIs, and React Native apps. Based in Barcelona, open to relocating to Switzerland." />
+    <meta name="twitter:description" content="Fullstack & AI Engineer building AI agents (Google ADK, Vertex AI, RAG), .NET and Python APIs, and React Native apps. Based in Barcelona, Spain." />
     <meta name="twitter:image"       content="https://alanteixido.dev/images/og-image.jpg" />
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -113,40 +123,53 @@
       <div id="hero-3d" aria-hidden="true"></div>
 
       <div class="container">
-        <div class="hero-content">
-          <div class="hero-eyebrow">
-            <div class="hero-eyebrow-dot"></div>
-            <span>
-              Open to relocation — Switzerland<span class="hero-eyebrow-sep"> · </span><span class="hero-eyebrow-note">EU citizen, no visa sponsorship needed</span>
-            </span>
+        <div class="hero-grid">
+          <div class="hero-content">
+            <h1 class="hero-name">
+              <span class="hero-line1">Alan</span><br />
+              <span class="line2">Teixidó.</span>
+            </h1>
+
+            <p class="hero-title">Fullstack &amp; AI Engineer</p>
+            <div class="hero-rule" aria-hidden="true"></div>
+
+            <p class="hero-tagline">
+              AI agents on Google ADK and Vertex AI grounded with RAG, FastAPI
+              and .NET backends, and React Native apps for iOS and Android —
+              built to production standard.
+            </p>
+
+            <p class="hero-location">
+              <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+              Based in Barcelona, Spain
+            </p>
+
+            <div class="hero-actions">
+              <a href="#experience" class="btn btn-primary">
+                <i class="fa-solid fa-code-branch"></i> View experience
+              </a>
+              <a href="#contact" class="btn btn-secondary">
+                <i class="fa-regular fa-paper-plane"></i> Get in touch
+              </a>
+              <a href="/cv/Alan_Teixido_CV.pdf" download class="btn btn-ghost">
+                <i class="fa-solid fa-download"></i> Download CV
+              </a>
+            </div>
           </div>
 
-          <h1 class="hero-name">
-            <span class="hero-line1">Alan</span><br />
-            <span class="line2">Teixidó.</span>
-          </h1>
-
-          <p class="hero-role">
-            <strong>Fullstack &amp; AI Engineer</strong> — Agents, APIs and mobile apps
-          </p>
-
-          <p class="hero-tagline">
-            AI agents on Google ADK and Vertex AI grounded with RAG, FastAPI
-            and .NET backends, and React Native apps for iOS and Android —
-            built to production standard. Based in Barcelona.
-          </p>
-
-          <div class="hero-actions">
-            <a href="#experience" class="btn btn-primary">
-              <i class="fa-solid fa-code-branch"></i> View experience
-            </a>
-            <a href="#contact" class="btn btn-secondary">
-              <i class="fa-regular fa-paper-plane"></i> Get in touch
-            </a>
-            <a href="/cv/Alan_Teixido_CV.pdf" download class="btn btn-ghost">
-              <i class="fa-solid fa-download"></i> Download CV
-            </a>
-          </div>
+          <!-- Status terminal: real text, typed out after the intro on the first visit -->
+          <aside class="hero-term" aria-label="Status">
+            <div class="term-bar" aria-hidden="true">
+              <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+              <span class="term-name">alan@barcelona: ~</span>
+            </div>
+            <div class="term-body">
+              <p class="term-line"><span class="term-prompt">$</span> <span class="term-cmd">alan --status</span></p>
+              <p class="term-line"><span class="term-arrow">→</span> Building AI agents @ Plain Concepts</p>
+              <p class="term-line"><span class="term-arrow">→</span> Stack: .NET · Python · React · React&nbsp;Native</p>
+              <p class="term-line"><span class="term-arrow">→</span> Based in Barcelona, Spain</p>
+            </div>
+          </aside>
         </div>
       </div>
 
@@ -192,7 +215,7 @@
             <ul class="about-contact-list">
               <li>
                 <i class="fa-solid fa-location-dot"></i>
-                Barcelona, Spain · relocating to Switzerland
+                Based in Barcelona, Spain
               </li>
               <li>
                 <i class="fa-regular fa-envelope"></i>
@@ -634,6 +657,21 @@
               L'Hospitalet de Llobregat, Spain
             </div>
           </div>
+
+          <div class="edu-card reveal reveal-delay-3">
+            <div class="edu-card-logo">
+              <img src="images/logo_sek.webp" alt="SEK Catalunya" loading="lazy" />
+            </div>
+            <div class="edu-degree">Primary &amp; Secondary Education</div>
+            <div class="edu-institution">
+              <a href="https://catalunya.sek.es/" target="_blank" rel="noopener">SEK Catalunya</a>
+            </div>
+            <div class="edu-period">Sep 2013 — Apr 2020</div>
+            <div class="edu-location">
+              <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
+              La Garriga, Spain
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -787,9 +825,8 @@
               Where I want to grow is the engineering that keeps systems like
               these dependable as usage grows: evaluating answer quality,
               observability, grounding and guardrails, and keeping latency and
-              cost under control. I'm looking for a team in Switzerland that
-              treats AI systems with the same rigor as any other production
-              software.
+              cost under control. I'm looking for a team that treats AI
+              systems with the same rigor as any other production software.
             </p>
           </div>
         </div>
@@ -806,9 +843,8 @@
               Open to <span class="gradient-text">new<br />opportunities</span>
             </h2>
             <p class="contact-sub">
-              Looking for a full-time role in Switzerland — or just up for a
-              conversation about AI systems and software. I'd love to hear
-              from you.
+              Open to full-time roles — or just up for a conversation about
+              AI systems and software. I'd love to hear from you.
             </p>
           </div>
 

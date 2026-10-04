@@ -1,6 +1,7 @@
 /* ─────────────────────────────────────────────────────────────────
    main.js — Alan Teixidó CV
    Effects:
+     00. Hero intro — typed title + status terminal (first visit only)
      01. Navbar scroll + active section highlight
      02. Mobile hamburger menu
      03. Scroll reveal (IntersectionObserver)
@@ -16,6 +17,78 @@
 
 const isTouch       = !window.matchMedia('(pointer: fine)').matches;
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── 00. Hero intro: typed title + status terminal ───────────────
+   The sequence is CSS, enabled by html.intro (set in <head> on the first
+   visit of the session, never with reduced motion). This only splits the
+   title and the terminal lines into per-character spans with staggered
+   delays. Runs first so its clock matches the CSS animations. Each block
+   has a CSS fallback that reveals it anyway, so nothing stays hidden if
+   this runs late or not at all. */
+(function initHeroIntro() {
+  if (!document.documentElement.classList.contains('intro')) return;
+
+  const TITLE_START = 160, TITLE_STEP = 18;                     /* ms */
+  const TERM_START = 1100, TERM_STEP = 17, LINE_PAUSE = 160;
+
+  /* One span per character, keeping inner markup (prompt, arrows).
+     Screen readers get the plain text from a visually hidden copy. */
+  function splitChars(el) {
+    const label = el.textContent.replace(/\s+/g, ' ').trim();
+    const visual = document.createElement('span');
+    visual.setAttribute('aria-hidden', 'true');
+    visual.append(...el.childNodes);
+    const sr = document.createElement('span');
+    sr.className = 'sr-only';
+    sr.textContent = label;
+    el.append(visual, sr);
+
+    const textNodes = [];
+    const walker = document.createTreeWalker(visual, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    const chars = [];
+    textNodes.forEach(node => {
+      const frag = document.createDocumentFragment();
+      for (const ch of node.textContent) {
+        const span = document.createElement('span');
+        span.className = 'tch';
+        span.textContent = ch;
+        frag.append(span);
+        chars.push(span);
+      }
+      node.replaceWith(frag);
+    });
+    return chars;
+  }
+
+  /* --d: when the character appears · --s: how long the caret stays on it */
+  function typeBlock(block, lineEls, start, step, pause) {
+    /* Already revealed by the CSS fallback (script ran late): leave it as text */
+    if (!block || getComputedStyle(block).opacity !== '0') return;
+
+    const lines = lineEls.map(splitChars);
+    block.classList.add('is-typing');
+
+    let t = start, last = null;
+    lines.forEach(chars => {
+      chars.forEach((c, i) => {
+        c.style.setProperty('--d', `${t}ms`);
+        c.style.setProperty('--s', `${i === chars.length - 1 ? step + pause : step}ms`);
+        t += step;
+        last = c;
+      });
+      t += pause;
+    });
+    if (last) last.classList.add('is-last');
+  }
+
+  const title = document.querySelector('.hero-title');
+  if (title) typeBlock(title, [title], TITLE_START, TITLE_STEP, 0);
+
+  const term = document.querySelector('.term-body');
+  if (term) typeBlock(term, [...term.querySelectorAll('.term-line')], TERM_START, TERM_STEP, LINE_PAUSE);
+})();
 
 /* ── 01. Navbar scroll + active section ──────────────────────── */
 const navbar      = document.getElementById('navbar');
@@ -239,7 +312,8 @@ window.addEventListener('scroll', () => {
 (function initHero3D() {
   if (isTouch) return;
   const wrap = document.getElementById('hero-3d');
-  if (!wrap) return;
+  /* Hidden on narrow screens or with the terminal-only layout: don't render */
+  if (!wrap || getComputedStyle(wrap).display === 'none') return;
 
   /* Create canvas and fill the overlay div */
   const canvas = document.createElement('canvas');
