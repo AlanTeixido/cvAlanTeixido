@@ -30,7 +30,9 @@ jobs:
           port: 49222
           username: root
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          # Server host key (ED25519); the connection fails if it ever changes
-          fingerprint: SHA256:sgZDMSkbVAdYQF/5SQfFQnxrnO6RcHU9sAntVA5XO00
+          # Server host key fingerprint; the connection fails if it ever changes.
+          # It is the ECDSA key because the action's Go SSH client prefers ECDSA
+          # over ED25519 (check: ssh-keyscan -p 49222 -t ecdsa 65.20.104.227).
+          fingerprint: SHA256:hpn/nDCm9ESNj4rrdKrrQOtx2SwqSFFlZiF7cKeRkLE
           # Ignored by the server: the key's forced command always runs deploy-cv
           script: deploy-cv
