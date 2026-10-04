@@ -1,21 +1,36 @@
 name: Deploy to server
 
+# On every push to main the VPS fast-forwards its clone of the repo
+# (/var/www/cvAlanTeixido). The deploy key is locked on the server to a single
+# forced command, /usr/local/bin/deploy-cv, so this job can only trigger that
+# `git pull`: no shell, no other commands. The */15 cron on the server stays as
+# a fallback.
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /var/www/cv
-            git pull
+          host: 65.20.104.227
+          port: 49222
+          username: root
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          # Server host key (ED25519); the connection fails if it ever changes
+          fingerprint: SHA256:sgZDMSkbVAdYQF/5SQfFQnxrnO6RcHU9sAntVA5XO00
+          # Ignored by the server: the key's forced command always runs deploy-cv
+          script: deploy-cv
