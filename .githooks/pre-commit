@@ -1,0 +1,14 @@
+#!/bin/sh
+# Refresh the ?v=<content hash> stamps on CSS/JS/images in the HTML pages
+# before every commit, and stage the pages that were rewritten.
+# Enable once per clone:   git config core.hooksPath .githooks
+
+out=$(node scripts/stamp-assets.js) || {
+  echo "pre-commit: stamp-assets failed, commit aborted" >&2
+  exit 1
+}
+echo "$out"
+
+for page in $(printf '%s\n' "$out" | sed -n 's/^stamped: //p'); do
+  git add "$page"
+done
