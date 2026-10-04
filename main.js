@@ -803,6 +803,22 @@ if (!isTouch && !prefersReduced) {
 
 /* ── 25. Timeline accordion (collapsible bullets) ────────────── */
 (function initTimelineAccordion() {
+  /* A pixel max-height is only used while animating; once open it becomes
+     'none' so text can reflow (font load, resize, rotation) without clipping */
+  function open(card, bullets) {
+    bullets.style.maxHeight = bullets.scrollHeight + 'px';
+    bullets.addEventListener('transitionend', function done(e) {
+      if (e.target !== bullets || e.propertyName !== 'max-height') return;
+      bullets.removeEventListener('transitionend', done);
+      if (card.classList.contains('expanded')) bullets.style.maxHeight = 'none';
+    });
+  }
+  function close(bullets) {
+    bullets.style.maxHeight = bullets.scrollHeight + 'px'; /* 'none' can't animate */
+    void bullets.offsetHeight;
+    bullets.style.maxHeight = '0';
+  }
+
   document.querySelectorAll('.timeline-card').forEach((card, i) => {
     const bullets = card.querySelector('.timeline-bullets');
     if (!bullets) return;
@@ -810,7 +826,7 @@ if (!isTouch && !prefersReduced) {
     /* Non-tech cards: always expanded, no toggle (they're short) */
     if (card.classList.contains('non-tech')) {
       card.classList.add('expanded');
-      bullets.style.maxHeight = bullets.scrollHeight + 'px';
+      bullets.style.maxHeight = 'none';
       return;
     }
 
@@ -824,13 +840,14 @@ if (!isTouch && !prefersReduced) {
     /* First tech card starts expanded */
     if (isFirst) {
       card.classList.add('expanded');
-      bullets.style.maxHeight = bullets.scrollHeight + 'px';
+      bullets.style.maxHeight = 'none';
     }
 
     toggle.addEventListener('click', () => {
       const expanding = card.classList.toggle('expanded');
       toggle.querySelector('span').textContent = expanding ? 'Hide details' : 'Show details';
-      bullets.style.maxHeight = expanding ? bullets.scrollHeight + 'px' : '0';
+      if (expanding) open(card, bullets);
+      else close(bullets);
     });
   });
 })();
@@ -864,21 +881,17 @@ if (!isTouch) {
   const words = Array.from(document.querySelectorAll('.hero-rotate-word'));
   if (!wrap || words.length < 2) return;
 
-  /* Measure each word's natural width */
-  const measure = document.createElement('span');
-  measure.style.cssText =
-    'position:absolute;visibility:hidden;white-space:nowrap;' +
-    'font-weight:600;font-size:inherit;pointer-events:none;';
-  wrap.appendChild(measure);
-
-  const widths = words.map(w => {
-    measure.textContent = w.textContent;
-    return measure.offsetWidth;
-  });
-  measure.remove();
-
   let current = 0;
-  wrap.style.width = widths[0] + 'px';
+
+  /* Size the wrapper to the active word. Measured live instead of cached:
+     the width changes when the web font finishes loading (measuring earlier
+     clipped the last letters) and on resize (font-size is vw-based). */
+  function fitWidth() {
+    wrap.style.width = Math.ceil(words[current].getBoundingClientRect().width) + 2 + 'px';
+  }
+  fitWidth();
+  if (document.fonts) document.fonts.ready.then(fitWidth);
+  window.addEventListener('resize', fitWidth, { passive: true });
 
   /* Start cycling after hero animations finish */
   setTimeout(() => {
@@ -889,7 +902,7 @@ if (!isTouch) {
       words[prev].classList.remove('active');
       words[prev].classList.add('exit');
       words[current].classList.add('active');
-      wrap.style.width = widths[current] + 'px';
+      fitWidth();
 
       setTimeout(() => words[prev].classList.remove('exit'), 500);
     }, 2500);
