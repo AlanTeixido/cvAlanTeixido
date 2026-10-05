@@ -7,6 +7,7 @@
      03. Scroll reveal (IntersectionObserver)
      04. Language bar fill animation
      06. Scroll progress bar
+     07. Navbar theme (follows the section under it)
      13. Projects 3D carousel
      17. Skill pills stagger entrance
      18. Hero 3D torus knot (desktop; still frame with reduced motion)
@@ -157,6 +158,57 @@ window.addEventListener('scroll', () => {
   const pct  = max > 0 ? (window.scrollY / max) * 100 : 0;
   progressBar.style.width = `${pct}%`;
 }, { passive: true });
+
+/* ── 07. Navbar theme ────────────────────────────────────────────
+   Sections paint themselves (data-section-theme, see THEME in style.css).
+   The navbar and the other fixed UI follow html[data-theme], set here from
+   the section under the navbar. A section's gradient band (--fade-h) still
+   counts as the previous section until its midpoint, where the band is
+   halfway between both colours. html.theme-ready (which turns the crossfade
+   on) is added after the first update, so a reload halfway down the page
+   doesn't fade in from dark. */
+(function initNavTheme() {
+  const root      = document.documentElement;
+  const themed    = Array.from(document.querySelectorAll('[data-section-theme]'));
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (!themed.length) return;
+  let bands = [], fadeTimer, queued = false;
+
+  function measure() {
+    bands = themed.map(s => parseFloat(getComputedStyle(s).getPropertyValue('--fade-h')) || 0);
+  }
+
+  function update() {
+    queued = false;
+    const y = navbar.offsetHeight / 2;
+    let theme = themed[0].dataset.sectionTheme;
+    for (let i = 0; i < themed.length; i++) {
+      if (themed[i].getBoundingClientRect().top + bands[i] / 2 > y) break;
+      theme = themed[i].dataset.sectionTheme;
+    }
+    if (root.dataset.theme === theme) return;
+    if (root.classList.contains('theme-ready')) {
+      // Matches the 0.5s token transition in style.css
+      root.classList.add('theme-fading');
+      clearTimeout(fadeTimer);
+      fadeTimer = setTimeout(() => root.classList.remove('theme-fading'), 550);
+    }
+    root.dataset.theme = theme;
+    if (metaTheme) metaTheme.content = theme === 'light' ? '#fafafa' : '#09090b';
+  }
+
+  function queue() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(update);
+  }
+
+  measure();
+  update();
+  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('theme-ready')));
+  window.addEventListener('scroll', queue, { passive: true });
+  window.addEventListener('resize', () => { measure(); queue(); }, { passive: true });
+})();
 
 /* ── 13. Projects 3D carousel — enhanced ──────────────────────── */
 (function initProjCarousel() {
@@ -432,22 +484,23 @@ window.addEventListener('scroll', () => {
 
   const heroEl = document.getElementById('hero');
   let t = 0;
+  let spin = 0;   // extra turn while scrolling (eased toward scrollY)
 
   /* ── Draw one frame at the current angle ────────────────────── */
   function draw(fade) {
-    const ry = t * 0.20 + cmx * 0.5;
+    const ry = t * 0.20 + cmx * 0.5 + spin;
     const rx = t * 0.13 + cmy * 0.5;
 
     ctx.clearRect(0, 0, W, H);
 
-    // Main knot — indigo/lavender
-    drawKnot(k1, makeProj(rx, ry),                   '#9d85ff', 0.88 * fade, 2, 8);
-    // Accent knot — cyan, counter-rotated
-    drawKnot(k2, makeProj(-rx*0.8+0.4, ry*0.9+1.1), '#ffb347', 0.52 * fade, 2, 6);
+    // Main knot — silver
+    drawKnot(k1, makeProj(rx, ry),                   '#d4d4d8', 0.88 * fade, 2, 8);
+    // Accent knot — graphite, counter-rotated
+    drawKnot(k2, makeProj(-rx*0.8+0.4, ry*0.9+1.1), '#71717a', 0.52 * fade, 2, 6);
 
     // Particles
     const pfn = makeProj(rx*0.22, ry*0.22);
-    ctx.fillStyle   = '#d9ceff';
+    ctx.fillStyle   = '#fafafa';
     ctx.globalAlpha = 0.48 * fade;
     PARTS.forEach(([ox, oy, oz]) => {
       const [px, py, , ps] = pfn(ox, oy, oz);
@@ -470,6 +523,7 @@ window.addEventListener('scroll', () => {
   (function frame() {
     requestAnimationFrame(frame);
     t += 0.007;
+    spin += (window.scrollY * 0.004 - spin) * 0.08;
     cmx += (mx - cmx) * 0.04;
     cmy += (my - cmy) * 0.04;
 

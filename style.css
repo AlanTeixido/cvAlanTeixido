@@ -3,8 +3,8 @@
 html { scroll-behavior: smooth; font-size: 16px; scroll-padding-top: 84px; }
 body {
   font-family: var(--font-body);
-  background: #05070d;
-  color: #e2e8f0;
+  background: var(--bg);
+  color: var(--text-1);
   overflow-x: hidden;
   line-height: 1.65;
   font-synthesis: none;
@@ -19,7 +19,7 @@ body {
   top: 0; left: 0;
   height: 2px;
   width: 0%;
-  background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
+  background: linear-gradient(90deg, var(--accent-cyan), var(--text-1));
   z-index: 9999;
   transition: width 0.1s linear;
   pointer-events: none;
@@ -34,21 +34,25 @@ body {
 }
 
 /* ─── CSS VARIABLES ────────────────────────────────────────────── */
-:root {
-  --bg:           #05070d;
-  --bg-surface:   #0a0e1a;
-  --bg-card:      rgba(255,255,255,0.032);
-  --bg-card-h:    rgba(255,255,255,0.058);
-  --border:       rgba(255,255,255,0.07);
-  --border-h:     rgba(124,92,255,0.4);
-  --accent:       #7c5cff;
-  --accent-cyan:  #ffb347;
-  --accent-soft:  rgba(124,92,255,0.12);
-  --text-1:       #f1f5f9;
-  --text-2:       #94a3b8;
-  --text-3:       #8896a8;
-  --glow:         0 0 60px rgba(124,92,255,0.18);
-  --glow-sm:      0 0 24px rgba(124,92,255,0.22);
+/* Graphite / white / silver. Dark is the default and also what dark
+   sections use; light sections get the light set (see THEME at the end). */
+:root,
+[data-section-theme="dark"] {
+  --bg:           #09090b;
+  --bg-surface:   #0f0f12;
+  --bg-card:      rgba(255,255,255,0.035);
+  --bg-card-h:    rgba(255,255,255,0.06);
+  --border:       rgba(255,255,255,0.08);
+  --border-h:     rgba(228,228,231,0.35);
+  --accent:       #e4e4e7;   /* primary silver: buttons, labels, rules */
+  --accent-cyan:  #a1a1aa;   /* secondary silver (name kept from the old palette) */
+  --accent-soft:  rgba(228,228,231,0.08);
+  --text-1:       #fafafa;
+  --text-2:       #a1a1aa;
+  --text-3:       #8b8b94;
+  --on-accent:    #09090b;   /* text on --accent backgrounds */
+  --glow:         0 0 60px rgba(255,255,255,0.06);
+  --glow-sm:      0 0 24px rgba(255,255,255,0.08);
   --radius:       16px;
   --radius-sm:    10px;
   --radius-pill:  999px;
@@ -59,25 +63,29 @@ body {
   --font-body:    'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-mono:    'JetBrains Mono', ui-monospace, monospace;
 
-  /* Tinted elevation — shadows carry the background hue, never pure black */
-  --shadow-sm:    0 2px 8px rgba(4,4,12,0.4);
-  --shadow-md:    0 12px 32px -8px rgba(4,4,16,0.55);
-  --shadow-lg:    0 28px 64px -16px rgba(4,4,20,0.6);
+  /* Elevation */
+  --shadow-sm:    0 2px 8px rgba(4,4,6,0.4);
+  --shadow-md:    0 12px 32px -8px rgba(4,4,6,0.55);
+  --shadow-lg:    0 28px 64px -16px rgba(4,4,6,0.6);
   --ring:         0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+
+  /* Metallic silver: gradient text and the primary button */
+  --metal:        linear-gradient(100deg, #e4e4e7 0%, #a1a1aa 26%, #d4d4d8 40%, #ffffff 50%, #d4d4d8 60%, #a1a1aa 74%, #e4e4e7 100%);
+  --metal-btn:    linear-gradient(180deg, #ffffff 0%, #e4e4e7 50%, #b4b4bc 100%);
 }
 
 /* ─── SCROLLBAR ────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: rgba(124,92,255,0.35); border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--accent) 35%, transparent); border-radius: 99px; }
 
 /* ─── SELECTION ────────────────────────────────────────────────── */
-::selection { background: rgba(124,92,255,0.3); color: #fff; }
+::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); color: var(--text-1); }
 
 /* ─── TYPOGRAPHY HELPERS ───────────────────────────────────────── */
 .mono { font-family: 'JetBrains Mono', monospace; }
 .gradient-text {
-  background: linear-gradient(135deg, #fff 30%, var(--accent-cyan) 100%);
+  background: var(--metal);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -110,12 +118,17 @@ section { padding: 110px 0; }
   display: block;
   width: 24px;
   height: 1px;
-  background: var(--accent);
+  background: linear-gradient(90deg, transparent, var(--accent));
 }
 .section-title {
+  width: fit-content;
   font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 800;
   color: var(--text-1);
+  background: var(--metal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   letter-spacing: -0.03em;
   line-height: 1.15;
   margin-bottom: 60px;
@@ -145,7 +158,7 @@ nav {
   border-bottom: 1px solid transparent;
 }
 nav.scrolled {
-  background: rgba(5,7,13,0.72);
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
   backdrop-filter: blur(20px) saturate(1.4);
   -webkit-backdrop-filter: blur(20px) saturate(1.4);
   border-color: var(--border);
@@ -232,7 +245,7 @@ nav.scrolled {
   display: none;
   position: fixed;
   top: 68px; left: 0; right: 0;
-  background: rgba(5,7,13,0.97);
+  background: color-mix(in srgb, var(--bg) 97%, transparent);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   z-index: 99;
@@ -277,7 +290,10 @@ nav.scrolled {
 }
 .hero-name .line2 {
   display: block;
-  background: linear-gradient(135deg, #d9ceff 0%, #9d85ff 40%, var(--accent-cyan) 100%);
+  width: fit-content;
+  background: var(--metal);
+  background-size: 250% 100%;
+  animation: metalGlint 7s ease-in-out infinite alternate;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -309,10 +325,16 @@ nav.scrolled {
 }
 .btn-primary {
   background-color: var(--accent);
-  color: #fff;
+  background-image:
+    linear-gradient(105deg, transparent 42%, rgba(255,255,255,0.75) 50%, transparent 58%),
+    var(--metal-btn);
+  background-size: 250% 100%, 100% 100%;
+  background-position: 110% 0, 0 0;
+  background-repeat: no-repeat;
+  color: var(--on-accent);
   position: relative;
   z-index: 1;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset, 0 6px 20px -6px rgba(124,92,255,0.5);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--text-1) 12%, transparent) inset, 0 6px 20px -6px color-mix(in srgb, var(--accent) 50%, transparent);
 }
 /* Neon glow halo — inspired by uiverse.io */
 .btn-primary::after {
@@ -321,17 +343,18 @@ nav.scrolled {
   inset: 0;
   border-radius: var(--radius-pill);
   background: radial-gradient(circle farthest-corner at 50% 130%,
-    rgba(124,92,255,0.9) 0%,
-    rgba(255,179,71,0.5) 100%);
+    color-mix(in srgb, var(--accent) 90%, transparent) 0%,
+    color-mix(in srgb, var(--accent-cyan) 50%, transparent) 100%);
   filter: blur(16px);
   z-index: -1;
   opacity: 0;
   transition: opacity var(--transition);
 }
 .btn-primary:hover {
-  background: #6a48f0;
+  filter: brightness(1.06);
+  background-position: -10% 0, 0 0;
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(124,92,255,0.35);
+  box-shadow: 0 8px 30px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 .btn-primary:hover::after { opacity: 1; }
 .btn-secondary {
@@ -347,12 +370,12 @@ nav.scrolled {
 .btn-ghost {
   background: transparent;
   color: var(--text-2);
-  border: 1px dashed rgba(255,255,255,0.18);
+  border: 1px dashed color-mix(in srgb, var(--text-1) 18%, transparent);
 }
 .btn-ghost:hover {
   border-color: var(--accent-cyan);
   color: var(--accent-cyan);
-  background: rgba(255,179,71,0.06);
+  background: color-mix(in srgb, var(--accent-cyan) 6%, transparent);
   transform: translateY(-2px);
 }
 .hero-scroll-hint {
@@ -386,7 +409,6 @@ nav.scrolled {
 }
 
 /* ─── ABOUT ────────────────────────────────────────────────────── */
-#about { background: var(--bg-surface); }
 .about-grid {
   display: grid;
   grid-template-columns: 260px 1fr 300px;
@@ -396,7 +418,7 @@ nav.scrolled {
 
 /* Photo column — static tinted glow (no perpetual pulse) */
 .about-photo-col {
-  filter: drop-shadow(0 8px 28px rgba(124,92,255,0.16));
+  filter: drop-shadow(0 8px 28px color-mix(in srgb, var(--accent) 16%, transparent));
 }
 .about-photo-wrap {
   position: relative;
@@ -409,7 +431,7 @@ nav.scrolled {
 }
 .about-photo-wrap:hover {
   border-color: var(--border-h);
-  box-shadow: 0 0 80px rgba(124,92,255,0.28);
+  box-shadow: 0 0 80px color-mix(in srgb, var(--accent) 28%, transparent);
   transform: translateY(-4px);
 }
 .about-photo {
@@ -429,7 +451,7 @@ nav.scrolled {
   background: linear-gradient(
     to bottom,
     transparent 55%,
-    rgba(5,7,13,0.55) 100%
+    color-mix(in srgb, var(--bg) 55%, transparent) 100%
   );
   pointer-events: none;
 }
@@ -536,7 +558,7 @@ nav.scrolled {
   left: 0; top: 12px;
   width: 1px;
   bottom: 12px;
-  background: linear-gradient(to bottom, var(--accent) 0%, rgba(124,92,255,0.1) 100%);
+  background: linear-gradient(to bottom, var(--accent) 0%, color-mix(in srgb, var(--accent) 10%, transparent) 100%);
 }
 .timeline-item {
   position: relative;
@@ -554,7 +576,7 @@ nav.scrolled {
 }
 .timeline-item:hover .timeline-dot {
   background: var(--accent);
-  box-shadow: 0 0 16px rgba(124,92,255,0.5);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 50%, transparent);
 }
 .timeline-card {
   background: var(--bg-card);
@@ -574,7 +596,7 @@ nav.scrolled {
   background: linear-gradient(
     115deg,
     transparent 20%,
-    rgba(255,255,255,0.04) 50%,
+    color-mix(in srgb, var(--text-1) 4%, transparent) 50%,
     transparent 80%
   );
   transform: skewX(-15deg);
@@ -628,7 +650,7 @@ nav.scrolled {
   font-size: 11px;
   color: var(--accent);
   background: var(--accent-soft);
-  border: 1px solid rgba(124,92,255,0.2);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
   padding: 4px 12px;
   border-radius: var(--radius-pill);
   white-space: nowrap;
@@ -658,15 +680,15 @@ nav.scrolled {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   color: var(--accent-cyan);
-  background: rgba(255,179,71,0.07);
-  border: 1px solid rgba(255,179,71,0.15);
+  background: color-mix(in srgb, var(--accent-cyan) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-cyan) 15%, transparent);
   padding: 3px 10px;
   border-radius: var(--radius-pill);
   transition: background var(--transition), border-color var(--transition);
 }
 .stack-pill:hover {
-  background: rgba(255,179,71,0.14);
-  border-color: rgba(255,179,71,0.3);
+  background: color-mix(in srgb, var(--accent-cyan) 14%, transparent);
+  border-color: color-mix(in srgb, var(--accent-cyan) 30%, transparent);
 }
 .timeline-bullets {
   list-style: none;
@@ -700,7 +722,6 @@ nav.scrolled {
 }
 
 /* ─── PERSONAL PROJECTS (index teaser) ────────────────────────── */
-#projects { background: var(--bg-surface); }
 
 /* Compact 3-column preview grid */
 .pp-card {
@@ -820,7 +841,6 @@ nav.scrolled {
 }
 
 /* ─── EDUCATION ────────────────────────────────────────────────── */
-#education { background: var(--bg-surface); }
 .edu-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -921,7 +941,7 @@ nav.scrolled {
   position: absolute;
   width: 80px; height: 80px;
   border-radius: 50%;
-  background: rgba(124,92,255,0.18);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
   top: -24px; right: -24px;
   transition: transform 0.65s cubic-bezier(.4,0,.2,1), opacity 0.4s ease;
   pointer-events: none;
@@ -947,7 +967,7 @@ nav.scrolled {
   width: 34px; height: 34px;
   border-radius: 8px;
   background: var(--accent-soft);
-  border: 1px solid rgba(124,92,255,0.2);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
   display: flex; align-items: center; justify-content: center;
   color: var(--accent);
   font-size: 14px;
@@ -971,7 +991,7 @@ nav.scrolled {
   font-size: 12.5px;
   font-weight: 500;
   color: var(--text-2);
-  background: rgba(255,255,255,0.04);
+  background: color-mix(in srgb, var(--text-1) 4%, transparent);
   border: 1px solid var(--border);
   padding: 6px 13px;
   border-radius: var(--radius-pill);
@@ -987,10 +1007,10 @@ nav.scrolled {
 }
 .skill-pill:hover {
   color: var(--text-1);
-  border-color: rgba(124,92,255,0.4);
-  background: rgba(124,92,255,0.08);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
   transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 2px 12px rgba(124,92,255,0.15);
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 /* Devicon inside pill */
 .skill-pill [class^="devicon-"],
@@ -1036,7 +1056,6 @@ nav.scrolled {
 
 /* ─── CONTACT / FOOTER ─────────────────────────────────────────── */
 #contact {
-  background: var(--bg-surface);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -1046,7 +1065,7 @@ nav.scrolled {
   position: absolute;
   width: 600px; height: 600px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(124,92,255,0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 70%);
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -1252,8 +1271,8 @@ nav.scrolled {
 .project-card-visual {
   height: 220px;
   background: linear-gradient(135deg,
-    rgba(124,92,255,0.10) 0%,
-    rgba(255,179,71,0.06) 100%);
+    color-mix(in srgb, var(--accent) 10%, transparent) 0%,
+    color-mix(in srgb, var(--accent-cyan) 6%, transparent) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1267,7 +1286,7 @@ nav.scrolled {
   position: absolute;
   width: 240px; height: 240px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(124,92,255,0.16) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 70%);
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -1276,12 +1295,12 @@ nav.scrolled {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 60%, rgba(5,7,13,0.4) 100%);
+  background: linear-gradient(180deg, transparent 60%, color-mix(in srgb, var(--bg) 40%, transparent) 100%);
   pointer-events: none;
 }
 .project-card-visual--img {
   padding: 0;
-  background: #0a0e1a;
+  background: var(--bg-surface);
 }
 .project-thumb {
   width: 100%;
@@ -1313,8 +1332,8 @@ nav.scrolled {
   font-size: 10px;
   font-weight: 500;
   color: var(--accent-cyan);
-  background: rgba(255,179,71,0.08);
-  border: 1px solid rgba(255,179,71,0.2);
+  background: color-mix(in srgb, var(--accent-cyan) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-cyan) 20%, transparent);
   padding: 3px 10px;
   border-radius: var(--radius-pill);
   letter-spacing: 0.06em;
@@ -1348,7 +1367,7 @@ nav.scrolled {
   font-size: 11.5px;
   font-weight: 500;
   color: var(--text-2);
-  background: rgba(255,255,255,0.04);
+  background: color-mix(in srgb, var(--text-1) 4%, transparent);
   border: 1px solid var(--border);
   padding: 4px 11px;
   border-radius: var(--radius-pill);
@@ -1358,8 +1377,8 @@ nav.scrolled {
 .project-tech-pill i { font-size: 13px; line-height: 1; }
 .project-tech-pill:hover {
   color: var(--text-1);
-  border-color: rgba(124,92,255,0.3);
-  background: rgba(124,92,255,0.06);
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
 }
 .project-links {
   display: flex;
@@ -1422,7 +1441,7 @@ nav.scrolled {
   height: 48px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  background: rgba(10,14,26,0.7);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: var(--text-1);
@@ -1436,13 +1455,13 @@ nav.scrolled {
 }
 .proj-nav-btn:hover {
   border-color: var(--accent);
-  background: rgba(124,92,255,0.12);
-  box-shadow: 0 0 18px rgba(124,92,255,0.35);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 35%, transparent);
   transform: translateY(-50%) scale(1.08);
 }
 .proj-nav-btn:active {
   transform: translateY(-50%) scale(0.95);
-  box-shadow: 0 0 24px rgba(124,92,255,0.5);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 50%, transparent);
 }
 .proj-prev { left:  8px; }
 .proj-next { right: 8px; }
@@ -1462,7 +1481,7 @@ nav.scrolled {
   height: 8px;
   border-radius: 50%;
   border: none;
-  background: rgba(255,255,255,0.15);
+  background: color-mix(in srgb, var(--text-1) 15%, transparent);
   cursor: pointer;
   padding: 0;
   transition: background 0.35s, width 0.35s, border-radius 0.35s;
@@ -1495,7 +1514,7 @@ nav.scrolled {
   transform: translateX(-50%);
   width: 130px;
   height: 2px;
-  background: rgba(255,255,255,0.08);
+  background: color-mix(in srgb, var(--text-1) 8%, transparent);
   border-radius: 2px;
   z-index: 30;
   overflow: hidden;
@@ -1533,15 +1552,15 @@ nav.scrolled {
   bottom: 2.2rem;
   left: 50%;
   transform: translateX(-50%) translateY(16px);
-  background: rgba(15, 15, 30, 0.96);
-  color: #b8a8ff;
+  background: color-mix(in srgb, var(--bg) 96%, transparent);
+  color: var(--text-1);
   padding: 11px 22px;
   border-radius: 100px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
   letter-spacing: 0.06em;
-  border: 1px solid rgba(124,92,255,0.35);
-  box-shadow: 0 8px 32px rgba(124,92,255,0.15);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--accent) 15%, transparent);
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
@@ -1600,7 +1619,7 @@ nav.scrolled {
 }
 .about-contact-list li:hover i {
   border-color: var(--accent);
-  box-shadow: 0 0 12px rgba(124,92,255,0.25);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 25%, transparent);
   background: var(--accent-soft);
 }
 
@@ -1612,8 +1631,8 @@ nav.scrolled {
 /* Photo overlay: enhanced gradient with vignette */
 .about-photo-overlay {
   background:
-    linear-gradient(to bottom, transparent 50%, rgba(5,7,13,0.6) 100%),
-    radial-gradient(ellipse at center, transparent 60%, rgba(5,7,13,0.15) 100%);
+    linear-gradient(to bottom, transparent 50%, color-mix(in srgb, var(--bg) 60%, transparent) 100%),
+    radial-gradient(ellipse at center, transparent 60%, color-mix(in srgb, var(--bg) 15%, transparent) 100%);
 }
 
 /* "Currently" status widget */
@@ -1665,21 +1684,13 @@ nav.scrolled {
 
 /* ─── FOOTER DIVIDER — static, centered gradient seam ──────────── */
 .footer-divider {
-  background: linear-gradient(90deg, transparent, rgba(124,92,255,0.55) 35%, rgba(255,179,71,0.45) 65%, transparent) !important;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 55%, transparent) 35%, color-mix(in srgb, var(--accent-cyan) 45%, transparent) 65%, transparent) !important;
 }
 
 /* ─── CONTACT LINK BORDER BEAM ON HOVER ────────────────────────── */
 .contact-link {
   position: relative;
 }
-/* ─── GOALS QUOTE GRADIENT TEXT ────────────────────────────────── */
-.goals-quote .gradient-text {
-  background: linear-gradient(105deg, #d9ceff 0%, #9d85ff 45%, var(--accent-cyan) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 /* ─── ABOUT SECTION DOT GRID (cyan) ───────────────────────────── */
 #about { position: relative; }
 #about > .container { position: relative; z-index: 1; }
@@ -1687,7 +1698,7 @@ nav.scrolled {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255,179,71,0.04) 1px, transparent 1px);
+  background-image: radial-gradient(color-mix(in srgb, var(--accent-cyan) 4%, transparent) 1px, transparent 1px);
   background-size: 32px 32px;
   pointer-events: none;
   -webkit-mask-image: radial-gradient(ellipse 60% 40% at 50% 50%, #000 20%, transparent 100%);
@@ -1697,7 +1708,7 @@ nav.scrolled {
 
 /* ─── LANGUAGE BAR GLOW ────────────────────────────────────────── */
 .lang-bar-fill {
-  box-shadow: 0 0 8px rgba(124,92,255,0.3), 0 0 3px rgba(255,179,71,0.2);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 30%, transparent), 0 0 3px color-mix(in srgb, var(--accent-cyan) 20%, transparent);
 }
 
 /* ─── TIMELINE ACCORDION + BULLET STAGGER ──────────────────────── */
@@ -1731,8 +1742,8 @@ nav.scrolled {
 }
 .timeline-toggle:hover {
   color: var(--accent-cyan);
-  border-color: rgba(255,179,71,0.3);
-  background: rgba(255,179,71,0.05);
+  border-color: color-mix(in srgb, var(--accent-cyan) 30%, transparent);
+  background: color-mix(in srgb, var(--accent-cyan) 5%, transparent);
 }
 .timeline-toggle i {
   font-size: 9px;
@@ -1770,29 +1781,21 @@ nav.scrolled {
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.055) 50%, transparent 80%);
+  background: linear-gradient(105deg, transparent 20%, color-mix(in srgb, var(--text-1) 5.5%, transparent) 50%, transparent 80%);
   transform: skewX(-15deg);
   pointer-events: none;
   transition: left 0.7s cubic-bezier(.4,0,.2,1);
 }
 .edu-card:hover::after { left: 200%; }
 
-/* ─── CONTACT HEADING GRADIENT ─────────────────────────────────── */
-.contact-heading .gradient-text {
-  background: linear-gradient(105deg, #d9ceff 0%, #9d85ff 45%, var(--accent-cyan) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 /* ─── SKILL GROUP ICON RIPPLE PULSE ────────────────────────────── */
 .skill-group:hover .skill-group-icon {
   animation: iconRipple 1.5s ease-out infinite;
 }
 @keyframes iconRipple {
-  0%   { box-shadow: 0 0 0 0 rgba(124,92,255,0.4); }
-  70%  { box-shadow: 0 0 0 10px rgba(124,92,255,0); }
-  100% { box-shadow: 0 0 0 0 rgba(124,92,255,0); }
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 40%, transparent); }
+  70%  { box-shadow: 0 0 0 10px color-mix(in srgb, var(--accent) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
 }
 
 /* ─── DOT GRID BACKGROUNDS (21st.dev / hero-scroll-animation) ── */
@@ -1810,7 +1813,7 @@ nav.scrolled {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(124,92,255,0.07) 1px, transparent 1px);
+  background-image: radial-gradient(color-mix(in srgb, var(--accent) 7%, transparent) 1px, transparent 1px);
   background-size: 28px 28px;
   pointer-events: none;
   -webkit-mask-image: radial-gradient(ellipse 70% 50% at 50% 50%, #000 30%, transparent 100%);
@@ -1840,7 +1843,7 @@ nav.scrolled {
   width: 44px; height: 44px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  background: rgba(10,14,26,0.8);
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: var(--text-2);
@@ -1974,7 +1977,7 @@ button:focus-visible,
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(124,92,255,0.12) 0%, rgba(255,179,71,0.06) 100%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent) 0%, color-mix(in srgb, var(--accent-cyan) 6%, transparent) 100%);
 }
 .pp-flow {
   position: relative;
@@ -1991,7 +1994,7 @@ button:focus-visible,
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-1);
-  background: rgba(5,7,13,0.6);
+  background: color-mix(in srgb, var(--bg) 60%, transparent);
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
   padding: 5px 12px;
@@ -2003,9 +2006,10 @@ button:focus-visible,
 
 /* Hero backdrop: one static gradient instead of animated canvas + blurred orbs */
 #hero {
-  background:
-    radial-gradient(ellipse 60% 55% at 12% 18%, rgba(124,92,255,0.16) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 45% at 88% 85%, rgba(255,179,71,0.08) 0%, transparent 70%);
+  background-repeat: no-repeat;
+  background-image:
+    radial-gradient(ellipse 60% 55% at 12% 18%, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 40% at 86% 55%, color-mix(in srgb, var(--accent-cyan) 8%, transparent) 0%, transparent 70%);
 }
 
 /* Skip link: hidden until focused with the keyboard */
@@ -2016,7 +2020,7 @@ button:focus-visible,
   padding: 10px 18px;
   border-radius: var(--radius-pill);
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
@@ -2064,7 +2068,7 @@ button:focus-visible,
   max-width: 60%;
   height: 2px;
   border-radius: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
+  background: linear-gradient(90deg, var(--text-1), var(--accent-cyan) 60%, transparent);
   transform-origin: left center;
   margin-bottom: 28px;
 }
@@ -2080,15 +2084,15 @@ button:focus-visible,
 }
 .hero-location i { color: var(--accent-cyan); font-size: 12px; }
 
-/* Status terminal */
+/* Status terminal: always dark, whatever the page theme */
 .hero-term {
   position: relative;
   z-index: 2;
   width: 100%;
   max-width: 440px;
-  border: 1px solid var(--border);
+  border: 1px solid #27272a;
   border-radius: 14px;
-  background: rgba(10,14,26,0.82);
+  background: rgba(15,15,18,0.92);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.05);
@@ -2100,19 +2104,19 @@ button:focus-visible,
   align-items: center;
   gap: 7px;
   padding: 11px 14px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #27272a;
   background: rgba(255,255,255,0.025);
 }
 .term-dot { width: 10px; height: 10px; border-radius: 50%; }
-.term-dot:nth-child(1) { background: #ff5f57; }
-.term-dot:nth-child(2) { background: #febc2e; }
-.term-dot:nth-child(3) { background: #28c840; }
-.term-name { margin-left: 8px; font-size: 11px; color: var(--text-3); letter-spacing: 0.04em; }
+.term-dot:nth-child(1) { background: #71717a; }
+.term-dot:nth-child(2) { background: #52525b; }
+.term-dot:nth-child(3) { background: #3f3f46; }
+.term-name { margin-left: 8px; font-size: 11px; color: #71717a; letter-spacing: 0.04em; }
 .term-body { padding: 16px 18px 18px; font-size: 13px; line-height: 1.8; }
-.term-line { margin: 0; color: #cbd5e1; white-space: pre-wrap; }
-.term-prompt { color: #9d85ff; }
-.term-arrow { color: var(--accent-cyan); }
-.term-cmd { color: var(--text-1); }
+.term-line { margin: 0; color: #d4d4d8; white-space: pre-wrap; }
+.term-prompt { color: #a1a1aa; }
+.term-arrow { color: #71717a; }
+.term-cmd { color: #fafafa; }
 @media (max-width: 640px) {
   .term-body { padding: 14px 12px 16px; font-size: 11.5px; }
 }
@@ -2185,4 +2189,293 @@ button:focus-visible,
   .intro #hero *,
   .intro #hero *::after { animation: none !important; }
   .intro .is-typing .tch { opacity: 1; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   THEME — graphite and white sections, melted together with gradients
+   ══════════════════════════════════════════════════════════════════
+   Each section has data-section-theme="dark|light" and its own colour tokens
+   (dark: the :root block at the top, light: below). Where the theme flips,
+   the section opens with a band that fades the previous colour into its
+   own, so scrolling melts black into white and back.
+   The navbar and the rest of the fixed UI follow html[data-theme], which
+   main.js sets from the section under the navbar. The tokens are registered
+   so that switch can crossfade. */
+@property --bg { syntax: '<color>'; inherits: true; initial-value: #09090b; }
+@property --bg-surface { syntax: '<color>'; inherits: true; initial-value: #0f0f12; }
+@property --bg-card { syntax: '<color>'; inherits: true; initial-value: rgba(255,255,255,0.035); }
+@property --bg-card-h { syntax: '<color>'; inherits: true; initial-value: rgba(255,255,255,0.06); }
+@property --border { syntax: '<color>'; inherits: true; initial-value: rgba(255,255,255,0.08); }
+@property --border-h { syntax: '<color>'; inherits: true; initial-value: rgba(228,228,231,0.35); }
+@property --accent { syntax: '<color>'; inherits: true; initial-value: #e4e4e7; }
+@property --accent-cyan { syntax: '<color>'; inherits: true; initial-value: #a1a1aa; }
+@property --accent-soft { syntax: '<color>'; inherits: true; initial-value: rgba(228,228,231,0.08); }
+@property --text-1 { syntax: '<color>'; inherits: true; initial-value: #fafafa; }
+@property --text-2 { syntax: '<color>'; inherits: true; initial-value: #a1a1aa; }
+@property --text-3 { syntax: '<color>'; inherits: true; initial-value: #8b8b94; }
+@property --on-accent { syntax: '<color>'; inherits: true; initial-value: #09090b; }
+@property --fade-h { syntax: '<length>'; inherits: true; initial-value: 0px; }
+
+html.theme-ready {
+  transition: --bg 0.5s ease,
+              --bg-surface 0.5s ease,
+              --bg-card 0.5s ease,
+              --bg-card-h 0.5s ease,
+              --border 0.5s ease,
+              --border-h 0.5s ease,
+              --accent 0.5s ease,
+              --accent-cyan 0.5s ease,
+              --accent-soft 0.5s ease,
+              --text-1 0.5s ease,
+              --text-2 0.5s ease,
+              --text-3 0.5s ease,
+              --on-accent 0.5s ease;
+}
+/* A colour fade isn't motion, so it stays with reduced motion too (the
+   global reduced-motion rule would otherwise make it instant). */
+@media (prefers-reduced-motion: reduce) {
+  html.theme-ready { transition-duration: 0.5s !important; }
+}
+/* During the fade, elements keep only their motion transitions. Their colour
+   transitions would restart on every frame of the fade and trail behind it.
+   main.js drops the class when the fade is over. */
+html.theme-fading *,
+html.theme-fading *::before,
+html.theme-fading *::after { transition-property: opacity, transform, filter !important; }
+
+html[data-theme="light"],
+[data-section-theme="light"] {
+  --bg:           #fafafa;
+  --bg-surface:   #f4f4f5;
+  --bg-card:      rgba(9,9,11,0.035);
+  --bg-card-h:    rgba(9,9,11,0.055);
+  --border:       rgba(9,9,11,0.1);
+  --border-h:     rgba(9,9,11,0.3);
+  --accent:       #18181b;
+  --accent-cyan:  #52525b;
+  --accent-soft:  rgba(9,9,11,0.06);
+  --text-1:       #09090b;
+  --text-2:       #3f3f46;
+  --text-3:       #52525b;
+  --on-accent:    #fafafa;
+  --glow:         0 14px 40px -14px rgba(9,9,11,0.22);
+  --glow-sm:      0 8px 22px -10px rgba(9,9,11,0.22);
+  --shadow-sm:    0 2px 8px rgba(9,9,11,0.06);
+  --shadow-md:    0 12px 32px -10px rgba(9,9,11,0.14);
+  --shadow-lg:    0 28px 64px -18px rgba(9,9,11,0.2);
+  --ring:         0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+  --metal:        linear-gradient(100deg, #18181b 0%, #3f3f46 26%, #52525b 40%, #a1a1aa 50%, #52525b 60%, #3f3f46 74%, #18181b 100%);
+  --metal-btn:    linear-gradient(180deg, #3f3f46 0%, #18181b 55%, #09090b 100%);
+}
+
+/* Sections paint their own background and text colour (body's colour is
+   inherited already computed, so it can't follow the section's tokens) */
+[data-section-theme] {
+  background-color: var(--bg);
+  color: var(--text-1);
+}
+
+/* Theme flip: the section's top border is a band that melts the previous
+   section's colour (--fade-from) into this one, eased in and out. The band is
+   its own layer (::before) rather than the section's background image: a
+   background image edge can land half a pixel off the background colour and
+   leave a light hairline at the top. */
+[data-section-theme="dark"] + [data-section-theme="light"],
+[data-section-theme="light"] + [data-section-theme="dark"] {
+  --fade-h: clamp(140px, 26vh, 280px);
+  position: relative;
+  border-top: var(--fade-h) solid transparent;
+}
+[data-section-theme="dark"] + [data-section-theme="light"]::before,
+[data-section-theme="light"] + [data-section-theme="dark"]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(-1 * var(--fade-h) - 1px);   /* 1px over the previous section hides its last row */
+  height: calc(var(--fade-h) + 1px);
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+    var(--fade-from) 0%,
+    color-mix(in oklab, var(--fade-from), var(--bg) 6%) 15%,
+    color-mix(in oklab, var(--fade-from), var(--bg) 22%) 30%,
+    color-mix(in oklab, var(--fade-from), var(--bg) 50%) 50%,
+    color-mix(in oklab, var(--fade-from), var(--bg) 78%) 70%,
+    color-mix(in oklab, var(--fade-from), var(--bg) 94%) 85%,
+    var(--bg) 100%);
+}
+[data-section-theme="dark"] + [data-section-theme="light"] { --fade-from: #09090b; }
+[data-section-theme="light"] + [data-section-theme="dark"] { --fade-from: #fafafa; }
+
+/* Same theme back to back: a silver hairline between them */
+[data-section-theme="light"] + [data-section-theme="light"],
+[data-section-theme="dark"] + [data-section-theme="dark"] {
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, var(--accent-cyan) 50%, transparent) 1;
+}
+
+
+/* White logo plates need an edge on white sections */
+.timeline-logo,
+.edu-card-logo { box-shadow: 0 0 0 1px var(--border); }
+
+/* ══════════════════════════════════════════════════════════════════
+   SHINE & SCROLL — silver light that reacts to scrolling
+   ══════════════════════════════════════════════════════════════════
+   Two kinds of effects:
+   - Light (shine sweeps, lines drawing, glows): always on, also with
+     reduced motion, because nothing on the page moves.
+   - Motion (parallax, slides): only for prefers-reduced-motion: no-preference.
+   Scroll-linked effects use CSS scroll-driven animations; browsers without
+   them keep the static design. */
+@property --horizon-w { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+
+/* Hero surname: a glint crosses it every few seconds */
+@keyframes metalGlint {
+  0%, 30%  { background-position: 100% 50%; }
+  70%, 100% { background-position: 0% 50%; }
+}
+.btn-primary { transition: var(--transition), background-position 0.9s cubic-bezier(.4,0,.2,1); }
+
+@keyframes metalScroll { from { background-position: 100% 50%; } to { background-position: 0% 50%; } }
+@keyframes horizonDraw { to { --horizon-w: 100%; } }
+@keyframes lineFill    { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes dotOn {
+  to {
+    background: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 12%, transparent),
+                0 0 18px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+}
+@keyframes glowDrift   { from { transform: none; } to { transform: translateX(100%); } }
+
+@supports (animation-timeline: view()) {
+  /* Titles and highlighted words: the streak crosses them as they pass */
+  .section-title,
+  .gradient-text {
+    background-size: 250% 100%;
+    animation: metalScroll linear both;
+    animation-timeline: view();
+    animation-range: cover 15% cover 75%;
+  }
+
+  /* Black/white bands: a silver horizon draws across the middle */
+  [data-section-theme="dark"] + [data-section-theme="light"],
+  [data-section-theme="light"] + [data-section-theme="dark"] {
+    view-timeline: --band block;
+  }
+  [data-section-theme="dark"] + [data-section-theme="light"]::before,
+  [data-section-theme="light"] + [data-section-theme="dark"]::before {
+    background-image:
+      linear-gradient(90deg, transparent, #ffffff 50%, transparent),
+      radial-gradient(closest-side, rgba(255,255,255,0.32), transparent),
+      linear-gradient(to bottom,
+        var(--fade-from) 0%,
+        color-mix(in oklab, var(--fade-from), var(--bg) 6%) 15%,
+        color-mix(in oklab, var(--fade-from), var(--bg) 22%) 30%,
+        color-mix(in oklab, var(--fade-from), var(--bg) 50%) 50%,
+        color-mix(in oklab, var(--fade-from), var(--bg) 78%) 70%,
+        color-mix(in oklab, var(--fade-from), var(--bg) 94%) 85%,
+        var(--bg) 100%);
+    background-repeat: no-repeat;
+    background-position: center, center, 0 0;
+    background-size: var(--horizon-w) 1px, var(--horizon-w) 120px, 100% 100%;
+    animation: horizonDraw linear both;
+    animation-timeline: --band;
+    animation-range: entry 15% entry 65%;
+  }
+
+  /* Experience: a silver line fills the timeline as you read down it, and
+     each dot lights up when it reaches the middle of the screen */
+  .timeline { view-timeline: --career block; }
+  .timeline::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 12px; bottom: 12px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--text-1), var(--accent-cyan));
+    box-shadow: 0 0 8px color-mix(in srgb, var(--text-1) 35%, transparent);
+    transform-origin: top;
+    animation: lineFill linear both;
+    animation-timeline: --career;
+    animation-range: cover 50vh cover calc(100% - 50vh);
+  }
+  .timeline-dot {
+    z-index: 1;
+    animation: dotOn linear both;
+    animation-timeline: view();
+    animation-range: cover calc(50vh - 12px) cover calc(50vh + 12px);
+  }
+
+  /* Dark sections: a soft silver light drifts across as you scroll by. It's
+     its own layer moved with transform, so scrolling never repaints the
+     section. isolation puts the layer (z-index -1) above the section's
+     background and below its content. Both sections open with a band, so
+     they already have the --band timeline. */
+  #projects,
+  #goals { isolation: isolate; }
+  #projects::after,
+  #goals::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 50%;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 9%, transparent), transparent);
+    animation: glowDrift linear both;
+    animation-timeline: --band;
+    animation-range: cover 0% cover 100%;
+  }
+}
+
+/* Light effects stay with reduced motion (the global rule above would
+   shorten them to nothing): a glint or a line drawing doesn't move anything */
+@media (prefers-reduced-motion: reduce) {
+  .hero-name .line2 {
+    animation-duration: 7s !important;
+    animation-iteration-count: infinite !important;
+  }
+  .btn-primary {
+    transition-property: background-position !important;
+    transition-duration: 0.9s !important;
+  }
+  @supports (animation-timeline: view()) {
+    .section-title,
+    .gradient-text,
+    .timeline::after,
+    .timeline-dot,
+    #projects::after,
+    #goals::after,
+    [data-section-theme="dark"] + [data-section-theme="light"]::before,
+    [data-section-theme="light"] + [data-section-theme="dark"]::before {
+      animation-duration: auto !important;
+    }
+  }
+}
+
+/* Motion: hero parallax and titles sliding in, only without reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    @keyframes heroAway  { to { transform: translateY(14vh) scale(0.97); opacity: 0; } }
+    @keyframes knotAway  { to { transform: translateY(22vh); } }
+    @keyframes titleIn   { from { transform: translateX(-7vw); } to { transform: none; } }
+
+    #hero { view-timeline: --hero block; }
+    .hero-grid {
+      animation: heroAway linear both;
+      animation-timeline: --hero;
+      animation-range: exit 0% exit 85%;
+    }
+    #hero-3d canvas {
+      animation: knotAway linear both;
+      animation-timeline: --hero;
+      animation-range: exit 0% exit 100%;
+    }
+    .section-title {
+      animation-name: metalScroll, titleIn;
+      animation-timeline: view(), view();
+      animation-range: cover 15% cover 75%, entry 0% cover 35%;
+    }
+  }
 }
