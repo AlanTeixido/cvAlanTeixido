@@ -21,7 +21,7 @@ const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 
 /* ── 00. Hero intro: typed title + status terminal ───────────────
    The sequence is CSS, enabled by html.intro (set in <head> on the first
-   visit of the session, never with reduced motion). This only splits the
+   visit of the session; calm version with reduced motion). This only splits the
    title and the terminal lines into per-character spans with staggered
    delays. Runs first so its clock matches the CSS animations. Each block
    has a CSS fallback that reveals it anyway, so nothing stays hidden if

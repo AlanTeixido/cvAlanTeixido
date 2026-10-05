@@ -2277,11 +2277,21 @@ button:focus-visible,
    it keeps its space meanwhile, so nothing moves when it appears */
 .intro .term-body.is-typing .term-prompt-line { opacity: 0; animation: tchIn 1ms linear var(--prompt-at, 4200ms) forwards; }
 
+/* Reduced motion keeps a calm intro: nothing moves, the blocks fade in and
+   the title and terminal still type (text appearing isn't motion). The
+   global reduced-motion rule would shorten these to nothing, so the
+   durations are set again here; the delays are untouched. */
 @media (prefers-reduced-motion: reduce) {
-  .intro #hero,
-  .intro #hero *,
-  .intro #hero *::after { animation: none !important; }
-  .intro .is-typing .tch { opacity: 1; }
+  .intro .hero-name,
+  .intro .hero-tagline,
+  .intro .hero-location,
+  .intro .hero-actions,
+  .intro .hero-term { animation-name: introShow !important; animation-duration: 500ms !important; }
+  .intro .hero-rule { animation-name: introShow !important; animation-duration: 400ms !important; }
+  .intro #hero-3d,
+  .intro .hero-scroll-hint { animation-duration: 700ms !important; }
+  .intro .is-typing .tch::after { animation-duration: var(--s) !important; }
+  .intro .is-typing .tch.is-last::after { animation-duration: 320ms !important; animation-iteration-count: 2 !important; }
 }
 
 /* ══════════════════════════════════════════════════════════════════

@@ -4,10 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script>
-      /* Hero intro runs once per session and never with reduced motion.
+      /* Hero intro runs once per session (per tab). With reduced motion it is
+         the calm version: fades and typing, nothing moves (see style.css).
          Without this class every hero element is visible from the first paint. */
       try {
-        if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sessionStorage.getItem('at-intro')) {
+        if (!sessionStorage.getItem('at-intro')) {
           sessionStorage.setItem('at-intro', '1');
           document.documentElement.classList.add('intro');
         }
@@ -49,7 +50,7 @@
     <link rel="stylesheet" href="icons.css?v=6de6e46b" />
 
     <!-- Styles -->
-    <link rel="stylesheet" href="style.css?v=f778d2a2" />
+    <link rel="stylesheet" href="style.css?v=e207e330" />
 
     <meta name="theme-color" content="#09090b" />
 
@@ -861,7 +862,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="main.js?v=39df5ab8" defer></script>
+    <script src="main.js?v=923bb289" defer></script>
     <script src="terminal.js?v=62d289cc" defer></script>
   </body>
 </html>
