@@ -42,6 +42,10 @@
   form.append(sign, input);
   staticPrompt.replaceWith(form);
 
+  /* The suggested commands under the status lines become buttons too (they
+     are plain spans in the HTML so the page doesn't shift when this runs) */
+  body.querySelectorAll('.term-chip').forEach(chip => chip.replaceWith(cmd(chip.textContent.trim())));
+
   /* First visit: the prompt appears once the intro has typed the status
      lines (style.css hides it until --prompt-at) */
   const lastChar = body.querySelector('.tch.is-last');

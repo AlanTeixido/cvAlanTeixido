@@ -1852,21 +1852,6 @@ nav.scrolled {
   z-index: 0;
 }
 
-/* ─── HERO 3D WIREFRAME (torus knot canvas) ────────────────────── */
-#hero-3d {
-  position: absolute;
-  top: 0; right: -4%;
-  width: 52%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-  -webkit-mask-image: radial-gradient(ellipse 65% 60% at 55% 50%, #000 45%, transparent 100%);
-  mask-image: radial-gradient(ellipse 65% 60% at 55% 50%, #000 45%, transparent 100%);
-}
-@media (max-width: 900px) {
-  #hero-3d { display: none; }
-}
-
 /* ─── BACK TO TOP ──────────────────────────────────────────────── */
 #back-to-top {
   position: fixed;
@@ -2075,9 +2060,9 @@ button:focus-visible,
 }
 @media (min-width: 1024px) {
   .hero-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 470px);
     align-items: center;
-    gap: 56px;
+    gap: 48px;
   }
 }
 @media (max-width: 640px) {
@@ -2120,13 +2105,15 @@ button:focus-visible,
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 440px;
+  max-width: 560px;
   border: 1px solid #27272a;
   border-radius: 14px;
   background: rgba(15,15,18,0.92);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow: var(--shadow-lg),
+              0 0 80px -24px rgba(228,228,231,0.12),   /* faint silver halo */
+              inset 0 1px 0 rgba(255,255,255,0.06);
   font-family: var(--font-mono);
   overflow: hidden;
 }
@@ -2149,7 +2136,7 @@ button:focus-visible,
 .term-arrow { color: #71717a; }
 .term-cmd { color: #fafafa; }
 @media (max-width: 640px) {
-  .term-body { padding: 14px 12px 16px; font-size: 11.5px; }
+  .term-body { padding: 14px 12px 16px; font-size: 12px; }
 }
 
 /* Interactive prompt (terminal.js). The output scrolls inside the terminal
@@ -2161,7 +2148,25 @@ button:focus-visible,
   scrollbar-width: thin;
   scrollbar-color: #3f3f46 transparent;
 }
-.term-body.is-cleared > .term-line { display: none; }
+.term-body.is-cleared > .term-line,
+.term-body.is-cleared > .term-hint { display: none; }
+.term-hint { margin: 0; color: #71717a; white-space: pre-wrap; }
+/* Wrapped status lines continue under the text, not under the "$" / "→" */
+.term-body > .term-line,
+.term-hint { padding-left: 2ch; text-indent: -2ch; }
+/* The chips are plain spans until terminal.js swaps in .term-btn buttons:
+   same box, so nothing moves when it does */
+.term-chip,
+.term-btn {
+  display: inline-block;
+  padding: 0 0.45em;
+  border: 1px solid #3f3f46;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.05);
+  color: #fafafa;
+  font: inherit;
+  line-height: 1.45;
+}
 .term-prompt-line { display: flex; align-items: baseline; gap: 0.6ch; margin: 0; color: #d4d4d8; }
 .term-caret {
   display: inline-block;
@@ -2198,29 +2203,25 @@ button:focus-visible,
   text-underline-offset: 3px;
 }
 .term-link:hover { text-decoration-color: #fafafa; }
-.term-btn {
-  padding: 0 0.45em;
-  border: 1px solid #3f3f46;
-  border-radius: 4px;
-  background: rgba(255,255,255,0.05);
-  color: #fafafa;
-  font: inherit;
-  line-height: 1.45;
-  cursor: pointer;
-}
+.term-btn { cursor: pointer; }
 .term-btn:hover,
 .term-btn:focus-visible { background: rgba(255,255,255,0.12); border-color: #71717a; }
 
-/* Desktop: knot up and to the right, terminal aligned with the buttons below it */
+/* Desktop: the terminal is the hero's visual, next to the text and sized
+   like a real window (the empty space under the prompt is part of the look) */
 @media (min-width: 1024px) {
-  .hero-term { align-self: end; }
-  #hero-3d { top: -10%; right: -6%; }
-}
-
-/* Alternative layout: terminal alone, no 3D knot (add .hero--no-knot to #hero) */
-#hero.hero--no-knot #hero-3d { display: none; }
-@media (min-width: 1024px) {
-  #hero.hero--no-knot .hero-term { align-self: center; }
+  .hero-term { align-self: center; }
+  /* keep the three buttons on one row next to the terminal */
+  .hero-actions { gap: 12px; }
+  .hero-actions .btn { padding-left: 22px; padding-right: 22px; }
+  .term-bar { padding: 13px 16px; }
+  .term-body {
+    padding: 22px 24px 24px;
+    font-size: 14px;
+    line-height: 1.75;
+    min-height: 290px;
+    max-height: 430px;
+  }
 }
 
 .sr-only {
@@ -2252,7 +2253,6 @@ button:focus-visible,
 .intro .hero-actions     { animation: introUp 320ms cubic-bezier(.16,1,.3,1) 740ms both; }
 .intro .hero-term        { animation: introUp 400ms cubic-bezier(.16,1,.3,1) 740ms both; }
 .intro .term-body        { animation: introShow 1ms linear 1150ms both; }  /* fallback when JS doesn't type it */
-.intro #hero-3d          { animation: introShow 700ms ease 600ms both; }
 .intro .hero-scroll-hint { animation: introShow 600ms ease 1000ms both; }
 
 /* Typing: JS splits the text into .tch spans and sets --d (reveal time)
@@ -2275,6 +2275,7 @@ button:focus-visible,
 .intro .is-typing .tch.is-last::after { animation: caretBlink 320ms linear var(--d) 2; }
 /* The prompt waits for the status lines (terminal.js sets --prompt-at);
    it keeps its space meanwhile, so nothing moves when it appears */
+.intro .term-body.is-typing .term-hint,
 .intro .term-body.is-typing .term-prompt-line { opacity: 0; animation: tchIn 1ms linear var(--prompt-at, 4200ms) forwards; }
 
 /* Reduced motion keeps a calm intro: nothing moves, the blocks fade in and
@@ -2288,7 +2289,6 @@ button:focus-visible,
   .intro .hero-actions,
   .intro .hero-term { animation-name: introShow !important; animation-duration: 500ms !important; }
   .intro .hero-rule { animation-name: introShow !important; animation-duration: 400ms !important; }
-  .intro #hero-3d,
   .intro .hero-scroll-hint { animation-duration: 700ms !important; }
   .intro .is-typing .tch::after { animation-duration: var(--s) !important; }
   .intro .is-typing .tch.is-last::after { animation-duration: 320ms !important; animation-iteration-count: 2 !important; }
@@ -2561,7 +2561,6 @@ html[data-theme="light"],
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     @keyframes heroAway  { to { transform: translateY(14vh) scale(0.97); opacity: 0; } }
-    @keyframes knotAway  { to { transform: translateY(22vh); } }
     @keyframes titleIn   { from { transform: translateX(-7vw); } to { transform: none; } }
 
     #hero { view-timeline: --hero block; }
@@ -2569,11 +2568,6 @@ html[data-theme="light"],
       animation: heroAway linear both;
       animation-timeline: --hero;
       animation-range: exit 0% exit 85%;
-    }
-    #hero-3d canvas {
-      animation: knotAway linear both;
-      animation-timeline: --hero;
-      animation-range: exit 0% exit 100%;
     }
     .section-title {
       animation-name: metalScroll, titleIn;
