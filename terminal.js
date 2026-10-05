@@ -273,6 +273,62 @@
     }
   });
 
+  /* ── Drag the window by its title bar (mouse and pen only) ─────
+     Uses the `translate` property, which the intro's `transform` animation
+     can't override. The window stays inside the hero and below the navbar;
+     double-click the bar to send it back. Touch screens just scroll. */
+  const bar = term.querySelector('.term-bar');
+  if (bar && window.matchMedia('(pointer: fine)').matches) {
+    const hero = term.closest('section') || document.body;
+    const navbar = document.getElementById('navbar');
+    const EDGE = 8;
+    let x = 0, y = 0, startX = 0, startY = 0, fromX = 0, fromY = 0, box = null;
+    bar.title = 'Drag to move · double-click to reset';
+
+    /* Where the window may go, from its untranslated box and the hero's */
+    function bounds() {
+      const r = term.getBoundingClientRect(), h = hero.getBoundingClientRect();
+      const left = r.left - x, top = r.top - y;
+      const navBottom = navbar ? navbar.getBoundingClientRect().bottom : 0;
+      return {
+        minX: h.left + EDGE - left,
+        maxX: h.right - EDGE - (left + r.width),
+        minY: Math.max(h.top, navBottom) + EDGE - top,
+        maxY: h.bottom - EDGE - (top + r.height),
+      };
+    }
+    const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), Math.max(lo, hi));
+    function moveTo(nx, ny) {
+      x = clamp(nx, box.minX, box.maxX);
+      y = clamp(ny, box.minY, box.maxY);
+      term.style.translate = x || y ? `${x}px ${y}px` : '';
+    }
+
+    bar.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      e.preventDefault();                 // no text selection while dragging
+      box = bounds();                     // measured before the "lifted" scale
+      startX = e.clientX; startY = e.clientY; fromX = x; fromY = y;
+      bar.setPointerCapture(e.pointerId);
+      term.classList.add('is-dragging');
+    });
+    bar.addEventListener('pointermove', e => {
+      if (!term.classList.contains('is-dragging')) return;
+      moveTo(fromX + e.clientX - startX, fromY + e.clientY - startY);
+    });
+    const drop = () => term.classList.remove('is-dragging');
+    bar.addEventListener('pointerup', drop);
+    bar.addEventListener('pointercancel', drop);
+    bar.addEventListener('dblclick', () => { box = bounds(); moveTo(0, 0); });
+
+    /* A smaller window could leave it outside the hero: pull it back in */
+    window.addEventListener('resize', () => {
+      if (!x && !y) return;
+      box = bounds();
+      moveTo(x, y);
+    }, { passive: true });
+  }
+
   /* Clicking the terminal's empty space puts the cursor in the prompt */
   term.addEventListener('click', e => {
     if (e.target.closest('a, button, input')) return;

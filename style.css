@@ -2189,6 +2189,26 @@ button:focus-visible,
 }
 .term-input::placeholder { color: #71717a; }
 .hero-term:focus-within { border-color: #52525b; }
+
+/* Draggable window (terminal.js; mouse and pen only). It lifts while held
+   and settles with a little overshoot when sent back. */
+.hero-term {
+  transition: translate 0.6s cubic-bezier(.2, .9, .25, 1.15),
+              scale 0.25s ease,
+              box-shadow 0.25s ease,
+              border-color 0.2s ease;
+}
+.hero-term.is-dragging {
+  transition: none;
+  scale: 1.015;
+  box-shadow: 0 44px 90px -24px rgba(0,0,0,0.85),
+              0 0 90px -20px rgba(228,228,231,0.16),
+              inset 0 1px 0 rgba(255,255,255,0.06);
+}
+@media (pointer: fine) {
+  .term-bar { cursor: grab; user-select: none; }
+  .hero-term.is-dragging .term-bar { cursor: grabbing; }
+}
 /* iOS zooms into inputs with text under 16px */
 @media (pointer: coarse) { .term-input { font-size: 16px; } }
 
