@@ -102,7 +102,7 @@
       desc: 'list commands',
       run: () => [
         line(span('Commands (type or tap):', 'term-muted')),
-        ...['ask', 'about', 'experience', 'projects', 'stack', 'education', 'goals', 'contact', 'cv', 'clear']
+        ...[...(assistant ? ['ask'] : []), 'about', 'experience', 'projects', 'stack', 'education', 'goals', 'contact', 'cv', 'clear']
           .map(name => line(cmd(name), span(` ${' '.repeat(Math.max(0, 11 - name.length))}${COMMANDS[name].desc}`, 'term-muted'))),
         line(span('Also: ls, cd <section>, whoami, date. ↑ ↓ history, Tab completes.', 'term-muted')),
       ],
@@ -208,7 +208,7 @@
     logout: 'exit', quit: 'exit', cls: 'clear',
     ai: 'ask', chat: 'ask',
   };
-  const COMPLETIONS = [...Object.keys(COMMANDS).filter(c => c !== 'ask'), 'ask ', 'cd ', 'cat ', 'echo '];
+  const completions = () => [...Object.keys(COMMANDS).filter(c => c !== 'ask'), ...(assistant ? ['ask '] : []), 'cd ', 'cat ', 'echo '];
 
   /* ── ask: the AI assistant (api/ask.py behind /api/ask) ─────────
      The answer streams in as plain text. Anything that goes wrong becomes
@@ -216,11 +216,27 @@
   const EXAMPLES = ['what has Alan built with RAG?', 'which cloud platforms has he worked with?', 'is he open to new roles?'];
   const QUESTION_WORDS = /^(what|which|who|how|why|where|when|does|did|is|are|can|has|have|tell|qu[eé]|c[oó]mo|qui[eé]n|d[oó]nde|cu[aá]l|tiene|sabe|es)\b/i;
   let asking = false;
+  let assistant = null;            // provider name once /api/ask/health says it's configured
+
+  /* The assistant only shows up (help, suggestions, questions typed straight
+     in) when the server has an API key; otherwise the terminal is as before */
+  fetch('/api/ask/health', { cache: 'no-store' })
+    .then(res => (res.ok ? res.json() : null))
+    .then(status => {
+      if (!status || !status.configured) return;
+      assistant = status.provider === 'claude' ? 'Claude' : 'Gemini';
+      const stackChip = body.querySelector('.term-hint .term-btn:nth-of-type(3)');
+      if (stackChip && stackChip.textContent === 'stack') stackChip.replaceWith(cmd('ask'));
+    })
+    .catch(() => {});
 
   function ask(question) {
+    if (!assistant) {
+      return [line(span('The AI assistant is switched off for now. Meanwhile try ', 'term-muted'), cmd('about'), ' ', cmd('projects'), ' or ', cmd('contact'))];
+    }
     if (!question) {
       return [
-        line('Ask anything about my experience, projects or skills. ', span('Answers are AI-generated from my CV.', 'term-muted')),
+        line('Ask anything about my experience, projects or skills. ', span(`Answers are written by ${assistant} from my CV, so they can be imperfect.`, 'term-muted')),
         ...EXAMPLES.map(q => line(arrow(), cmd(`ask ${q}`, q))),
       ];
     }
@@ -295,8 +311,8 @@
     const key = COMMANDS[name] ? name : ALIASES[name];
     if (key) return COMMANDS[key].run(arg);
     /* Someone typed a question straight in: hand it to the assistant */
-    if (arg && (raw.trim().endsWith('?') || QUESTION_WORDS.test(raw.trim()))) return ask(raw.trim());
-    return [line(`command not found: ${word}. Type `, cmd('help'), ' or ', cmd('ask'), ' a question')];
+    if (assistant && arg && (raw.trim().endsWith('?') || QUESTION_WORDS.test(raw.trim()))) return ask(raw.trim());
+    return [line(`command not found: ${word}. Type `, cmd('help'), ...(assistant ? [' or ', cmd('ask'), ' a question'] : []))];
   }
 
   const history = [];
@@ -331,7 +347,7 @@
       input.value = history[historyAt] || '';
     } else if (e.key === 'Tab' && input.value.trim()) {
       const typed = input.value.toLowerCase();
-      const matches = COMPLETIONS.filter(c => c.startsWith(typed));
+      const matches = completions().filter(c => c.startsWith(typed));
       if (matches.length) {
         e.preventDefault();
         if (matches.length === 1) input.value = matches[0];
