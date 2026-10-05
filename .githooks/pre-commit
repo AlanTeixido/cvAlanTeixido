@@ -1,6 +1,7 @@
 #!/bin/sh
-# Refresh the ?v=<content hash> stamps on CSS/JS/images in the HTML pages
-# before every commit, and stage the pages that were rewritten.
+# Refresh the ?v=<content hash> stamps (url() refs in style.css, then the
+# CSS/JS/images/fonts in the HTML pages) before every commit, and stage the
+# files that were rewritten.
 # Enable once per clone:   git config core.hooksPath .githooks
 
 out=$(node scripts/stamp-assets.js) || {

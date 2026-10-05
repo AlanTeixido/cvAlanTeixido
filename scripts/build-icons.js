@@ -1,0 +1,116 @@
+#!/usr/bin/env node
+/* ─────────────────────────────────────────────────────────────────
+   build-icons.js — icons.css with only the icons the site uses
+
+   Scans the pages and main.js for Font Awesome classes
+   (fa-solid | fa-regular | fa-brands  fa-NAME) and Devicon classes
+   (devicon-NAME-VARIANT, optionally "colored"), downloads just those
+   icons from jsDelivr and writes icons.css: each icon is a CSS mask on
+   the element's ::before, painted with currentColor. The markup stays the
+   same (<i class="fa-solid fa-robot"></i>), but the site no longer loads
+   the full icon fonts.
+
+   Sources: Font Awesome Free 6.5.0 SVGs, and the glyphs of the Devicon
+   2.16.0 SVG font (so they match the old icon font exactly).
+
+   Usage:   node scripts/build-icons.js     (needs network)
+   Run it after adding or removing an icon class, then commit icons.css.
+───────────────────────────────────────────────────────────────── */
+const fs = require('fs');
+const path = require('path');
+
+const ROOT = path.resolve(__dirname, '..');
+const SOURCES = ['index.html', 'projects.html', '404.html', 'main.js'];
+const FA = 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/svgs';
+const DEVICON = 'https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0';
+
+async function get(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${res.status} ${url}`);
+  return res.text();
+}
+
+/* SVG → url("data:…"), percent-encoding only what CSS and URLs need */
+function dataUri(svg) {
+  const min = svg.replace(/\s+/g, ' ').replace(/"/g, "'").trim();
+  return `url("data:image/svg+xml,${min.replace(/[%#<>?\[\]{}`|^\\]/g, encodeURIComponent)}")`;
+}
+const em = n => `${+n.toFixed(4)}em`;
+
+async function main() {
+  const text = SOURCES.map(f => fs.readFileSync(path.join(ROOT, f), 'utf8')).join('\n');
+
+  /* Classes in use */
+  const fa = new Map();       // "solid:robot" -> { style, name }
+  for (const [, style, name] of text.matchAll(/\bfa-(solid|regular|brands) fa-([a-z0-9-]+)/g)) {
+    fa.set(`${style}:${name}`, { style, name });
+  }
+  const dev = new Set([...text.matchAll(/\b(devicon-[a-z0-9]+-(?:plain|original|line)(?:-wordmark)?)\b/g)].map(m => m[1]));
+
+  const rules = [];
+
+  /* Font Awesome: one SVG per icon; height is 1em, width follows the viewBox */
+  for (const { style, name } of [...fa.values()].sort((a, b) => a.name.localeCompare(b.name))) {
+    const svg = await get(`${FA}/${style}/${name}.svg`);
+    const [, w, h] = svg.match(/viewBox="0 0 (\d+) (\d+)"/);
+    const d = svg.match(/<path d="([^"]+)"/)[1];
+    const uri = dataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}"><path d="${d}"/></svg>`);
+    rules.push(`.fa-${style}.fa-${name}{--icon:${uri};--icon-w:${em(w / h)}}`);
+  }
+
+  /* Devicon: glyphs from the SVG font, located through the codepoints in its CSS */
+  const css = await get(`${DEVICON}/devicon.min.css`);
+  const font = await get(`${DEVICON}/fonts/devicon.svg`);
+  /* Rules may group selectors (".a:before,.a-wordmark:before{content:…}"), and
+     content is either an escape ("\e900") or the private-use character itself */
+  const codepoint = new Map();
+  for (const [, selectors, c] of css.matchAll(/([^{}]+)\{\s*content:\s*"(\\[0-9a-f]+|[^"])"\s*;?\s*\}/gi)) {
+    const cp = c.startsWith('\\') ? parseInt(c.slice(1), 16) : c.codePointAt(0);
+    for (const [, cls] of selectors.matchAll(/\.(devicon-[\w-]+):before/g)) codepoint.set(cls, cp);
+  }
+  const colour = new Map();
+  for (const [, selectors, value] of css.matchAll(/([^{}]+)\{\s*color:\s*(#[0-9a-f]{3,8})\s*;?\s*\}/gi)) {
+    for (const [, cls] of selectors.matchAll(/\.(devicon-[\w-]+)\.colored/g)) colour.set(cls, value.toLowerCase());
+  }
+  const attr = (tag, name) => (tag.match(new RegExp(`\\s${name}="([^"]*)"`)) || [])[1];
+  const face = font.match(/<font-face[^>]*>/)[0];
+  const upm = +attr(face, 'units-per-em'), ascent = +attr(face, 'ascent'), descent = +attr(face, 'descent');
+  const defaultAdv = +(attr(font.match(/<font[\s>][^>]*>/)[0], 'horiz-adv-x') || upm);
+  const glyphs = new Map();
+  for (const [tag] of font.matchAll(/<glyph[^>]*>/g)) {
+    const u = attr(tag, 'unicode');
+    if (!u) continue;
+    const cp = u.startsWith('&#x') ? parseInt(u.slice(3), 16) : u.startsWith('&#') ? parseInt(u.slice(2), 10) : u.codePointAt(0);
+    glyphs.set(cp, { d: attr(tag, 'd'), adv: +(attr(tag, 'horiz-adv-x') || defaultAdv) });
+  }
+
+  for (const cls of [...dev].sort()) {
+    const g = glyphs.get(codepoint.get(cls));
+    if (!g || !g.d) throw new Error(`no Devicon glyph for ${cls}`);
+    /* Font glyphs are y-up from the baseline: flip them into an SVG viewBox */
+    const uri = dataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 ${-ascent} ${g.adv} ${ascent - descent}"><path transform="scale(1 -1)" d="${g.d}"/></svg>`);
+    rules.push(`.${cls}{--icon:${uri};--icon-w:${em(g.adv / (ascent - descent))}}`);
+    if (colour.has(cls)) rules.push(`.${cls}.colored{color:${colour.get(cls)}}`);
+  }
+
+  const out = `/* icons.css — generated by scripts/build-icons.js, do not edit by hand.
+   Font Awesome Free 6.5.0 icons: CC BY 4.0, https://fontawesome.com/license/free
+   Devicon 2.16.0: MIT, https://github.com/devicons/devicon
+   Each icon is a mask on ::before, painted with currentColor, so the
+   element itself keeps any box, border or background the site gives it. */
+.fa-solid,.fa-regular,.fa-brands{display:inline-block;font-style:normal;line-height:1}
+[class^="devicon-"],[class*=" devicon-"]{font-style:normal;line-height:1}
+.fa-solid::before,.fa-regular::before,.fa-brands::before,
+[class^="devicon-"]::before,[class*=" devicon-"]::before{
+  content:"";display:inline-block;width:var(--icon-w,1em);height:1em;
+  background-color:currentColor;
+  -webkit-mask:var(--icon) center/100% 100% no-repeat;mask:var(--icon) center/100% 100% no-repeat}
+.fa-solid::before,.fa-regular::before,.fa-brands::before{vertical-align:-0.125em}
+[class^="devicon-"]::before,[class*=" devicon-"]::before{vertical-align:${em(descent / (ascent - descent))}}
+${rules.join('\n')}
+`;
+  fs.writeFileSync(path.join(ROOT, 'icons.css'), out);
+  console.log(`icons.css: ${fa.size} Font Awesome + ${dev.size} Devicon icons, ${(out.length / 1024).toFixed(1)} KB`);
+}
+
+main().catch(err => { console.error(err.message); process.exit(1); });
