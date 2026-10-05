@@ -1,0 +1,78 @@
+name: Monitor
+
+# Once a day, check the live site end to end: pages, assets, CV, TLS and the
+# "Ask my CV" assistant (one real test question). A failed run makes GitHub
+# email the repo owner. It can also be run by hand from the Actions tab.
+# Note: GitHub pauses scheduled workflows after 60 days without commits to
+# the repo; it emails before that, and one click in Actions turns it back on.
+
+on:
+  schedule:
+    - cron: "17 7 * * *"          # every day at 07:17 UTC
+  workflow_dispatch:
+  push:                           # and once whenever this file changes
+    branches: [main]
+    paths: [".github/workflows/monitor.yml"]
+
+permissions: {}
+
+concurrency:
+  group: monitor
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check alanteixido.dev
+        env:
+          SITE: https://alanteixido.dev
+        run: |
+          set -u
+          failures=0
+          ok()   { echo "PASS  $1" | tee -a "$GITHUB_STEP_SUMMARY"; }
+          bad()  { echo "FAIL  $1" | tee -a "$GITHUB_STEP_SUMMARY"; failures=$((failures + 1)); }
+          get()  { curl -sS --retry 2 --max-time 20 "$@"; }
+
+          echo "### alanteixido.dev — $(date -u '+%Y-%m-%d %H:%M UTC')" >> "$GITHUB_STEP_SUMMARY"
+
+          # Pages
+          home=$(get "$SITE/" -w '\n%{http_code}') || home=""
+          code=${home##*$'\n'}
+          if [ "$code" = 200 ] && grep -q "Alan Teixid" <<<"$home" && grep -q "terminal.js" <<<"$home"; then ok "home page"; else bad "home page (HTTP $code)"; fi
+          code=$(get -o /tmp/projects.html -w '%{http_code}' "$SITE/projects.html") || code=000
+          if [ "$code" = 200 ] && grep -q "Ask my CV" /tmp/projects.html; then ok "projects page"; else bad "projects page (HTTP $code)"; fi
+
+          # Assets referenced by the home page (versioned with ?v=)
+          for asset in $(grep -oE '(style|icons)\.css\?v=[0-9a-f]+|(main|terminal)\.js\?v=[0-9a-f]+' <<<"$home" | sort -u); do
+            code=$(get -o /dev/null -w '%{http_code}' "$SITE/$asset") || code=000
+            if [ "$code" = 200 ]; then ok "$asset"; else bad "$asset (HTTP $code)"; fi
+          done
+
+          # CV download
+          read -r code type size < <(get -o /dev/null -w '%{http_code} %{content_type} %{size_download}\n' "$SITE/cv/Alan_Teixido_CV.pdf" || echo "000 - 0")
+          size=${size//[^0-9]/}; size=${size:-0}
+          if [ "$code" = 200 ] && [ "$type" = application/pdf ] && [ "$size" -gt 10000 ]; then ok "CV PDF ($size bytes)"; else bad "CV PDF (HTTP $code, $type, $size bytes)"; fi
+
+          # TLS certificate (certbot renews it; warn well before it expires)
+          end=$(echo | openssl s_client -servername alanteixido.dev -connect alanteixido.dev:443 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+          days=$(( ( $(date -d "$end" +%s) - $(date +%s) ) / 86400 ))
+          if [ "$days" -gt 14 ]; then ok "TLS certificate ($days days left)"; else bad "TLS certificate expires in $days days"; fi
+
+          # Ask my CV: configured, and one real answer
+          health=$(get "$SITE/api/ask/health") || health=""
+          if grep -q '"configured": true' <<<"$health"; then ok "assistant configured ($health)"; else bad "assistant not configured ($health)"; fi
+          answer=$(get -X POST -H 'Content-Type: application/json' -d '{"question":"What is Alan'"'"'s current role?"}' -w '\n%{http_code}' "$SITE/api/ask") || answer=""
+          code=${answer##*$'\n'}; text=${answer%$'\n'*}
+          if [ "$code" = 200 ] && [ "${#text}" -gt 20 ] && ! grep -q "ran into an error" <<<"$text"; then
+            ok "assistant answered: ${text:0:120}"
+          else
+            bad "assistant (HTTP $code): ${text:0:200}"
+          fi
+
+          if [ "$failures" -gt 0 ]; then
+            echo "$failures check(s) failed" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
