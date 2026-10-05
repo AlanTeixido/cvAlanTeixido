@@ -1,0 +1,278 @@
+/* ─────────────────────────────────────────────────────────────────
+   terminal.js — the hero's status terminal, made interactive
+
+   Type a command (help, about, experience, projects, stack, contact, cv…)
+   and it answers with the same facts as the page. Commands shown in the
+   output are buttons, so it also works by tapping on a phone. ↑/↓ walk the
+   history, Tab completes.
+
+   Output is built from DOM nodes and textContent only: what the visitor
+   types is never parsed as HTML.
+───────────────────────────────────────────────────────────────── */
+(function initTerminal() {
+  const term = document.querySelector('.hero-term');
+  const body = term && term.querySelector('.term-body');
+  const staticPrompt = body && body.querySelector('.term-prompt-line');
+  if (!staticPrompt) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const MAX_LINES = 120;
+
+  /* ── Build: output area + a real input where the static caret was ── */
+  const out = document.createElement('div');
+  out.className = 'term-out';
+  out.setAttribute('aria-live', 'polite');
+  body.insertBefore(out, staticPrompt);
+
+  const form = document.createElement('form');
+  form.className = 'term-prompt-line';
+  const sign = document.createElement('span');
+  sign.className = 'term-prompt';
+  sign.setAttribute('aria-hidden', 'true');
+  sign.textContent = '$';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'term-input';
+  input.placeholder = 'type help and press Enter';
+  input.spellcheck = false;
+  input.autocomplete = 'off';
+  input.setAttribute('autocapitalize', 'off');
+  input.setAttribute('enterkeyhint', 'send');
+  input.setAttribute('aria-label', 'Terminal: type a command, for example help');
+  form.append(sign, input);
+  staticPrompt.replaceWith(form);
+
+  /* First visit: the prompt appears once the intro has typed the status
+     lines (style.css hides it until --prompt-at) */
+  const lastChar = body.querySelector('.tch.is-last');
+  if (lastChar) {
+    const at = parseFloat(lastChar.style.getPropertyValue('--d')) || 0;
+    body.style.setProperty('--prompt-at', `${at + 700}ms`);
+  }
+
+  /* ── Output helpers ──────────────────────────────────────────── */
+  function line(...parts) {
+    const p = document.createElement('p');
+    p.className = 'term-line';
+    p.append(...parts);
+    return p;
+  }
+  function span(text, cls) {
+    const s = document.createElement('span');
+    if (cls) s.className = cls;
+    s.textContent = text;
+    return s;
+  }
+  /* A command you can tap */
+  function cmd(name, label = name) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'term-btn';
+    b.textContent = label;
+    b.addEventListener('click', () => run(name));
+    return b;
+  }
+  function link(text, href, { external = false, download = false } = {}) {
+    const a = document.createElement('a');
+    a.className = 'term-link';
+    a.href = href;
+    a.textContent = text;
+    if (external) { a.target = '_blank'; a.rel = 'noopener'; }
+    if (download) a.setAttribute('download', '');
+    return a;
+  }
+  const arrow = () => span('→ ', 'term-arrow');
+  const pad = (text, width) => span(text.padEnd(width), 'term-key');
+
+  function goTo(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+  }
+
+  /* ── Content (same facts as the page) ────────────────────────── */
+  const SECTIONS = ['about', 'experience', 'projects', 'education', 'skills', 'goals', 'contact'];
+
+  const COMMANDS = {
+    help: {
+      desc: 'list commands',
+      run: () => [
+        line(span('Commands (type or tap):', 'term-muted')),
+        ...['about', 'experience', 'projects', 'stack', 'education', 'goals', 'contact', 'cv', 'clear']
+          .map(name => line(cmd(name), span(` ${' '.repeat(Math.max(0, 11 - name.length))}${COMMANDS[name].desc}`, 'term-muted'))),
+        line(span('Also: ls, cd <section>, whoami, date. ↑ ↓ history, Tab completes.', 'term-muted')),
+      ],
+    },
+    about: {
+      desc: 'who I am',
+      run: () => [
+        line('Fullstack & AI engineer based in Barcelona. I build AI agents that answer from company knowledge (Google ADK, Vertex AI, RAG), the Python and .NET APIs behind them, and React / React Native apps on top.'),
+        line(arrow(), cmd('cd about', 'open section')),
+      ],
+    },
+    experience: {
+      desc: "where I've worked",
+      run: () => [
+        ...[
+          ['2025 – now ', 'Plain Concepts', 'Software Engineer, Fullstack & AI'],
+          ['2024 – 2025', 'Quantion', 'Backend Developer (.NET), internship'],
+          ['2024       ', 'SJAS Summer Camp', 'Camp Counselor'],
+          ['2022       ', 'CamperXpress', 'Sales Representative & Web Developer'],
+          ['2021 – 2022', 'Pista Cero Informática', 'Hardware Technician'],
+        ].map(([when, where, what]) => line(span(when + '  ', 'term-muted'), span(where, 'term-strong'), ` · ${what}`)),
+        line(arrow(), cmd('cd experience', 'open section')),
+      ],
+    },
+    projects: {
+      desc: "things I've built",
+      run: () => [
+        line(arrow(), link('GenAI Data Platform', 'projects.html#genai-data-platform'),
+          span(' — questions in plain English become governed SQL and Metabase dashboards', 'term-muted')),
+        line(arrow(), link('Fit', 'https://fit.alanteixido.dev', { external: true }),
+          span(' — training app with an AI coach (Next.js, Supabase, Claude API)', 'term-muted')),
+        line(arrow(), link('ProTactics', 'https://github.com/AlanTeixido/ProTactics', { external: true }),
+          span(' — football club management platform (Vue 3, Node.js, PostgreSQL)', 'term-muted')),
+        line(arrow(), link('all projects', 'projects.html')),
+      ],
+    },
+    stack: {
+      desc: 'tools I use',
+      run: () => [
+        ['AI', 'Google ADK · Vertex AI · RAG · Azure Bot Service'],
+        ['Backend', '.NET (C#) · Python · FastAPI · Clean Architecture · CQRS'],
+        ['Frontend', 'React · Next.js · TypeScript · Vue.js · Tailwind CSS'],
+        ['Mobile', 'React Native · Expo · Kotlin · Firebase'],
+        ['Cloud', 'Azure · Azure DevOps · Google Cloud · Docker'],
+        ['Data', 'PostgreSQL · Entity Framework Core · SQL'],
+      ].map(([group, tools]) => line(pad(group, 10), tools)),
+    },
+    education: {
+      desc: 'where I studied',
+      run: () => [
+        line(span('2024 – 2025  ', 'term-muted'), span('CFGS DAW', 'term-strong'), ' · Web Application Development · Institut Tecnològic de Barcelona'),
+        line(span('2021 – 2023  ', 'term-muted'), span('CFGM SMX', 'term-strong'), ' · Microcomputer Systems & Networks · IFP Hospitalet'),
+        line(span('2013 – 2020  ', 'term-muted'), span('SEK Catalunya', 'term-strong'), ' · Primary & Secondary Education'),
+      ],
+    },
+    goals: {
+      desc: "what's next",
+      run: () => [
+        line('I already ship AI agents to production. Next, I want to make them reliable at scale: evaluating answer quality, observability, grounding and guardrails, and keeping latency and cost under control.'),
+        line(arrow(), cmd('cd goals', 'open section')),
+      ],
+    },
+    contact: {
+      desc: 'how to reach me',
+      run: () => [
+        line(pad('email', 10), link('teixido.alan@gmail.com', 'mailto:teixido.alan@gmail.com')),
+        line(pad('linkedin', 10), link('in/alanteixidosararols', 'https://www.linkedin.com/in/alanteixidosararols', { external: true })),
+        line(pad('github', 10), link('AlanTeixido', 'https://github.com/AlanTeixido', { external: true })),
+      ],
+    },
+    cv: {
+      desc: 'download my CV',
+      run: () => [line(arrow(), link('Alan_Teixido_CV.pdf', '/cv/Alan_Teixido_CV.pdf', { download: true }), span('  (PDF)', 'term-muted'))],
+    },
+    clear: {
+      desc: 'clear the screen',
+      run: () => { out.replaceChildren(); body.classList.add('is-cleared'); return []; },
+    },
+
+    /* Not listed in help, but a terminal wouldn't be one without them */
+    ls: { run: () => [line(['about.md', 'experience.md', 'projects/', 'stack.md', 'education.md', 'goals.md', 'contact.md', 'cv.pdf'].join('  '))] },
+    whoami: { run: () => [line('guest. Hiring? Try ', cmd('contact'))] },
+    pwd: { run: () => [line('/home/alan/barcelona')] },
+    date: { run: () => [line(new Date().toString())] },
+    sudo: { run: () => [line('guest is not in the sudoers file. This incident will be reported… to my inbox: ', cmd('contact'))] },
+    rm: { run: () => [line('rm: refusing to delete a CV that is still job hunting')] },
+    exit: { run: () => [line("There's no exit, only ", cmd('contact'), ' or ', cmd('cv'))] },
+    hello: { run: () => [line('Hi! Type ', cmd('help'), ' to see what I can do.')] },
+  };
+
+  const ALIASES = {
+    work: 'experience', exp: 'experience', jobs: 'experience',
+    skills: 'stack', tech: 'stack',
+    email: 'contact', mail: 'contact', social: 'contact',
+    resume: 'cv', 'cv.pdf': 'cv',
+    studies: 'education', edu: 'education',
+    man: 'help', '?': 'help', commands: 'help',
+    hi: 'hello', hola: 'hello', hey: 'hello',
+    logout: 'exit', quit: 'exit', cls: 'clear',
+  };
+  const COMPLETIONS = [...Object.keys(COMMANDS), 'cd ', 'cat ', 'echo '];
+
+  /* ── Run a command ───────────────────────────────────────────── */
+  function resolve(raw) {
+    const [word = '', ...rest] = raw.trim().split(/\s+/);
+    const name = word.toLowerCase();
+    const arg = rest.join(' ');
+
+    if (name === 'cd' || name === 'open') {
+      const target = arg.toLowerCase().replace(/[/.]|md$/g, '');
+      const id = target === 'stack' ? 'skills' : target;
+      if (SECTIONS.includes(id)) { goTo(id); return [line(span(`→ #${id}`, 'term-muted'))]; }
+      if (!target || target === '~') return [line(span('already home', 'term-muted'))];
+      return [line(`cd: no such section: ${arg}. Try `, cmd('ls'))];
+    }
+    if (name === 'cat') {
+      const file = arg.toLowerCase().replace(/\.(md|pdf)$|\/$/g, '');
+      const target = ALIASES[file] || file;
+      if (COMMANDS[target] && COMMANDS[target].desc) return COMMANDS[target].run();
+      return [line(`cat: ${arg || 'missing file'}: no such file. Try `, cmd('ls'))];
+    }
+    if (name === 'echo') return [line(arg)];
+
+    const key = COMMANDS[name] ? name : ALIASES[name];
+    if (key) return COMMANDS[key].run(arg);
+    return [line(`command not found: ${word}. Type `, cmd('help'))];
+  }
+
+  const history = [];
+  let historyAt = 0;
+
+  function run(raw) {
+    const text = raw.trim();
+    if (!text) return;
+    history.push(text);
+    historyAt = history.length;
+
+    body.classList.remove('is-cleared');
+    out.append(line(span('$ ', 'term-prompt'), span(text, 'term-cmd')));
+    out.append(...resolve(text));
+    while (out.childElementCount > MAX_LINES) out.firstElementChild.remove();
+    body.scrollTop = body.scrollHeight;
+  }
+
+  /* ── Input: Enter, history, completion ───────────────────────── */
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const text = input.value;
+    input.value = '';
+    run(text);
+  });
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      if (!history.length) return;
+      e.preventDefault();
+      historyAt = Math.max(0, Math.min(history.length, historyAt + (e.key === 'ArrowUp' ? -1 : 1)));
+      input.value = history[historyAt] || '';
+    } else if (e.key === 'Tab' && input.value.trim()) {
+      const typed = input.value.toLowerCase();
+      const matches = COMPLETIONS.filter(c => c.startsWith(typed));
+      if (matches.length) {
+        e.preventDefault();
+        if (matches.length === 1) input.value = matches[0];
+        else out.append(line(span(matches.join('  '), 'term-muted')));
+        body.scrollTop = body.scrollHeight;
+      }
+      /* no match: let Tab move focus as usual */
+    }
+  });
+
+  /* Clicking the terminal's empty space puts the cursor in the prompt */
+  term.addEventListener('click', e => {
+    if (e.target.closest('a, button, input')) return;
+    if (window.getSelection().toString()) return;   // let people copy text
+    input.focus({ preventScroll: true });
+  });
+})();

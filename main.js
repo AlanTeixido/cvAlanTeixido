@@ -313,6 +313,7 @@ window.addEventListener('scroll', () => {
 
   /* Arrow keys */
   document.addEventListener('keydown', e => {
+    if (e.target.closest('input, textarea, [contenteditable]')) return;   // e.g. typing in the terminal
     const sec = document.getElementById('projects');
     if (!sec) return;
     const r = sec.getBoundingClientRect();

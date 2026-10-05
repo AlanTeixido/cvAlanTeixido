@@ -49,7 +49,7 @@
     <link rel="stylesheet" href="icons.css?v=6de6e46b" />
 
     <!-- Styles -->
-    <link rel="stylesheet" href="style.css?v=80251cab" />
+    <link rel="stylesheet" href="style.css?v=f778d2a2" />
 
     <meta name="theme-color" content="#09090b" />
 
@@ -147,7 +147,7 @@
           </div>
 
           <!-- Status terminal: real text, typed out after the intro on the first visit -->
-          <aside class="hero-term" aria-label="Status">
+          <aside class="hero-term" aria-label="Terminal">
             <div class="term-bar" aria-hidden="true">
               <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
               <span class="term-name">alan@barcelona: ~</span>
@@ -157,6 +157,8 @@
               <p class="term-line"><span class="term-arrow">→</span> Building AI agents @ Plain Concepts</p>
               <p class="term-line"><span class="term-arrow">→</span> Stack: .NET · Python · React · React&nbsp;Native</p>
               <p class="term-line"><span class="term-arrow">→</span> Based in Barcelona, Spain</p>
+              <!-- terminal.js turns this into a prompt you can type in -->
+              <p class="term-prompt-line"><span class="term-prompt">$</span> <span class="term-caret" aria-hidden="true"></span></p>
             </div>
           </aside>
         </div>
@@ -519,24 +521,7 @@
             </div>
           </a>
 
-          <a href="https://github.com/AlanTeixido/ProTactics" target="_blank" rel="noopener" class="pp-card proj-slide" data-idx="1">
-            <div class="pp-thumb">
-              <img src="images/protactics_preview.svg?v=bac0905b" alt="ProTactics — Football Club Management" loading="lazy" />
-            </div>
-            <div class="pp-body">
-              <div class="pp-live"><span class="fp-live-dot" style="background:#04c444"></span> Fullstack</div>
-              <h3 class="pp-title">ProTactics</h3>
-              <p class="pp-desc">Football club management platform with role-based auth, training planner, player tracking and an interactive tactics board.</p>
-              <div class="pp-tech">
-                <span><i class="devicon-vuejs-plain colored"></i> Vue 3</span>
-                <span><i class="devicon-nodejs-plain colored"></i> Node.js</span>
-                <span><i class="devicon-postgresql-plain colored"></i> PostgreSQL</span>
-              </div>
-              <div class="pp-cta">View project <i class="fa-solid fa-arrow-right"></i></div>
-            </div>
-          </a>
-
-          <a href="https://fit.alanteixido.dev" target="_blank" rel="noopener" class="pp-card proj-slide" data-idx="2">
+          <a href="https://fit.alanteixido.dev" target="_blank" rel="noopener" class="pp-card proj-slide" data-idx="1">
             <div class="pp-thumb">
               <img src="images/fit_preview.webp?v=8e557abe" alt="Fit — training and recovery app" loading="lazy" />
             </div>
@@ -553,18 +538,18 @@
             </div>
           </a>
 
-          <a href="https://pokedex.alanteixido.dev" target="_blank" rel="noopener" class="pp-card proj-slide" data-idx="3">
+          <a href="https://github.com/AlanTeixido/ProTactics" target="_blank" rel="noopener" class="pp-card proj-slide" data-idx="2">
             <div class="pp-thumb">
-              <img src="images/pokedex_project.webp?v=3b5f0867" alt="Pokédex App" loading="lazy" />
+              <img src="images/protactics_preview.svg?v=bac0905b" alt="ProTactics — Football Club Management" loading="lazy" />
             </div>
             <div class="pp-body">
-              <div class="pp-live"><span class="fp-live-dot"></span> Live</div>
-              <h3 class="pp-title">Pokédex App</h3>
-              <p class="pp-desc">Full-featured Pokédex with real-time search, filters, evolution chains and stat comparison.</p>
+              <div class="pp-live"><span class="fp-live-dot" style="background:#04c444"></span> Fullstack</div>
+              <h3 class="pp-title">ProTactics</h3>
+              <p class="pp-desc">Football club management platform with role-based auth, training planner, player tracking and an interactive tactics board.</p>
               <div class="pp-tech">
-                <span><i class="devicon-nextjs-plain"></i> Next.js</span>
-                <span><i class="devicon-typescript-original colored"></i> TypeScript</span>
-                <span><i class="devicon-tailwindcss-plain colored"></i> Tailwind</span>
+                <span><i class="devicon-vuejs-plain colored"></i> Vue 3</span>
+                <span><i class="devicon-nodejs-plain colored"></i> Node.js</span>
+                <span><i class="devicon-postgresql-plain colored"></i> PostgreSQL</span>
               </div>
               <div class="pp-cta">View project <i class="fa-solid fa-arrow-right"></i></div>
             </div>
@@ -581,13 +566,12 @@
           <!-- Dots -->
           <div class="proj-dots" id="projDots">
             <button class="proj-dot" data-idx="0" aria-label="GenAI Data Platform"></button>
-            <button class="proj-dot" data-idx="1" aria-label="ProTactics"></button>
-            <button class="proj-dot" data-idx="2" aria-label="Fit"></button>
-            <button class="proj-dot" data-idx="3" aria-label="Pokédex App"></button>
+            <button class="proj-dot" data-idx="1" aria-label="Fit"></button>
+            <button class="proj-dot" data-idx="2" aria-label="ProTactics"></button>
           </div>
 
           <!-- Counter -->
-          <div class="proj-counter" id="projCounter">1 / 4</div>
+          <div class="proj-counter" id="projCounter">1 / 3</div>
 
           <!-- Progress bar -->
           <div class="proj-progress">
@@ -877,6 +861,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="main.js?v=608d264c" defer></script>
+    <script src="main.js?v=39df5ab8" defer></script>
+    <script src="terminal.js?v=62d289cc" defer></script>
   </body>
 </html>
