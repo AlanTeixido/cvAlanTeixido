@@ -134,6 +134,8 @@
     projects: {
       desc: "things I've built",
       run: () => [
+        line(arrow(), link('Ask my CV', 'projects.html#ask-my-cv'),
+          span(' — the AI assistant in this terminal (Python service, nginx, Gemini API)', 'term-muted')),
         line(arrow(), link('GenAI Data Platform', 'projects.html#genai-data-platform'),
           span(' — questions in plain English become governed SQL and Metabase dashboards', 'term-muted')),
         line(arrow(), link('Fit', 'https://fit.alanteixido.dev', { external: true }),
@@ -227,6 +229,12 @@
       assistant = status.provider === 'claude' ? 'Claude' : 'Gemini';
       const stackChip = body.querySelector('.term-hint .term-btn:nth-of-type(3)');
       if (stackChip && stackChip.textContent === 'stack') stackChip.replaceWith(cmd('ask'));
+      /* "Try it" on the projects page links here with #ask: show the examples
+         and put the cursor in the prompt (after the intro, if it's playing) */
+      if (location.hash === '#ask') {
+        const promptAt = parseFloat(body.style.getPropertyValue('--prompt-at')) || 0;
+        setTimeout(() => { run('ask'); input.focus({ preventScroll: true }); }, promptAt);
+      }
     })
     .catch(() => {});
 

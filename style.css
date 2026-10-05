@@ -2018,6 +2018,29 @@ button:focus-visible,
 }
 .pp-flow-step i { color: var(--accent-cyan); font-size: 11px; }
 .pp-flow-arrow { color: var(--text-3); font-size: 10px; }
+/* Ask my CV card: a miniature of the home page terminal (always dark) */
+.pp-term {
+  position: relative;
+  z-index: 1;
+  width: 86%;
+  max-width: 360px;
+  padding-bottom: 10px;
+  border: 1px solid #27272a;
+  border-radius: 10px;
+  background: rgba(15,15,18,0.92);
+  box-shadow: var(--shadow-md);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: #d4d4d8;
+  text-align: left;
+}
+.pp-term-bar { display: flex; gap: 5px; padding: 8px 10px; margin-bottom: 8px; border-bottom: 1px solid #27272a; }
+.pp-term-bar span { width: 7px; height: 7px; border-radius: 50%; background: #52525b; }
+.pp-term p { margin: 0; padding: 0 12px; }
+.pp-term-prompt { color: #a1a1aa; }
+.pp-term-arrow { color: #71717a; }
+.pp-term p.pp-term-dim { margin-top: 6px; color: #71717a; }
 .pp-live--case { color: var(--accent-cyan); }
 
 /* Hero backdrop: one static gradient instead of animated canvas + blurred orbs */

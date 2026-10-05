@@ -36,10 +36,10 @@
     <link rel="preload" href="fonts/plus-jakarta-sans-v12-latin.woff2?v=a180dc40" as="font" type="font/woff2" crossorigin />
 
     <!-- Icons: only the ones in use, as CSS masks (scripts/build-icons.js) -->
-    <link rel="stylesheet" href="icons.css?v=10060d26" />
+    <link rel="stylesheet" href="icons.css?v=36da3a7d" />
 
     <!-- Styles -->
-    <link rel="stylesheet" href="style.css?v=4a105203" />
+    <link rel="stylesheet" href="style.css?v=e185df9b" />
 
     <meta name="theme-color" content="#09090b" />
   </head>
@@ -97,6 +97,71 @@
     <section id="projects-section">
       <div class="container">
         <div class="projects-grid">
+
+          <!-- Ask my CV -->
+          <div class="project-card reveal reveal-delay-1" id="ask-my-cv">
+            <div class="project-card-visual" aria-hidden="true">
+              <div class="pp-term">
+                <div class="pp-term-bar"><span></span><span></span><span></span></div>
+                <p><span class="pp-term-prompt">$</span> ask what has Alan built with RAG?</p>
+                <p><span class="pp-term-arrow">→</span> AI agents on Vertex AI, grounded in company documents, plus the FastAPI backend…</p>
+                <p class="pp-term-dim">streamed live · written only from my CV</p>
+              </div>
+            </div>
+            <div class="project-card-body">
+              <div class="project-meta">
+                <span class="project-status">Live</span>
+                <span class="project-tag">AI</span>
+              </div>
+              <h2 class="project-title">Ask my CV</h2>
+              <p class="project-desc">
+                An AI assistant built into the terminal on my home page.
+                Visitors ask about my experience in English, Spanish or Catalan
+                and the answer streams in live, written only from my CV. A small
+                Python service (standard library, no dependencies) runs behind
+                nginx on my own VPS and calls the Gemini API with my profile as
+                context. Production details on a zero budget: the prompt keeps
+                it on topic and treats every message as a question, never as
+                instructions; length limits, per-visitor and daily caps and
+                nginx rate limiting keep it safe and free to run; questions are
+                never logged; and systemd runs it sandboxed, restarting it on
+                every deploy.
+              </p>
+              <div class="project-tech">
+                <span class="project-tech-pill">
+                  <i class="devicon-python-plain colored"></i>Python
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-robot" style="color:var(--accent-cyan);font-size:11px"></i>Gemini API
+                </span>
+                <span class="project-tech-pill">
+                  <i class="devicon-nginx-original colored"></i>nginx
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-server" style="color:var(--accent-cyan);font-size:11px"></i>systemd
+                </span>
+                <span class="project-tech-pill">
+                  <i class="devicon-javascript-plain colored"></i>JavaScript
+                </span>
+                <span class="project-tech-pill">
+                  <i class="fa-solid fa-bolt" style="color:var(--accent-cyan);font-size:11px"></i>Streaming
+                </span>
+              </div>
+              <div class="project-links">
+                <a href="index.html#ask" class="btn btn-primary btn-sm">
+                  <i class="fa-solid fa-terminal"></i> Try it
+                </a>
+                <a
+                  href="https://github.com/AlanTeixido/cvAlanTeixido/tree/main/api"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-secondary btn-sm"
+                >
+                  <i class="fa-brands fa-github"></i> Code
+                </a>
+              </div>
+            </div>
+          </div>
 
           <!-- GenAI Data Platform -->
           <div class="project-card reveal reveal-delay-1" id="genai-data-platform">

@@ -80,9 +80,17 @@ Barcelona, Spain.
 - Smaller builds: Pokédex app and Crypto Tracker (Next.js, TypeScript),
   Minesweeper (vanilla JavaScript), BarberStyle BCN (Vue 3, Vite, Tailwind)
   and AutoTech demo site (vanilla HTML, CSS, JavaScript).
+- Ask my CV (this assistant, live on alanteixido.dev): an AI assistant in the
+  terminal on the home page that answers questions about Alan from his CV only,
+  streaming the answer live. A small Python service (standard library, no
+  dependencies) behind nginx on his own VPS calls the Gemini API with the
+  profile as context. Guardrails: the prompt keeps it on topic and treats the
+  visitor's message as a question, never as instructions; question length
+  limits, per-visitor and daily caps and nginx rate limiting; questions are
+  never logged; systemd runs it sandboxed and restarts it on every deploy.
+  Code: github.com/AlanTeixido/cvAlanTeixido (api/ folder).
 - This website: static HTML, CSS and JavaScript on his own VPS with nginx and a
-  GitHub Actions deploy; this assistant is a small Python service calling the
-  Claude API.
+  GitHub Actions deploy, with a draggable interactive terminal in the hero.
 
 ## Skills
 - AI & agents: Google ADK, Vertex AI, RAG, Vertex AI Data Stores, Azure Bot
