@@ -473,16 +473,6 @@ nav.scrolled {
 .about-photo-wrap:hover .about-photo {
   transform: scale(1.04);
 }
-.about-photo-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 55%,
-    color-mix(in srgb, var(--bg) 55%, transparent) 100%
-  );
-  pointer-events: none;
-}
 .about-bio {
   font-size: 1.05rem;
   color: var(--text-2);
@@ -1659,12 +1649,6 @@ nav.scrolled {
 /* Language bars: thicker */
 .lang-bar { height: 4px; }
 
-/* Photo overlay: enhanced gradient with vignette */
-.about-photo-overlay {
-  background:
-    linear-gradient(to bottom, transparent 50%, color-mix(in srgb, var(--bg) 60%, transparent) 100%),
-    radial-gradient(ellipse at center, transparent 60%, color-mix(in srgb, var(--bg) 15%, transparent) 100%);
-}
 
 /* "Currently" status widget */
 .about-status {
