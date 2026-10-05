@@ -340,6 +340,19 @@ window.addEventListener('scroll', () => {
     });
   }
 
+  /* Slides are absolutely positioned, so the wrapper can't grow with them:
+     size it to the tallest card plus the controls row (--controls-h) */
+  function fitHeight() {
+    const controls = parseFloat(getComputedStyle(wrap).getPropertyValue('--controls-h')) || 56;
+    wrap.style.height = `${Math.max(...slides.map(s => s.offsetHeight)) + controls}px`;
+  }
+  fitHeight();
+  window.addEventListener('resize', fitHeight, { passive: true });
+  document.fonts.ready.then(fitHeight);
+  wrap.querySelectorAll('img').forEach(img => {
+    if (!img.complete) img.addEventListener('load', fitHeight, { once: true });
+  });
+
   setPositions();
 })();
 
