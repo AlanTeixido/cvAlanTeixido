@@ -224,9 +224,13 @@ class Handler(BaseHTTPRequestHandler):
         if length <= 0 or length > MAX_BODY_BYTES:
             return self.reply(400, "bad request")
         try:
-            question = str(json.loads(self.rfile.read(length)).get("question", "")).strip()
-        except (ValueError, AttributeError):
+            data = json.loads(self.rfile.read(length))  # invalid UTF-8 raises ValueError too
+        except ValueError:
             return self.reply(400, "bad request")
+        question = data.get("question") if isinstance(data, dict) else None
+        if not isinstance(question, str):                # e.g. a list: never forwarded
+            return self.reply(400, "bad request")
+        question = question.strip()
         if not question:
             return self.reply(400, "empty question")
         if len(question) > MAX_QUESTION_CHARS:

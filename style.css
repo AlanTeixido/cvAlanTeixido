@@ -2305,6 +2305,12 @@ button:focus-visible,
     max-height: 430px;
   }
 }
+/* Small laptops (1024–1099px): a narrower terminal so the three hero
+   buttons still fit on one row next to it */
+@media (min-width: 1024px) and (max-width: 1099px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 400px); gap: 40px; }
+  .term-body { font-size: 13px; }
+}
 
 .sr-only {
   position: absolute;

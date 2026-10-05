@@ -1,3 +1,4 @@
 # Local editor and assistant settings: not part of the site
 .claude/
 .vscode/
+__pycache__/
