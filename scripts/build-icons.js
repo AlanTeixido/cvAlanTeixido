@@ -20,7 +20,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const SOURCES = ['index.html', 'projects.html', '404.html', 'main.js'];
+const SOURCES = ['index.html', 'projects.html', '404.html', 'main.js', 'terminal.js'];
 const FA = 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/svgs';
 const DEVICON = 'https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0';
 

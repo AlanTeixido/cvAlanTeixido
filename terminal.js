@@ -2,9 +2,10 @@
    terminal.js — the hero's status terminal, made interactive
 
    Type a command (help, about, experience, projects, stack, contact, cv…)
-   and it answers with the same facts as the page. Commands shown in the
-   output are buttons, so it also works by tapping on a phone. ↑/↓ walk the
-   history, Tab completes.
+   and it answers with the same facts as the page; `ask` (or any question
+   typed straight in) goes to the AI assistant in api/ask.py. Commands shown
+   in the output are buttons, so it also works by tapping on a phone. ↑/↓
+   walk the history, Tab completes. On desktop the window can be dragged.
 
    Output is built from DOM nodes and textContent only: what the visitor
    types is never parsed as HTML.
@@ -101,10 +102,14 @@
       desc: 'list commands',
       run: () => [
         line(span('Commands (type or tap):', 'term-muted')),
-        ...['about', 'experience', 'projects', 'stack', 'education', 'goals', 'contact', 'cv', 'clear']
+        ...['ask', 'about', 'experience', 'projects', 'stack', 'education', 'goals', 'contact', 'cv', 'clear']
           .map(name => line(cmd(name), span(` ${' '.repeat(Math.max(0, 11 - name.length))}${COMMANDS[name].desc}`, 'term-muted'))),
         line(span('Also: ls, cd <section>, whoami, date. ↑ ↓ history, Tab completes.', 'term-muted')),
       ],
+    },
+    ask: {
+      desc: 'ask the AI about me',
+      run: question => ask(question),
     },
     about: {
       desc: 'who I am',
@@ -201,8 +206,70 @@
     man: 'help', '?': 'help', commands: 'help',
     hi: 'hello', hola: 'hello', hey: 'hello',
     logout: 'exit', quit: 'exit', cls: 'clear',
+    ai: 'ask', chat: 'ask',
   };
-  const COMPLETIONS = [...Object.keys(COMMANDS), 'cd ', 'cat ', 'echo '];
+  const COMPLETIONS = [...Object.keys(COMMANDS).filter(c => c !== 'ask'), 'ask ', 'cd ', 'cat ', 'echo '];
+
+  /* ── ask: the AI assistant (api/ask.py behind /api/ask) ─────────
+     The answer streams in as plain text. Anything that goes wrong becomes
+     one friendly line pointing to the static commands. */
+  const EXAMPLES = ['what has Alan built with RAG?', 'which cloud platforms has he worked with?', 'is he open to new roles?'];
+  const QUESTION_WORDS = /^(what|which|who|how|why|where|when|does|did|is|are|can|has|have|tell|qu[eé]|c[oó]mo|qui[eé]n|d[oó]nde|cu[aá]l|tiene|sabe|es)\b/i;
+  let asking = false;
+
+  function ask(question) {
+    if (!question) {
+      return [
+        line('Ask anything about my experience, projects or skills. ', span('Answers are AI-generated from my CV.', 'term-muted')),
+        ...EXAMPLES.map(q => line(arrow(), cmd(`ask ${q}`, q))),
+      ];
+    }
+    if (asking) return [line(span('Still answering the previous question…', 'term-muted'))];
+    const answer = span('', 'term-answer');
+    const thinking = span('thinking', 'term-thinking');
+    answer.append(thinking);
+    streamAnswer(question, answer, thinking);
+    return [line(arrow(), answer)];
+  }
+
+  async function streamAnswer(question, answer, thinking) {
+    asking = true;
+    out.setAttribute('aria-busy', 'true');        // screen readers wait for the full answer
+    let text = '';
+    try {
+      const res = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question }),
+      });
+      if (!res.ok || !res.body) throw new Error(String(res.status));
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        text += decoder.decode(value, { stream: true });
+        answer.textContent = text;                 // replaces "thinking" on the first chunk
+        body.scrollTop = body.scrollHeight;
+      }
+      text += decoder.decode();
+      if (!text.trim()) throw new Error('empty');
+      answer.textContent = text;
+    } catch (err) {
+      thinking.remove();
+      answer.replaceChildren(...failure(Number(err.message)));
+    } finally {
+      asking = false;
+      out.removeAttribute('aria-busy');
+      body.scrollTop = body.scrollHeight;
+    }
+  }
+
+  function failure(status) {
+    if (status === 429) return [span("That's a lot of questions for today. Ask Alan directly: ", 'term-muted'), cmd('contact')];
+    if (status === 400) return [span('Try a shorter question (300 characters max).', 'term-muted')];
+    return [span('The assistant is offline right now. Try ', 'term-muted'), cmd('about'), ' ', cmd('projects'), ' or ', cmd('contact')];
+  }
 
   /* ── Run a command ───────────────────────────────────────────── */
   function resolve(raw) {
@@ -227,7 +294,9 @@
 
     const key = COMMANDS[name] ? name : ALIASES[name];
     if (key) return COMMANDS[key].run(arg);
-    return [line(`command not found: ${word}. Type `, cmd('help'))];
+    /* Someone typed a question straight in: hand it to the assistant */
+    if (arg && (raw.trim().endsWith('?') || QUESTION_WORDS.test(raw.trim()))) return ask(raw.trim());
+    return [line(`command not found: ${word}. Type `, cmd('help'), ' or ', cmd('ask'), ' a question')];
   }
 
   const history = [];
@@ -284,6 +353,25 @@
     const EDGE = 8;
     let x = 0, y = 0, startX = 0, startY = 0, fromX = 0, fromY = 0, box = null;
     bar.title = 'Drag to move · double-click to reset';
+
+    /* Say so: a "drag" label on the bar, and once per session a small wobble
+       when the window is ready (skipped with reduced motion) */
+    const hint = document.createElement('span');
+    hint.className = 'term-drag-hint';
+    const moveIcon = document.createElement('i');
+    moveIcon.className = 'fa-solid fa-up-down-left-right';
+    hint.append(moveIcon, ' drag');
+    bar.append(hint);
+    let nudged = true;
+    try { nudged = sessionStorage.getItem('at-term-nudge') === '1'; sessionStorage.setItem('at-term-nudge', '1'); } catch (e) {}
+    if (!nudged && !reduceMotion) {
+      const promptAt = parseFloat(body.style.getPropertyValue('--prompt-at')) || 0;
+      setTimeout(() => {
+        if (x || y || term.classList.contains('is-dragging')) return;   // already found it
+        term.classList.add('is-nudging');
+        term.addEventListener('animationend', () => term.classList.remove('is-nudging'), { once: true });
+      }, (promptAt || 600) + 900);
+    }
 
     /* Where the window may go, from its untranslated box and the hero's */
     function bounds() {
