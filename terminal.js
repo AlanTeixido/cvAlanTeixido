@@ -360,7 +360,7 @@
     hint.className = 'term-drag-hint';
     const moveIcon = document.createElement('i');
     moveIcon.className = 'fa-solid fa-up-down-left-right';
-    hint.append(moveIcon, ' drag');
+    hint.append(moveIcon, ' drag me');
     bar.append(hint);
     let nudged = true;
     try { nudged = sessionStorage.getItem('at-term-nudge') === '1'; sessionStorage.setItem('at-term-nudge', '1'); } catch (e) {}
