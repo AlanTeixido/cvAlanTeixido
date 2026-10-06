@@ -16,7 +16,7 @@ github.com/AlanTeixido · website alanteixido.dev (CV as PDF on the site).
 
 ## Experience
 
-### Plain Concepts — Software Engineer, Fullstack & AI (2025 – present)
+### Plain Concepts — Software Engineer, Fullstack & AI (June 2025 – present)
 Barcelona, Spain. Client: Puig.
 Stack: Google ADK, Vertex AI, RAG, Python, FastAPI, Azure Bot Service, Azure
 DevOps, .NET (C#), React Native, TypeScript, PostgreSQL, Firebase.
