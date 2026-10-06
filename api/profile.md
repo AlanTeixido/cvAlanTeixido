@@ -76,7 +76,8 @@ Barcelona, Spain.
 - ProTactics: fullstack football club management platform. Clubs manage
   coaches and teams; coaches plan training sessions, track players, share
   publications and draw tactics on an interactive canvas board. JWT auth with
-  role-based access. Vue 3, Node.js, PostgreSQL.
+  role-based access. Vue 3, Node.js, PostgreSQL. Live demo (runs in the
+  browser with sample data): https://alanteixido.github.io/ProTactics/
 - Smaller builds: Pokédex app and Crypto Tracker (Next.js, TypeScript),
   Minesweeper (vanilla JavaScript), BarberStyle BCN (Vue 3, Vite, Tailwind)
   and AutoTech demo site (vanilla HTML, CSS, JavaScript).
