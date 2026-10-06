@@ -109,7 +109,7 @@ Barcelona, Spain.
 
 ## Education
 - Higher VET Diploma in Web Application Development (CFGS DAW), Institut
-  Tecnològic de Barcelona, 2024 – 2025.
+  Tecnològic de Barcelona, September 2023 – June 2025.
 - Intermediate VET Diploma in Microcomputer Systems & Networks (CFGM SMX), IFP
   Hospitalet, 2021 – 2023.
 - Primary & secondary education, SEK Catalunya (La Garriga), 2013 – 2020.
