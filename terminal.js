@@ -161,7 +161,7 @@
       run: () => [
         line(span('2023 – 2025  ', 'term-muted'), span('CFGS DAW', 'term-strong'), ' · Web Application Development · Institut Tecnològic de Barcelona'),
         line(span('2021 – 2023  ', 'term-muted'), span('CFGM SMX', 'term-strong'), ' · Microcomputer Systems & Networks · IFP Hospitalet'),
-        line(span('2013 – 2020  ', 'term-muted'), span('SEK Catalunya', 'term-strong'), ' · Primary & Secondary Education'),
+        line(span('2017 – 2019  ', 'term-muted'), span('SEK Catalunya', 'term-strong'), ' · Secondary Education (ESO)'),
       ],
     },
     goals: {
