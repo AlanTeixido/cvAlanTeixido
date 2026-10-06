@@ -46,7 +46,8 @@ index.html, projects.html   pages
 style.css, icons.css        styles (icons.css is generated)
 main.js, terminal.js        site behaviour and the terminal
 api/ask.py, api/profile.md  the assistant and its knowledge base
-scripts/                    build-icons.js, stamp-assets.js (cache busting)
+scripts/                    build-icons.js, stamp-assets.js (cache busting), build-cv.js
+cv/cv.html                  source of the CV PDF: node scripts/build-cv.js
 .githooks/pre-commit        re-stamps asset hashes on every commit
 ```
 

@@ -73,7 +73,8 @@ Barcelona, Spain.
   Claude API with tool use over his own data (meals, workouts, daily metrics
   and goals), plus Strava and Google Health Connect integrations. Next.js,
   Supabase, Claude API.
-- ProTactics: fullstack football club management platform. Clubs manage
+- ProTactics: fullstack football club management platform, built as a team
+  project with two classmates (three developers in total). Clubs manage
   coaches and teams; coaches plan training sessions, track players, share
   publications and draw tactics on an interactive canvas board. JWT auth with
   role-based access. Vue 3, Node.js, PostgreSQL. Live demo (runs in the

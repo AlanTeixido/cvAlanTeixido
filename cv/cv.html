@@ -1,0 +1,175 @@
+<!doctype html>
+<!-- Source of cv/Alan_Teixido_CV.pdf. Rebuild the PDF with: node scripts/build-cv.js
+     Sizes are in pt to match the original A4 layout (15 mm side margins). -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Alan Teixidó Sararols — CV</title>
+<meta name="robots" content="noindex">
+<style>
+  @font-face { font-family: 'Space Grotesk'; src: url('../fonts/space-grotesk-v22-latin.woff2') format('woff2'); font-weight: 500 700; }
+  @font-face { font-family: 'Plus Jakarta Sans'; src: url('../fonts/plus-jakarta-sans-v12-latin.woff2') format('woff2'); font-weight: 400 800; }
+  @font-face { font-family: 'JetBrains Mono'; src: url('../fonts/jetbrains-mono-v24-latin.woff2') format('woff2'); font-weight: 400 500; }
+
+  :root {
+    --ink: #0b1020;
+    --text: #2a3346;
+    --muted: #5f6b80;
+    --accent: #7c5cff;
+    --amber: #e8962e;
+    --amber-bg: #fff4e3;
+    --amber-text: #9a5a00;
+    --rule: #dde1ea;
+  }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #fff; }
+  body {
+    width: 595.28pt; height: 841.89pt; position: relative; overflow: hidden;
+    padding: 31pt 42.52pt 0;
+    font: 400 8.5pt/11.2pt 'Plus Jakarta Sans', sans-serif; color: var(--text);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  body::before, body::after { content: ''; position: absolute; top: 0; height: 4pt; }
+  body::before { left: 0; right: 0; background: var(--accent); }
+  body::after { right: 0; width: 130.96pt; background: var(--amber); }
+  b { font-weight: 700; }
+  .nowrap { white-space: nowrap; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  header { display: flex; justify-content: space-between; align-items: flex-end; }
+  h1 { font: 700 25pt/27pt 'Space Grotesk', sans-serif; color: var(--ink); }
+  .role { font: 500 12pt/15pt 'Space Grotesk', sans-serif; color: var(--accent); margin-top: 1pt; }
+  .contact { text-align: right; font-size: 8.4pt; line-height: 11.5pt; color: var(--text); }
+
+  .tagline {
+    margin-top: 5pt; height: 18.5pt; padding: 0 7pt; display: flex; align-items: center;
+    background: var(--amber-bg); border-left: 2pt solid var(--amber);
+    font: 500 7.8pt/10pt 'JetBrains Mono', monospace; color: var(--amber-text);
+  }
+
+  h2 {
+    margin-top: 4.5pt; padding: 2.2pt 0 1.4pt; border-bottom: .6pt solid var(--rule);
+    font: 500 8.6pt/11pt 'JetBrains Mono', monospace; color: var(--accent); text-transform: uppercase;
+  }
+  h2 + * { margin-top: 3pt; }
+
+  .entry + .entry { margin-top: 5pt; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; }
+  h3 { font: 700 9.6pt/12.5pt 'Plus Jakarta Sans', sans-serif; color: var(--ink); }
+  .date { font: 400 8pt/12.5pt 'JetBrains Mono', monospace; color: var(--muted); white-space: nowrap; }
+  .meta { font-size: 8.3pt; line-height: 11pt; color: var(--muted); }
+  .meta .link { color: var(--text); }
+  ul { list-style: none; }
+  li { padding-left: 10.9pt; text-indent: -10.9pt; margin-top: .6pt; }
+  li::before { content: '•'; display: inline-block; width: 10.9pt; text-indent: 0; font-weight: 700; font-size: 8.7pt; color: var(--accent); }
+  .tech { margin-top: 2pt; font: 400 7.4pt/9.6pt 'JetBrains Mono', monospace; color: var(--muted); }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 3pt; }
+  td { padding: 1.25pt 0; font-size: 8.4pt; line-height: 11pt; vertical-align: top; }
+  td:first-child { width: 96.38pt; font-weight: 700; color: var(--ink); }
+
+  .entry.edu + .entry.edu { margin-top: 3pt; }
+  .edu h3 .where { font: 400 8.3pt/12.5pt 'Plus Jakarta Sans', sans-serif; color: var(--muted); }
+</style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Alan Teixidó Sararols</h1>
+      <div class="role">Fullstack &amp; AI Engineer</div>
+    </div>
+    <div class="contact">
+      teixido.alan@gmail.com<br>
+      alanteixido.dev<br>
+      linkedin.com/in/alanteixidosararols<br>
+      github.com/AlanTeixido
+    </div>
+  </header>
+
+  <div class="tagline">Based in Barcelona, Spain · Fullstack · AI agents · Mobile</div>
+
+  <h2>Profile</h2>
+  <p>Fullstack engineer building <b>AI agents</b>, <b>.NET and Python APIs</b> and <b>cross-platform mobile apps</b> in production. At Plain Concepts I deliver RAG-based agents on Google Cloud Vertex AI, integrated into Microsoft Teams through Azure, working autonomously and directly with the client. I care about clean architecture, reliable delivery pipelines and software that holds up in real use.</p>
+
+  <h2>Experience</h2>
+  <div class="entry">
+    <div class="row"><h3>Software Engineer — Fullstack &amp; AI</h3><span class="date">2025 — Present</span></div>
+    <div class="meta"><b>Plain Concepts</b> · Client: Puig · Barcelona, Spain</div>
+    <ul>
+      <li>Built <b>AI agents with Google ADK</b> on <b>Vertex AI</b>, using <b>RAG</b> over Vertex AI data stores to ground answers in company documents.</li>
+      <li>Designed the <b>document ingestion workflow</b>: JSON metadata, data store imports and content updates so the agents always answer from current knowledge.</li>
+      <li>Developed the <b>FastAPI</b> (Python) backend connecting the agents with the rest of the platform.</li>
+      <li>Integrated the agents into <b>Microsoft Teams</b> via <b>Azure Bot Service</b>, in a multi-cloud architecture (Google Cloud + Azure).</li>
+      <li>Built <b>Azure DevOps CI/CD pipelines</b> to deploy across four repositories: agents, bot, API and infrastructure.</li>
+      <li>Designed <b>.NET REST APIs</b> (CQRS, Clean Architecture, EF Core, PostgreSQL) and <b>React Native</b> apps for iOS and Android, with Firebase release tooling (App Distribution, Crashlytics, Analytics).</li>
+    </ul>
+    <div class="tech">Google ADK · Vertex AI · Python · FastAPI · Azure Bot Service · Azure DevOps · .NET · React Native · TypeScript · PostgreSQL · Firebase</div>
+  </div>
+  <div class="entry">
+    <div class="row"><h3>Backend Developer (.NET) — Internship</h3><span class="date">Oct 2024 — Mar 2025</span></div>
+    <div class="meta"><b>Quantion</b> · Barcelona, Spain</div>
+    <ul>
+      <li>Shipped .NET (C#) features and tested REST endpoints in a live production codebase from day one, and refactored legacy code within a Scrum team.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="row"><h3>Camp Counselor</h3><span class="date">Jul — Aug 2024</span></div>
+    <div class="meta"><b>SJAS Summer Camp</b> · Lucerne, Switzerland</div>
+    <ul>
+      <li>Led international groups in outdoor and team activities, working daily across languages and cultures.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="row"><h3>Earlier roles</h3></div>
+    <div class="meta">Sales Representative &amp; Web Developer, <b>CamperXpress</b> (2022) · Hardware Technician, <b>Pista Cero Informática</b> (2021 — 2022)</div>
+  </div>
+
+  <h2>Selected projects</h2>
+  <div class="entry">
+    <div class="row"><h3>GenAI Data Platform</h3></div>
+    <div class="meta">Corporate GenAI mentorship program</div>
+    <ul>
+      <li>Natural-language analytics: an LLM turns business questions into SQL, a governed semantic layer validates every query <span class="nowrap">(read-only,</span> row-level security), and results are published automatically as Metabase dashboards via its REST API. Built the semantic definitions, the Metabase integration and the Streamlit interface.</li>
+    </ul>
+    <div class="tech">LLM · SQL · PostgreSQL · Metabase API · Streamlit · Python</div>
+  </div>
+  <div class="entry">
+    <div class="row"><h3>Fit</h3></div>
+    <div class="meta">Personal training app I use daily · <span class="link">fit.alanteixido.dev</span></div>
+    <ul>
+      <li>AI coach built on the Claude API with tool use over my own data (meals, workouts, daily metrics, goals), plus Strava and Google Health Connect integrations.</li>
+    </ul>
+    <div class="tech">Next.js · React · TypeScript · Supabase · Vercel · Claude API</div>
+  </div>
+  <div class="entry">
+    <div class="row"><h3>ProTactics</h3></div>
+    <div class="meta">Team project (3 developers) · Live demo: <span class="link">alanteixido.github.io/ProTactics</span></div>
+    <ul>
+      <li>Football club management platform with role-based auth, training planner, player tracking and an interactive tactics board.</li>
+    </ul>
+    <div class="tech">Vue 3 · Node.js · REST API · PostgreSQL</div>
+  </div>
+
+  <h2>Skills</h2>
+  <table>
+    <tr><td>AI &amp; Agents</td><td>Google ADK, Vertex AI, RAG, Vertex AI Data Stores, Azure Bot Service, LLM APIs (Claude)</td></tr>
+    <tr><td>Backend</td><td>.NET (C#), ASP.NET Core, Python, FastAPI, Node.js, REST APIs, CQRS, Clean Architecture</td></tr>
+    <tr><td>Frontend &amp; Mobile</td><td>React, Next.js, Vue.js, TypeScript, Tailwind CSS, React Native, Expo, Firebase</td></tr>
+    <tr><td>Cloud &amp; DevOps</td><td>Azure DevOps CI/CD, Google Cloud, Azure, Docker, Git, App Insights</td></tr>
+    <tr><td>Data</td><td>PostgreSQL, Entity Framework Core, SQL, Supabase</td></tr>
+    <tr><td>Languages</td><td>Catalan (native), Spanish (native), English (native), French (basic)</td></tr>
+  </table>
+
+  <h2>Education</h2>
+  <div class="entry edu">
+    <div class="row"><h3>Higher VET Diploma in Web Application Development (CFGS DAW) <span class="where">· Institut Tecnològic de Barcelona</span></h3><span class="date">2025</span></div>
+  </div>
+  <div class="entry edu">
+    <div class="row"><h3>Intermediate VET Diploma in Microcomputer Systems &amp; Networks (CFGM SMX) <span class="where">· IFP Hospitalet</span></h3><span class="date">2021 — 2023</span></div>
+  </div>
+  <div class="entry edu">
+    <div class="row"><h3>Primary &amp; Secondary Education <span class="where">· SEK Catalunya, La Garriga</span></h3><span class="date">2013 — 2020</span></div>
+  </div>
+</body>
+</html>
