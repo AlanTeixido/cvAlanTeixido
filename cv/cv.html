@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- Source of cv/Alan_Teixido_CV.pdf. Rebuild the PDF with: node scripts/build-cv.js
-     Sizes are in pt to match the original A4 layout (15 mm side margins). -->
+     Monochrome design; sizes are in pt to match the A4 layout (15 mm side margins). -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -12,74 +12,71 @@
   @font-face { font-family: 'JetBrains Mono'; src: url('../fonts/jetbrains-mono-v24-latin.woff2') format('woff2'); font-weight: 400 500; }
 
   :root {
-    --ink: #0b1020;
-    --text: #2a3346;
-    --muted: #5f6b80;
-    --accent: #7c5cff;
-    --amber: #e8962e;
-    --amber-bg: #fff4e3;
-    --amber-text: #9a5a00;
-    --rule: #dde1ea;
+    --ink: #09090b;
+    --text: #3f3f46;
+    --muted: #71717a;
+    --rule: #e4e4e7;
   }
   @page { size: A4; margin: 0; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: #fff; }
   body {
     width: 595.28pt; height: 841.89pt; position: relative; overflow: hidden;
-    padding: 31pt 42.52pt 0;
+    padding: 28.3pt 42.52pt 0;
     font: 400 8.5pt/11.2pt 'Plus Jakarta Sans', sans-serif; color: var(--text);
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-  body::before, body::after { content: ''; position: absolute; top: 0; height: 4pt; }
-  body::before { left: 0; right: 0; background: var(--accent); }
-  body::after { right: 0; width: 130.96pt; background: var(--amber); }
+  body::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3pt; background: var(--ink); }
   b { font-weight: 700; }
   .nowrap { white-space: nowrap; }
-  .mono { font-family: 'JetBrains Mono', monospace; }
 
-  header { display: flex; justify-content: space-between; align-items: flex-end; }
+  header { display: flex; align-items: flex-end; gap: 17pt; }
+  .photo { width: 56.69pt; height: 70.87pt; object-fit: cover; object-position: center 35%; flex: none; }
+  .who { flex: 1; padding-bottom: 1pt; }
   h1 { font: 700 25pt/27pt 'Space Grotesk', sans-serif; color: var(--ink); }
-  .role { font: 500 12pt/15pt 'Space Grotesk', sans-serif; color: var(--accent); margin-top: 1pt; }
-  .contact { text-align: right; font-size: 8.4pt; line-height: 11.5pt; color: var(--text); }
-
-  .tagline {
-    margin-top: 5pt; height: 18.5pt; padding: 0 7pt; display: flex; align-items: center;
-    background: var(--amber-bg); border-left: 2pt solid var(--amber);
-    font: 500 7.8pt/10pt 'JetBrains Mono', monospace; color: var(--amber-text);
-  }
+  .role { font: 500 9.5pt/13pt 'JetBrains Mono', monospace; color: var(--text); }
+  .focus { margin-top: 2pt; font-size: 8.3pt; line-height: 11pt; color: var(--muted); }
+  .contact { text-align: right; font-size: 8.4pt; line-height: 12.2pt; color: var(--text); padding-bottom: 1pt; }
 
   h2 {
-    margin-top: 4.5pt; padding: 2.2pt 0 1.4pt; border-bottom: .6pt solid var(--rule);
-    font: 500 8.6pt/11pt 'JetBrains Mono', monospace; color: var(--accent); text-transform: uppercase;
+    margin-top: 3.5pt; padding: 2.4pt 0 1.4pt; border-bottom: .6pt solid var(--rule);
+    font: 500 8.4pt/11pt 'JetBrains Mono', monospace; color: var(--ink); text-transform: uppercase;
   }
-  h2 + * { margin-top: 3pt; }
+  h2::before { content: '— '; }
+  header + h2 { margin-top: 5.5pt; }
+  h2 + * { margin-top: 2.5pt; }
 
   .entry + .entry { margin-top: 5pt; }
-  .row { display: flex; justify-content: space-between; align-items: baseline; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12pt; }
   h3 { font: 700 9.6pt/12.5pt 'Plus Jakarta Sans', sans-serif; color: var(--ink); }
   .date { font: 400 8pt/12.5pt 'JetBrains Mono', monospace; color: var(--muted); white-space: nowrap; }
   .meta { font-size: 8.3pt; line-height: 11pt; color: var(--muted); }
   .meta .link { color: var(--text); }
   ul { list-style: none; }
-  li { padding-left: 10.9pt; text-indent: -10.9pt; margin-top: .6pt; }
-  li::before { content: '•'; display: inline-block; width: 10.9pt; text-indent: 0; font-weight: 700; font-size: 8.7pt; color: var(--accent); }
-  .tech { margin-top: 2pt; font: 400 7.4pt/9.6pt 'JetBrains Mono', monospace; color: var(--muted); }
+  li { padding-left: 10.69pt; text-indent: -10.69pt; margin-top: .6pt; }
+  li::before { content: '•'; display: inline-block; width: 10.69pt; text-indent: 0; font-weight: 700; color: var(--ink); }
+  .tech { margin-top: 2pt; font: 400 7.3pt/9.6pt 'JetBrains Mono', monospace; color: var(--muted); }
 
-  table { width: 100%; border-collapse: collapse; margin-top: 3pt; }
+  table { width: 100%; border-collapse: collapse; }
   td { padding: 1.25pt 0; font-size: 8.4pt; line-height: 11pt; vertical-align: top; }
   td:first-child { width: 96.38pt; font-weight: 700; color: var(--ink); }
 
-  .entry.edu + .entry.edu { margin-top: 3pt; }
-  .edu h3 .where { font: 400 8.3pt/12.5pt 'Plus Jakarta Sans', sans-serif; color: var(--muted); }
+  .entry.edu + .entry.edu { margin-top: 1.5pt; }
+  .edu h3 { font-size: 9pt; }
+  .edu h3 .where.own-line { display: block; line-height: 10.5pt; }
+  .edu h3 .where { font: 400 8pt/12.5pt 'Plus Jakarta Sans', sans-serif; color: var(--muted); }
 </style>
 </head>
 <body>
   <header>
-    <div>
+    <img class="photo" src="../images/alan-teixido.jpg" alt="Alan Teixidó">
+    <div class="who">
       <h1>Alan Teixidó Sararols</h1>
-      <div class="role">Fullstack &amp; AI Engineer</div>
+      <div class="role">FULLSTACK &amp; AI ENGINEER</div>
+      <div class="focus">AI agents · .NET &amp; Python APIs · React &amp; React Native</div>
     </div>
     <div class="contact">
+      Barcelona, Spain<br>
       teixido.alan@gmail.com<br>
       alanteixido.dev<br>
       linkedin.com/in/alanteixidosararols<br>
@@ -87,10 +84,8 @@
     </div>
   </header>
 
-  <div class="tagline">Based in Barcelona, Spain · Fullstack · AI agents · Mobile</div>
-
   <h2>Profile</h2>
-  <p>Fullstack engineer building <b>AI agents</b>, <b>.NET and Python APIs</b> and <b>cross-platform mobile apps</b> in production. At Plain Concepts I deliver RAG-based agents on Google Cloud Vertex AI, integrated into Microsoft Teams through Azure, working autonomously and directly with the client. I care about clean architecture, reliable delivery pipelines and software that holds up in real use.</p>
+  <p>Fullstack engineer building <b>AI agents</b>, <b>.NET and Python APIs</b> and <b>cross-platform mobile apps</b> in production. At Plain Concepts I deliver RAG-based agents on Google Cloud Vertex AI, integrated into Microsoft Teams through Azure, working autonomously and directly with the client.</p>
 
   <h2>Experience</h2>
   <div class="entry">
@@ -144,9 +139,9 @@
   </div>
   <div class="entry">
     <div class="row"><h3>ProTactics</h3></div>
-    <div class="meta">Team project (3 developers) · Live demo: <span class="link">alanteixido.github.io/ProTactics</span></div>
+    <div class="meta">Football club management platform (team of 3) · <span class="link">github.com/AlanTeixido/ProTactics</span></div>
     <ul>
-      <li>Football club management platform with role-based auth, training planner, player tracking and an interactive tactics board.</li>
+      <li>Fullstack platform with role-based auth, training planner, player tracking and an interactive tactics board.</li>
     </ul>
     <div class="tech">Vue 3 · Node.js · REST API · PostgreSQL</div>
   </div>
@@ -163,13 +158,13 @@
 
   <h2>Education</h2>
   <div class="entry edu">
-    <div class="row"><h3>Higher VET Diploma in Web Application Development (CFGS DAW) <span class="where">· Institut Tecnològic de Barcelona</span></h3><span class="date">2023 — 2025</span></div>
+    <div class="row"><h3>Higher VET Diploma in Web Application Development (CFGS DAW) <span class="where own-line">Institut Tecnològic de Barcelona</span></h3><span class="date">Sep 2023 — Jun 2025</span></div>
   </div>
   <div class="entry edu">
     <div class="row"><h3>Intermediate VET Diploma in Microcomputer Systems &amp; Networks (CFGM SMX) <span class="where">· IFP Hospitalet</span></h3><span class="date">2021 — 2023</span></div>
   </div>
   <div class="entry edu">
-    <div class="row"><h3>Secondary Education (ESO) <span class="where">· SEK Catalunya, La Garriga</span></h3><span class="date">2017 — 2019</span></div>
+    <div class="row"><h3>Secondary Education (ESO) <span class="where">· SEK Catalunya, La Garriga</span></h3><span class="date">Sep 2017 — Jun 2019</span></div>
   </div>
 </body>
 </html>

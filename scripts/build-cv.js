@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Builds cv/Alan_Teixido_CV.pdf from cv/cv.html with headless Chrome.
-   The web fonts are inlined as data URIs first, so the print doesn't depend on
-   file:// font loading. Usage: node scripts/build-cv.js [output.pdf] */
+   The web fonts and the photo are inlined as data URIs first, so the print
+   doesn't depend on file:// loading. Usage: node scripts/build-cv.js [output.pdf] */
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -24,10 +24,16 @@ if (!CHROME) {
   process.exit(1);
 }
 
-const html = fs.readFileSync(SRC, 'utf8').replace(/url\('\.\.\/fonts\/([^']+\.woff2)'\)/g, (_, file) => {
-  const data = fs.readFileSync(path.join(ROOT, 'fonts', file)).toString('base64');
-  return `url('data:font/woff2;base64,${data}')`;
-});
+const MIME = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' };
+const html = fs.readFileSync(SRC, 'utf8')
+  .replace(/url\('\.\.\/fonts\/([^']+\.woff2)'\)/g, (_, file) => {
+    const data = fs.readFileSync(path.join(ROOT, 'fonts', file)).toString('base64');
+    return `url('data:font/woff2;base64,${data}')`;
+  })
+  .replace(/src="\.\.\/images\/([^"]+\.(?:jpe?g|png|webp))"/g, (_, file) => {
+    const data = fs.readFileSync(path.join(ROOT, 'images', file)).toString('base64');
+    return `src="data:${MIME[path.extname(file).toLowerCase()]};base64,${data}"`;
+  });
 
 const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cv-'));
 const tmpHtml = path.join(tmpDir, 'cv.html');
