@@ -469,3 +469,16 @@ window.addEventListener('scroll', () => {
     });
   });
 })();
+
+/* ─── CV video modal ─────────────────────────────────────────────────── */
+(() => {
+  const btn = document.getElementById('cvVideoBtn');
+  const dlg = document.getElementById('cvVideo');
+  if (!btn || !dlg || typeof dlg.showModal !== 'function') { if (btn) btn.hidden = true; return; }
+  const vid = dlg.querySelector('video');
+  const close = () => dlg.close();
+  btn.addEventListener('click', () => { dlg.showModal(); vid.play().catch(() => {}); });
+  dlg.querySelector('.cv-video-close').addEventListener('click', close);
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+  dlg.addEventListener('close', () => { vid.pause(); });
+})();

@@ -50,7 +50,7 @@
     <link rel="stylesheet" href="icons.css?v=36da3a7d" />
 
     <!-- Styles -->
-    <link rel="stylesheet" href="style.css?v=a8df3bdc" />
+    <link rel="stylesheet" href="style.css?v=698fc4f0" />
 
     <meta name="theme-color" content="#09090b" />
 
@@ -142,6 +142,9 @@
               <a href="/cv/Alan_Teixido_CV.pdf" download class="btn btn-ghost">
                 <i class="fa-solid fa-download"></i> Download CV
               </a>
+              <button type="button" class="btn btn-ghost" id="cvVideoBtn" aria-haspopup="dialog">
+                <svg class="btn-play-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg> Watch my CV · 30s
+              </button>
             </div>
           </div>
 
@@ -800,8 +803,8 @@
               Where I want to grow is the engineering that keeps systems like
               these dependable as usage grows: evaluating answer quality,
               observability, grounding and guardrails, and keeping latency and
-              cost under control. I'm looking for a team that treats AI
-              systems with the same rigor as any other production software.
+              cost under control. AI systems deserve the same rigor as any
+              other production software.
             </p>
           </div>
         </div>
@@ -813,13 +816,13 @@
       <div class="container">
         <div class="contact-inner">
           <div class="reveal">
-            <span class="section-label">Let's talk</span>
+            <span class="section-label">Contact</span>
             <h2 class="contact-heading">
-              Open to <span class="gradient-text">new<br />opportunities</span>
+              Let's <span class="gradient-text">build<br />something.</span>
             </h2>
             <p class="contact-sub">
-              Open to full-time roles — or just up for a conversation about
-              AI systems and software. I'd love to hear from you.
+              Always up for a conversation about AI systems, software or a good
+              side project. I'd love to hear from you.
             </p>
           </div>
 
@@ -856,6 +859,11 @@
       </div>
     </section>
 
+    <dialog id="cvVideo" class="cv-video" aria-label="My CV as a 30-second video">
+      <button type="button" class="cv-video-close" aria-label="Close video">&times;</button>
+      <video src="/video/cv-30s.mp4" poster="images/cv-video-poster.webp?v=5e0f5fea" controls playsinline preload="none"></video>
+    </dialog>
+
     <div id="clipboard-toast"><i class="fa-solid fa-check"></i> <span id="toast-text"></span></div>
 
     <button id="back-to-top" aria-label="Back to top">
@@ -863,7 +871,7 @@
     </button>
 
     <!-- Scripts -->
-    <script src="main.js?v=a3a52b93" defer></script>
+    <script src="main.js?v=0cfb6d3e" defer></script>
     <script src="terminal.js?v=9f70e53e" defer></script>
   </body>
 </html>

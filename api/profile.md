@@ -10,7 +10,7 @@ APIs behind them, and React and React Native apps on top. Cares about the full
 picture: clean architecture on the server, polished UI on the client, and
 reliable delivery pipelines in between.
 
-Open to full-time roles, or just a conversation about AI systems and software.
+Always up for a conversation about AI systems and software.
 Contact: teixido.alan@gmail.com · linkedin.com/in/alanteixidosararols ·
 github.com/AlanTeixido · website alanteixido.dev (CV as PDF on the site).
 
@@ -120,8 +120,8 @@ Catalan (native), Spanish (native), English (native), French (basic).
 ## What's next
 Already ships AI agents to production; next he wants to make them reliable at
 scale: evaluating answer quality, observability, grounding and guardrails, and
-keeping latency and cost under control. Looking for a team that treats AI
-systems with the same rigor as any other production software.
+keeping latency and cost under control. Believes AI
+systems deserve the same rigor as any other production software.
 
 ## Personal
 Strong interest in sports and a competitive mindset.
