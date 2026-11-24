@@ -33,7 +33,7 @@
     <!-- Fonts: self-hosted (@font-face at the top of style.css) -->
     <link rel="preload" href="fonts/archivo-var-latin.woff2?v=f799f904" as="font" type="font/woff2" crossorigin />
 
-    <link rel="stylesheet" href="style.css?v=76a2c75a" />
+    <link rel="stylesheet" href="style.css?v=f21e2c61" />
 
     <meta name="theme-color" content="#f5f6f8" />
   </head>
@@ -44,10 +44,10 @@
       <div class="nav-inner">
         <a href="index.html" class="nav-logo">Alan Teixidó</a>
         <ul class="nav-links">
+          <li><a href="index.html#about">About</a></li>
           <li><a href="index.html#experience">Experience</a></li>
           <li><a href="projects.html" aria-current="page">Projects</a></li>
           <li><a href="index.html#skills">Skills</a></li>
-          <li><a href="index.html#about">About</a></li>
           <li><a href="#contact" class="nav-cta">Contact</a></li>
         </ul>
         <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
@@ -56,10 +56,10 @@
       </div>
     </nav>
     <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+      <a href="index.html#about">About</a>
       <a href="index.html#experience">Experience</a>
       <a href="projects.html">Projects</a>
       <a href="index.html#skills">Skills</a>
-      <a href="index.html#about">About</a>
       <a href="#contact">Contact</a>
     </nav>
 
@@ -258,8 +258,22 @@
       <video src="/video/nox-demo.mp4" poster="images/nox_cover.webp?v=2c5d9dca" controls playsinline preload="none"></video>
     </dialog>
 
+    <!-- Side panel that shows the long version of a job or a project.
+         main.js fills it from the <details> that was opened. -->
+    <dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
+      <header class="sheet-head">
+        <div>
+          <p class="sheet-kicker" id="sheetKicker"></p>
+          <h2 id="sheetTitle"></h2>
+          <p class="sheet-when" id="sheetWhen"></p>
+        </div>
+        <button type="button" class="sheet-close" aria-label="Close">&times;</button>
+      </header>
+      <div class="sheet-body" id="sheetBody"></div>
+    </dialog>
+
     <div id="clipboard-toast" role="status" aria-live="polite"></div>
 
-    <script src="main.js?v=09834a4d" defer></script>
+    <script src="main.js?v=fbfb10c9" defer></script>
   </body>
 </html>

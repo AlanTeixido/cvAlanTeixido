@@ -7,6 +7,7 @@
      4. Copy-to-clipboard toast (the email in the footer)
      5. Video dialogs (the CV in 30 seconds, the Nox demo)
      6. Text that fills in as it scrolls past ([data-fill])
+     7. Side panel for the long version of a job or project
 
    Every block looks for its own elements and returns if they aren't on
    the page, so both pages load the same file.
@@ -192,3 +193,117 @@
   window.addEventListener('resize', update, { passive: true });
   update();
 })();
+
+/* ── 7. Side panel ────────────────────────────────────────────────
+   The long version of a job or a project lives in a <details>, which works
+   on its own. With <dialog> support, opening one shows its content in the
+   side panel instead: the title comes from the nearest heading. */
+(function initSheet() {
+  const sheet = document.getElementById('sheet');
+  if (!sheet || typeof sheet.showModal !== 'function') return;
+  const title = document.getElementById('sheetTitle');
+  const kicker = document.getElementById('sheetKicker');
+  const body = document.getElementById('sheetBody');
+  const when = document.getElementById('sheetWhen');
+
+  document.addEventListener('click', e => {
+    const summary = e.target.closest('.project-card details > summary');
+    if (!summary) return;
+    e.preventDefault();                               // keep the <details> closed
+    const details = summary.parentElement;
+    const owner = details.closest('.project-card');
+    const heading = owner && owner.querySelector('h3');
+    const org = owner && owner.querySelector('.project-kind');
+
+    title.textContent = heading ? heading.textContent : summary.textContent;
+    kicker.textContent = org ? org.textContent : '';
+    const dates = owner && owner.querySelector('.role-when');
+    when.textContent = dates ? dates.textContent : '';
+    body.replaceChildren(...[...details.children].filter(el => el !== summary).map(el => el.cloneNode(true)));
+    sheet.showModal();
+    sheet.scrollTop = 0;
+  });
+
+  sheet.querySelector('.sheet-close').addEventListener('click', () => sheet.close());
+  sheet.addEventListener('click', e => { if (e.target === sheet) sheet.close(); });   // click on the backdrop
+})();
+
+/* ── 8. Experience: the years are tabs ─────────────────────────── */
+/* The markup is five links and five panels. Here the links become tabs:
+   one panel is shown at a time, and the line is inked up to the chosen year. */
+(function initExperience() {
+  const xp = document.querySelector('.xp');
+  if (!xp) return;
+  const axis = xp.querySelector('.axis');
+  const tabs = [...axis.querySelectorAll('.axis-tab')];
+  const panelOf = tab => document.getElementById(tab.getAttribute('href').slice(1));
+
+  const select = tab => {
+    const at = tabs.indexOf(tab);
+    tabs.forEach((t, i) => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', on);
+      t.tabIndex = on ? 0 : -1;
+      /* inked up to the chosen year; the current job runs on to the end */
+      t.parentElement.classList.toggle('is-done', i < at || (on && i === tabs.length - 1));
+      panelOf(t).hidden = !on;
+    });
+    point();
+  };
+  /* --at: where the chosen year's dot is, so the panel can point at it */
+  const point = () => {
+    const tab = tabs.find(t => t.getAttribute('aria-selected') === 'true');
+    xp.style.setProperty('--at', tab.getBoundingClientRect().left - xp.getBoundingClientRect().left + 8 + 'px');
+  };
+
+  axis.setAttribute('role', 'tablist');
+  axis.setAttribute('aria-label', 'Jobs by year');
+  tabs.forEach(tab => {
+    tab.parentElement.setAttribute('role', 'presentation');
+    tab.setAttribute('role', 'tab');
+    tab.setAttribute('aria-controls', panelOf(tab).id);
+    tab.removeAttribute('aria-current');
+    panelOf(tab).setAttribute('role', 'tabpanel');
+    tab.addEventListener('click', e => { e.preventDefault(); select(tab); });
+  });
+  axis.addEventListener('keydown', e => {
+    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    const next = tabs[(tabs.indexOf(document.activeElement) + step + tabs.length) % tabs.length];
+    select(next);
+    next.focus();
+  });
+  window.addEventListener('resize', point);
+
+  xp.classList.add('is-js');
+  select(tabs[tabs.length - 1]);
+  axis.scrollLeft = axis.scrollWidth;       // on a phone, start at the current job
+})();
+
+/* ── 9. Experience: a job's terminal types its command, then prints ── */
+/* The <details> works on its own. Here, opening it types the command a
+   character at a time and only then lets the output through (.is-run). */
+(function initJobTerminals() {
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.role-more').forEach(term => {
+    const cmd = term.querySelector('.cmd');
+    const text = cmd.textContent;
+    let timer;
+    term.addEventListener('toggle', () => {
+      clearInterval(timer);
+      cmd.textContent = text;
+      term.classList.toggle('is-run', term.open && calm);
+      if (!term.open || calm) return;
+      let n = 0;
+      cmd.textContent = '';
+      timer = setInterval(() => {
+        cmd.textContent = text.slice(0, ++n);
+        if (n < text.length) return;
+        clearInterval(timer);
+        setTimeout(() => term.classList.add('is-run'), 240);
+      }, 40);
+    });
+  });
+})();
+

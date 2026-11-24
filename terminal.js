@@ -91,7 +91,9 @@
 
   function goTo(id) {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;   // education is folded away in About
+    el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: el.tagName === 'DETAILS' ? 'center' : 'start' });
   }
 
   /* ── Content (same facts as the page) ────────────────────────── */

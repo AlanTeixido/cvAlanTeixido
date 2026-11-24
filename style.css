@@ -477,37 +477,96 @@ button.link { border: 0; background: none; cursor: pointer; }
 }
 
 /* ─── 5. EXPERIENCE ────────────────────────────────────────────── */
-/* A timeline: a line down the left with a dot per job. The line fills in
-   as the section scrolls past (see Motion). */
-.timeline { position: relative; padding-left: 40px; }
-.timeline::before,
-.timeline::after {
-  content: '';
-  position: absolute;
-  left: 7px; top: 8px; bottom: 8px;
-  width: 2px;
-  border-radius: 2px;
-  background: var(--line);
+/* One line of years across the page. Each year is a tab and the job it
+   stands for opens in the panel underneath (main.js). Without the script
+   the years are plain links and every panel is shown, newest first. */
+.xp { display: grid; gap: 24px; }
+.axis {
+  display: flex;
+  margin-inline: calc(var(--gutter) * -1);
+  padding: 4px var(--gutter);
+  overflow-x: auto;                /* on a phone the line scrolls sideways */
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
 }
-.timeline::after { background: var(--ink); transform-origin: top; transform: scaleY(0); }
-.tl-item { position: relative; padding-bottom: 44px; }
-.tl-item:last-child { padding-bottom: 0; }
-.tl-item::before {
+.axis::-webkit-scrollbar { display: none; }
+.axis li { position: relative; flex: 0 0 172px; scroll-snap-align: start; }
+/* Each year draws its own piece of the line, up to the next year */
+.axis li::before {
   content: '';
   position: absolute;
-  left: -40px; top: 18px;
-  z-index: 1;
+  left: 0; right: 0; top: 49px;
+  height: 2px;
+  background: var(--line);
+  transition: background-color 0.35s ease;
+}
+.axis li.is-done::before { background: var(--ink); }
+.axis-tab { position: relative; display: block; padding: 74px 16px 0 0; text-decoration: none; }
+.axis-tab::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 42px;
   width: 16px; height: 16px;
   border: 2px solid var(--ink);
   border-radius: 50%;
   background: var(--paper);
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
-.tl-item--lead::before { border-color: var(--signal); background: var(--signal); box-shadow: 0 0 0 5px color-mix(in srgb, var(--signal) 16%, transparent); }
-.tl-item--small { padding-bottom: 24px; color: var(--graphite); }
-.tl-item--small::before { top: 5px; left: -37px; width: 10px; height: 10px; }
-.tl-item--small strong { color: var(--ink); font-weight: 600; }
+.axis-tab time {
+  position: absolute;
+  left: 0; top: 0;
+  font-size: 1.75rem;
+  font-stretch: 120%;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: color-mix(in srgb, var(--slate) 45%, var(--paper));
+  transition: color 0.25s ease;
+}
+.axis-tab b { display: block; color: var(--graphite); font-weight: 600; line-height: 1.35; transition: color 0.25s ease; }
+.axis-tab span { display: block; margin-top: 3px; color: var(--graphite); font-size: 0.9375rem; }
+.axis-tab:hover time { color: var(--slate); }
+.axis-tab:hover b { color: var(--ink); }
+.axis-tab:is([aria-selected="true"], [aria-current]) time,
+.axis-tab:is([aria-selected="true"], [aria-current]) b { color: var(--ink); }
+.axis-tab:is([aria-selected="true"], [aria-current])::before {
+  border-color: var(--signal);
+  background: var(--signal);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--signal) 16%, transparent);
+}
+
+.panel {
+  position: relative;
+  display: grid;
+  gap: 28px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  scroll-margin-top: calc(var(--nav-h) + 24px);
+}
+.panel[hidden] { display: none; }
+@media (min-width: 900px) {
+  .axis { margin-inline: 0; padding-inline: 0; overflow: visible; }
+  .axis li { flex: 1 1 0; }
+  .panel { padding: 36px; }
+  .panel--split { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 56px; align-items: center; }
+  /* The panel points at the year it belongs to (--at is set by main.js) */
+  .xp.is-js .panel::before {
+    content: '';
+    position: absolute;
+    left: var(--at, 50%); top: -9px;
+    width: 16px; height: 16px;
+    border: solid var(--line);
+    border-width: 1px 0 0 1px;
+    background: var(--surface);
+    transform: translateX(-50%) rotate(45deg);
+    transition: left 0.45s var(--ease);
+  }
+}
 
 .role-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 16px; align-items: center; }
+.role-head > div:only-child { grid-column: 1 / -1; }
 .role-logo {
   display: grid;
   place-items: center;
@@ -518,79 +577,103 @@ button.link { border: 0; background: none; cursor: pointer; }
   background: var(--surface);
 }
 .role-logo img { width: 100%; height: 100%; object-fit: contain; }
-.tl-item h3 { font-size: 1.25rem; }
+.panel h3 { font-size: 1.25rem; }
 .role-org { margin-top: 4px; color: var(--graphite); }
-.role-when { grid-column: 2; color: var(--slate); font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
-.tl-item--small .role-when { margin-bottom: 2px; }
-.role-sum { margin-top: 14px; max-width: 64ch; color: var(--graphite); }
-.role-sum--lead { margin-top: 20px; max-width: 64ch; color: var(--ink); font-size: 1.125rem; font-weight: 500; line-height: 1.45; }
-.role-sum--lead + .role-sum { margin-top: 8px; max-width: 64ch; font-size: 1rem; }
-@media (min-width: 640px) {
-  .role-head { grid-template-columns: auto minmax(0, 1fr) auto; }
-  .role-head .role-when { grid-column: auto; white-space: nowrap; }
-}
+.role-when { margin-top: 2px; color: var(--slate); font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
+.role-sum { margin-top: 8px; max-width: 52ch; color: var(--graphite); }
+.role-sum--lead { margin-top: 22px; max-width: 36ch; color: var(--ink); font-size: 1.125rem; font-weight: 500; line-height: 1.45; }
+.panel:not(.panel--split) .role-sum--lead { margin-top: 0; max-width: 60ch; }
 
-/* The platform as a line of stages, with a signal running through it:
-   a document going in at one end and an answer coming out in Teams */
-.pipeline {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px 8px;
-  margin-top: 24px;
-  padding: 18px 12px 16px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--surface);
+/* What the job was made of, as tiles. At Plain they are the platform's
+   stages in order, and a signal lights them one after another (Motion). */
+.stages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.stages li { padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+.stages b { display: block; font-size: 0.9375rem; font-weight: 600; }
+.stages span { display: block; margin-top: 2px; color: var(--slate); font-size: 0.8125rem; line-height: 1.35; }
+@media (min-width: 560px) { .stages:not(.stages--two) { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 28px; } }
+
+/* The long version of a job is a small terminal at the foot of its panel:
+   a <details> whose summary is the window bar with the command, and whose
+   content is the output. The work reads as `git log --graph`: one commit
+   per thing built, joined by the branch line. main.js types the command. */
+.role-more {
+  border: 1px solid var(--term-line);
+  border-radius: 12px;
+  background: var(--term-bg);
+  color: var(--term-text);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  box-shadow: 0 18px 40px -24px rgba(13, 14, 18, 0.55);
 }
-.pipeline li { position: relative; padding-top: 22px; text-align: center; }
-.pipeline li::before {
+.panel--split .role-more { grid-column: 1 / -1; }
+.role-more summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px;
+  border-radius: inherit;
+  cursor: pointer;
+  list-style: none;
+}
+.role-more summary::-webkit-details-marker { display: none; }
+/* three window dots, drawn from one */
+.role-more summary::before {
+  content: '';
+  flex: none;
+  width: 10px; height: 10px;
+  margin-right: 38px;
+  border-radius: 50%;
+  background: #3a3d47;
+  box-shadow: 16px 0 #3a3d47, 32px 0 #3a3d47;
+}
+.role-more summary::after { content: 'click to run'; margin-left: auto; color: var(--term-dim); transition: color 0.2s ease; }
+.role-more[open] summary::after { content: 'close'; }
+.role-more summary:hover::after { color: var(--term-hi); }
+.cmd { color: var(--term-hi); }
+.cmd::before, .tlog-cmd::before, .tlog-end::before { content: '$ '; color: var(--term-dim); }
+.cmd::after, .tlog-end::after {
+  content: '';
+  display: inline-block;
+  width: 0.55em; height: 1.1em;
+  margin-left: 6px;
+  vertical-align: -0.2em;
+  background: var(--term-hi);
+}
+.role-more.is-run .cmd::after { display: none; }
+.xp.is-js .role-more[open]:not(.is-run) .tlog { display: none; }   /* nothing printed until the command is typed */
+.tlog { padding: 18px 18px 18px; border-top: 1px solid var(--term-line); }
+
+.commits li { position: relative; padding: 0 0 16px 28px; }
+.commits li::before {             /* the commit */
   content: '';
   position: absolute;
-  left: calc(50% - 7px); top: 0;
+  left: 0; top: 0.4em;
   z-index: 1;
-  width: 14px; height: 14px;
-  border: 2px solid var(--ink);
+  width: 11px; height: 11px;
+  border: 2px solid #8f9bff;
   border-radius: 50%;
-  background: var(--surface);
+  background: var(--term-bg);
 }
-.pipeline b { display: block; font-size: 0.875rem; font-weight: 600; }
-.pipeline span { display: block; margin-top: 1px; color: var(--slate); font-size: 0.75rem; line-height: 1.3; }
-@media (min-width: 760px) {
-  .pipeline { grid-template-columns: repeat(6, minmax(0, 1fr)); padding-inline: 8px; }
-  /* The line through the six dots, and the signal that travels along it */
-  .pipeline::before,
-  .pipeline::after {
-    content: '';
-    position: absolute;
-    top: 24px;
-    height: 2px;
-  }
-  .pipeline::before { left: calc(100% / 12 + 8px); right: calc(100% / 12 + 8px); background: var(--line); }
-  .pipeline::after {
-    left: calc(100% / 12 + 8px);
-    width: 56px;
-    margin-left: -28px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, transparent, var(--signal));
-    opacity: 0;
-  }
+.commits li:first-child::before { background: #8f9bff; }
+.commits li:not(:last-child)::after {   /* the branch */
+  content: '';
+  position: absolute;
+  left: 5px; top: 0.4em; bottom: -0.4em;
+  width: 1px;
+  background: #3a4070;
 }
-
-/* The long version of a job, on demand */
-.role-more { margin-top: 18px; }
-.role-grid { display: grid; gap: 24px 32px; margin-top: 24px; }
-.role-grid h4 { font-size: 0.9375rem; font-weight: 600; }
-.role-grid p { margin-top: 6px; color: var(--graphite); font-size: 0.9688rem; line-height: 1.5; }
-.role-grid--two { gap: 12px 32px; }
-.role-grid--two li { position: relative; padding-left: 20px; }
-.role-grid--two li::before { content: ''; position: absolute; left: 0; top: 0.95em; width: 8px; height: 1px; background: var(--slate); }
-.role-grid--two p { margin-top: 0; }
-.role-more .stack { margin-top: 24px; max-width: 72ch; }
-@media (min-width: 640px) { .role-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 1000px) { .role-grid:not(.role-grid--two) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.commits b { display: block; color: var(--term-hi); font-weight: 500; }
+.commits i { color: #9aa5ff; font-style: normal; }
+.commits em { margin-left: 8px; color: #e0b46c; font-style: normal; font-weight: 400; }
+.commits span { display: block; max-width: 78ch; color: var(--term-dim); }
+.tlog-cmd { margin-top: 6px; color: var(--term-hi); }
+.tstack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tstack li { padding: 1px 9px; border: 1px solid var(--term-line); border-radius: 6px; color: var(--term-text); font-size: 0.75rem; }
+.tlog-end { margin-top: 16px; }
 
 /* ─── 6. PROJECTS ──────────────────────────────────────────────── */
+
 .feature {
   display: block;
   border: 1px solid var(--line);
@@ -758,43 +841,68 @@ button.link { border: 0; background: none; cursor: pointer; }
 .orbit-also { margin: 28px auto 0; max-width: 62ch; color: var(--graphite); text-align: center; }
 .orbit-also b { color: var(--ink); font-weight: 600; }
 
-.about { display: grid; gap: 32px; }
-.about-photo {
-  width: min(100%, 280px);
-  aspect-ratio: 3 / 4;
-  border-radius: var(--radius);
-  object-fit: cover;
-  background: var(--line);
-}
-.about-bio { font-size: 1.1875rem; line-height: 1.5; max-width: 54ch; }
-.facts { margin-top: 28px; display: grid; }
-.facts > div {
-  display: grid;
-  gap: 2px 32px;
-  padding-block: 14px;
-  border-top: 1px solid var(--line);
-}
-.facts dt { color: var(--slate); font-size: 0.9375rem; }
-.facts dd span { display: block; color: var(--graphite); font-size: 0.9375rem; }
-.facts dd + dd { margin-top: 10px; }
-@media (min-width: 640px) {
-  .facts > div { grid-template-columns: 120px minmax(0, 1fr); }
-  .facts dd { grid-column: 2; }
-}
-@media (min-width: 720px) {
-  .about { grid-template-columns: 240px minmax(0, 1fr); gap: 48px; align-items: start; }
-}
+/* About is a poster: the name huge in the background, the portrait in an
+   arch in the middle, and the text set in the corners around it. */
+.section--wide > .container { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+.section--wide .section-head { position: static; }
 
-/* ─── 8. LOOKING FORWARD ───────────────────────────────────────── */
-.goals-quote {
-  font-size: clamp(1.5rem, 2.8vw, 2.125rem);
-  font-stretch: 112%;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  max-width: 24ch;
+.poster { position: relative; display: grid; gap: 28px; justify-items: start; }
+.poster-word {
+  position: absolute;
+  left: -0.06em; top: 0.08em;
+  z-index: -1;
+  font-size: clamp(7rem, 30vw, 21rem);
+  font-stretch: 125%;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+  color: color-mix(in srgb, var(--line) 62%, var(--paper));
+  white-space: nowrap;
+  user-select: none;
 }
-.goals-text { margin-top: 28px; display: grid; gap: 16px; max-width: 62ch; color: var(--graphite); }
+/* The portrait is a cut-out (transparent background), so the figure stands
+   in front of the name, and it fades out at the bottom instead of ending
+   on an edge. */
+.poster-photo {
+  width: 240px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center 12%;
+  -webkit-mask-image: linear-gradient(#000 72%, transparent);
+  mask-image: linear-gradient(#000 72%, transparent);
+  order: -1;                     /* on a phone the portrait comes first */
+}
+.poster-bio { max-width: 34ch; color: var(--graphite); }
+.poster-side { display: grid; gap: 28px; }
+.statement {
+  font-size: clamp(1.375rem, 2.3vw, 1.75rem);
+  font-stretch: 114%;
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 17ch;
+}
+.poster-facts { display: grid; gap: 14px; }
+.poster-facts dt { color: var(--slate); font-size: 0.875rem; }
+.poster-facts dd { font-weight: 600; font-size: 0.9688rem; line-height: 1.4; }
+.poster-facts dd + dd { margin-top: 2px; }
+.langs { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+.langs li { display: inline-flex; align-items: baseline; gap: 6px; font-weight: 600; font-size: 0.9688rem; }
+.langs small { color: var(--slate); font-size: 0.8125rem; font-weight: 400; }
+@media (min-width: 900px) {
+  .poster {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 48px;
+    align-items: stretch;
+    min-height: 520px;
+    padding-block: 8px 24px;
+  }
+  .poster-bio { align-self: end; }
+  .poster-photo { width: 340px; align-self: end; order: 0; }
+  .poster-side { justify-items: end; align-content: space-between; text-align: right; }
+  .langs { justify-content: flex-end; max-width: 300px; margin-left: auto; }
+  .statement { margin-left: auto; }
+}
 
 /* ─── 9. CONTACT AND FOOTER ────────────────────────────────────── */
 #contact {
@@ -871,8 +979,7 @@ button.link { border: 0; background: none; cursor: pointer; }
 .project-links { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px 24px; font-weight: 500; }
 
 .project-card details { margin-top: 14px; }
-.project-card summary,
-.role-more summary {
+.project-card summary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -880,10 +987,8 @@ button.link { border: 0; background: none; cursor: pointer; }
   cursor: pointer;
   list-style: none;
 }
-.project-card summary::-webkit-details-marker,
-.role-more summary::-webkit-details-marker { display: none; }
-.project-card summary::before,
-.role-more summary::before {
+.project-card summary::-webkit-details-marker { display: none; }
+.project-card summary::before {
   content: '+';
   display: inline-grid;
   place-items: center;
@@ -894,10 +999,8 @@ button.link { border: 0; background: none; cursor: pointer; }
   line-height: 1;
   transition: border-color 0.2s ease;
 }
-.project-card details[open] summary::before,
-.role-more[open] summary::before { content: '\2212'; }
-.project-card summary:hover::before,
-.role-more summary:hover::before { border-color: var(--ink); }
+.project-card details[open] summary::before { content: '\2212'; }
+.project-card summary:hover::before { border-color: var(--ink); }
 .project-card details p { margin-top: 12px; color: var(--graphite); font-size: 0.9688rem; max-width: 64ch; }
 
 @media (min-width: 760px) {
@@ -924,6 +1027,71 @@ button.link { border: 0; background: none; cursor: pointer; }
 .project-group:first-child { margin-top: 0; }
 
 /* ─── 11. OVERLAYS ─────────────────────────────────────────────── */
+/* Side panel for the long version of a job or project */
+.sheet {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(720px, 100%);
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid #23263a;
+  background: #0a0b10;
+  color: var(--paper);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #2c3044 transparent;
+}
+.sheet::backdrop { background: rgba(13, 14, 18, 0.5); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+
+/* The header is a small cover: glow, where it was, the title large */
+.sheet-head {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 230px;
+  padding: 40px 40px 32px;
+  background:
+    radial-gradient(520px 300px at 88% -10%, rgba(42, 59, 255, 0.6), transparent 68%),
+    radial-gradient(360px 220px at 8% 110%, rgba(42, 59, 255, 0.2), transparent 70%),
+    #0d0e14;
+  border-bottom: 1px solid #1c1f2e;
+}
+.sheet-kicker { color: #a7adc4; font-size: 0.9375rem; }
+.sheet-head h2 { margin-top: 8px; max-width: 16ch; font-size: clamp(1.75rem, 4vw, 2.5rem); font-stretch: 120%; letter-spacing: -0.03em; }
+.sheet-when { margin-top: 12px; color: #a7adc4; font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
+.sheet-when:empty { display: none; }
+.sheet-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  width: 42px; height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  background: rgba(13, 14, 20, 0.5);
+  color: var(--paper);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, rotate 0.3s var(--ease);
+}
+.sheet-close:hover { background: rgba(255, 255, 255, 0.16); rotate: 90deg; }
+.sheet :focus-visible { outline-color: var(--paper); }
+
+.sheet-body { padding: 8px 40px 56px; }
+.sheet-body > p:not(.stack) { margin-top: 28px; color: #c9cdda; font-size: 1.0625rem; line-height: 1.65; }
+.sheet-body .stack { margin-top: 10px; color: #c9cdda; font-size: 1rem; line-height: 1.6; }
+
+@media (max-width: 560px) {
+  .sheet-head { min-height: 190px; padding: 32px 22px 24px; }
+  .sheet-body { padding-inline: 22px; }
+}
+
 .cv-video {
   width: min(1100px, 92vw);
   margin: auto;
@@ -1018,13 +1186,15 @@ button.link { border: 0; background: none; cursor: pointer; }
 @keyframes grow     { from { transform: scaleY(0); } }
 @keyframes wipe     { from { clip-path: inset(0 100% 0 0); } }
 @keyframes blink    { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
-@keyframes fill     { to   { transform: scaleY(1); } }
 @keyframes orbitIn  { from { opacity: 0; transform: scale(0.72) rotate(-24deg); } }
 @keyframes spin     { to   { transform: rotate(360deg); } }
 @keyframes unspin   { to   { transform: rotate(-360deg); } }
-@keyframes travel   { 0% { left: calc(100% / 12 + 8px); opacity: 0; } 6% { opacity: 1; } 94% { opacity: 1; } 100% { left: calc(100% - 100% / 12 - 8px); opacity: 0; } }
-@keyframes nodeOn   { 0%, 14%, 100% { border-color: var(--ink); background: var(--surface); box-shadow: none; } 4% { border-color: var(--signal); background: var(--signal); box-shadow: 0 0 0 6px color-mix(in srgb, var(--signal) 18%, transparent); } }
-@keyframes beacon   { 0%, 100% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--signal) 16%, transparent); } 50% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--signal) 0%, transparent); } }
+@keyframes sheetIn  { from { transform: translateX(100%); } }
+@keyframes fadeIn   { from { opacity: 0; } }
+@keyframes drift    { from { transform: translateX(-4%); } to { transform: translateX(10%); } }
+@keyframes print    { from { opacity: 0; } }
+@keyframes caret    { 50% { opacity: 0; } }
+@keyframes stageOn  { 0%, 22%, 100% { border-color: var(--line); } 5%, 14% { border-color: var(--signal); } }
 @keyframes heroAway { to   { opacity: 0; transform: translateY(-48px) scale(0.97); } }
 
 .hero-name .line,
@@ -1061,18 +1231,29 @@ button.link { border: 0; background: none; cursor: pointer; }
   .ring--3, .ring--3 .chip { animation-duration: 150s; }
   .orbit:hover .ring, .orbit:hover .chip { animation-play-state: paused; }
 
-  /* Experience: the signal runs through the pipeline and each stage lights
-     up as it passes; the current job's dot breathes */
-  @media (min-width: 760px) {
-    .pipeline::after { animation: travel 4s linear infinite; }
-    .pipeline li::before { animation: nodeOn 4s linear infinite; animation-delay: calc(var(--k, 0) * 0.752s + 0.1s); }
-    .pipeline li:nth-child(2) { --k: 1; }
-    .pipeline li:nth-child(3) { --k: 2; }
-    .pipeline li:nth-child(4) { --k: 3; }
-    .pipeline li:nth-child(5) { --k: 4; }
-    .pipeline li:nth-child(6) { --k: 5; }
-  }
-  .tl-item--lead::before { animation: beacon 2.6s ease-in-out infinite; }
+  /* Experience: a signal goes through the six stages in order, and the
+     panel comes up when another year is picked */
+  ol.stages li { animation: stageOn 4.8s linear infinite; animation-delay: calc(var(--k, 0) * 0.8s); }
+  ol.stages li:nth-child(2) { --k: 1; }
+  ol.stages li:nth-child(3) { --k: 2; }
+  ol.stages li:nth-child(4) { --k: 3; }
+  ol.stages li:nth-child(5) { --k: 4; }
+  ol.stages li:nth-child(6) { --k: 5; }
+  .xp.is-js .panel > * { animation: introUp 0.5s var(--ease) both; }
+  .xp.is-js .panel > :nth-child(2) { animation-delay: 0.08s; }
+  /* The terminal prints its output line by line, and the cursor blinks */
+  .role-more[open] :is(.commits li, .tlog-cmd, .tstack, .tlog-end) { animation: print 0.01s steps(1) both; animation-delay: calc(var(--n, 0) * 0.13s); }
+  .commits li:nth-child(2) { --n: 1; } .commits li:nth-child(3) { --n: 2; } .commits li:nth-child(4) { --n: 3; }
+  .commits li:nth-child(5) { --n: 4; } .commits li:nth-child(6) { --n: 5; }
+  .tlog-cmd { --n: 7; } .tstack { --n: 8; } .tlog-end { --n: 9.5; }
+  .cmd::after, .tlog-end::after { animation: caret 1.1s steps(1) infinite; }
+
+  /* The side panel slides in from the right; its notes follow one by one */
+  .sheet[open] { animation: sheetIn 0.45s var(--ease); }
+  .sheet[open]::backdrop { animation: fadeIn 0.3s ease; }
+  .sheet[open] .sheet-body > * { animation: introUp 0.5s var(--ease) 0.12s both; }
+  .sheet[open] .sheet-head > div > * { animation: introUp 0.6s var(--ease) 0.1s both; }
+
 
   /* Nox blinks now and then */
   .nox-eyes i { animation: blink 5s infinite; }
@@ -1113,14 +1294,10 @@ button.link { border: 0; background: none; cursor: pointer; }
 
     .section-head h2,
     .section-head p,
-    .tl-item,
+    .xp,
     .feature,
     .project,
     .projects-all,
-    .about-photo,
-    .about-bio,
-    .facts > div,
-    .goals-text,
     .project-group,
     .project-card {
       animation: rise linear both;
@@ -1129,18 +1306,25 @@ button.link { border: 0; background: none; cursor: pointer; }
     }
     .project-pair .project:nth-child(2) { animation-range: cover 4% cover 26%; }
 
-    /* The timeline's line fills in as the jobs scroll past */
-    .timeline::after {
-      animation: fill linear both;
-      animation-timeline: view();
-      animation-range: cover 18% cover 72%;
-    }
-
     /* The orbit opens up as it arrives */
     .orbit-box {
       animation: orbitIn linear both;
       animation-timeline: view();
       animation-range: cover 0% cover 30%;
+    }
+
+    /* The poster: the name drifts sideways behind the portrait as it passes */
+    .poster-word {
+      animation: drift linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    .poster-photo,
+    .poster-bio,
+    .poster-side {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 26%;
     }
 
     /* Nox's response times draw themselves, one request after another */

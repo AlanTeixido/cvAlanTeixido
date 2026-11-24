@@ -47,7 +47,7 @@
     <link rel="preload" href="fonts/jetbrains-mono-v24-latin.woff2?v=4d09cda4" as="font" type="font/woff2" crossorigin />
 
     <link rel="stylesheet" href="icons.css?v=d8136626" />
-    <link rel="stylesheet" href="style.css?v=76a2c75a" />
+    <link rel="stylesheet" href="style.css?v=f21e2c61" />
 
     <meta name="theme-color" content="#f5f6f8" />
 
@@ -73,16 +73,16 @@
     </script>
   </head>
   <body>
-    <a href="#experience" class="skip-link">Skip to content</a>
+    <a href="#about" class="skip-link">Skip to content</a>
 
     <nav id="navbar" aria-label="Main">
       <div class="nav-inner">
         <a href="#hero" class="nav-logo">Alan Teixidó</a>
         <ul class="nav-links">
+          <li><a href="#about">About</a></li>
           <li><a href="#experience">Experience</a></li>
           <li><a href="#projects">Projects</a></li>
           <li><a href="#skills">Skills</a></li>
-          <li><a href="#about">About</a></li>
           <li><a href="#contact" class="nav-cta">Contact</a></li>
         </ul>
         <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
@@ -91,10 +91,10 @@
       </div>
     </nav>
     <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+      <a href="#about">About</a>
       <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
-      <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </nav>
 
@@ -144,140 +144,195 @@
         </div>
       </section>
 
+      <!-- ─── ABOUT: a mosaic of tiles ───────────────────────────────────── -->
+      <section id="about" class="section section--wide">
+        <div class="container">
+          <header class="section-head">
+            <h2>About</h2>
+          </header>
+
+          <div class="poster">
+            <span class="poster-word" aria-hidden="true">Alan</span>
+
+            <p class="poster-bio">
+              I build agents that answer from company knowledge, the Python
+              and .NET APIs behind them, and React and React Native apps on
+              top. I care about the full picture: clean architecture on the
+              server, polished UI on the client, and reliable delivery
+              pipelines in between.
+            </p>
+
+            <img class="poster-photo" src="images/alan-teixido-cutout.webp?v=297ab305" alt="Alan Teixidó" width="720" height="960" decoding="async" />
+
+            <div class="poster-side">
+              <p class="statement" id="goals" data-fill>
+                I already ship AI agents to production. Next, I want to make
+                them reliable at scale.
+              </p>
+              <dl class="poster-facts">
+                <div><dt>Based in</dt><dd>Barcelona, Spain</dd></div>
+                <div>
+                  <dt>Languages</dt>
+                  <dd>
+                    <ul class="langs">
+                      <li>Catalan <small>native</small></li>
+                      <li>Spanish <small>native</small></li>
+                      <li>English <small>native</small></li>
+                      <li>French <small>basic</small></li>
+                    </ul>
+                  </dd>
+                </div>
+                <div id="education">
+                  <dt>Education</dt>
+                  <dd>Web Application Development (CFGS DAW)</dd>
+                  <dd>Microcomputer Systems &amp; Networks (CFGM SMX)</dd>
+                  <dd>ESO at <a href="https://catalunya.sek.es/" target="_blank" rel="noopener" class="link">SEK Catalunya</a>, international school</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ─── EXPERIENCE ─────────────────────────────────────────────────── -->
-      <section id="experience" class="section">
+      <section id="experience" class="section section--wide">
         <div class="container">
           <header class="section-head">
             <h2>Experience</h2>
           </header>
 
-          <div>
-            <ol class="timeline">
-              <li class="tl-item tl-item--lead">
+          <!-- One line of years. Each year is a tab (main.js) and opens its job
+               in the panel underneath; without the script the links jump to the
+               panels, which are all shown, newest first. -->
+          <div class="xp">
+            <ol class="axis">
+              <li><a class="axis-tab" id="xt-pista" href="#xp-pista"><time datetime="2021">2021</time><b>Hardware Technician</b><span>Pista Cero Informática</span></a></li>
+              <li><a class="axis-tab" id="xt-camper" href="#xp-camper"><time datetime="2022">2022</time><b>Sales &amp; Web Dev</b><span>CamperXpress</span></a></li>
+              <li><a class="axis-tab" id="xt-sjas" href="#xp-sjas"><time datetime="2024">2024</time><b>Camp Counselor</b><span>SJAS, Lucerne</span></a></li>
+              <li><a class="axis-tab" id="xt-quantion" href="#xp-quantion"><time datetime="2024">2024</time><b>Backend Dev (.NET)</b><span>Quantion, internship</span></a></li>
+              <li><a class="axis-tab" id="xt-plain" href="#xp-plain" aria-current="true"><time datetime="2025">2025</time><b>Software Engineer, Fullstack &amp; AI</b><span>Plain Concepts. Client: Puig.</span></a></li>
+            </ol>
+
+            <article class="panel panel--split" id="xp-plain" aria-labelledby="xt-plain">
+              <div>
                 <header class="role-head">
                   <span class="role-logo"><img src="images/logo_plain.png?v=20c978dc" alt="" width="500" height="269" loading="lazy" decoding="async" /></span>
                   <div>
                     <h3>Software Engineer, Fullstack &amp; AI</h3>
                     <p class="role-org">Plain Concepts, Barcelona. Client: Puig.</p>
+                    <p class="role-when">Jun 2025 to now</p>
                   </div>
-                  <p class="role-when">Jun 2025 to now</p>
                 </header>
-
                 <p class="role-sum role-sum--lead">
                   I build the AI assistants that employees talk to in Microsoft
-                  Teams. Each one answers from a specific set of company
-                  documents: it finds the passages that matter and replies in
-                  plain language.
+                  Teams. Each one answers from a specific set of company documents.
                 </p>
                 <p class="role-sum">
-                  I take them from the first document to production: the
-                  ingestion that keeps the knowledge current, the agent itself,
+                  From the first document to production: ingestion, the agent,
                   the API behind it and the bot in Teams.
                 </p>
-
-                <!-- The platform, from a document to an answer in Teams -->
-                <ol class="pipeline" aria-label="How a company document becomes an answer in Microsoft Teams">
-                  <li><b>Documents</b><span>company knowledge</span></li>
-                  <li><b>Ingestion</b><span>JSON metadata</span></li>
-                  <li><b>Data stores</b><span>Vertex AI, RAG</span></li>
-                  <li><b>Agents</b><span>Google ADK</span></li>
-                  <li><b>API</b><span>FastAPI</span></li>
-                  <li><b>Teams</b><span>Azure Bot Service</span></li>
-                </ol>
-
-                <details class="role-more">
-                  <summary>What I did, in detail</summary>
-              <ul class="role-grid">
-                <li>
-                  <h4>Agents</h4>
-                  <p>
-                    Built AI agents with Google ADK on Vertex AI, using RAG over
-                    Vertex AI data stores to ground answers in company documents.
-                  </p>
-                </li>
-                <li>
-                  <h4>Ingestion</h4>
-                  <p>
-                    Designed the document ingestion workflow (JSON metadata,
-                    data store imports, content updates) so the agents always
-                    answer from current knowledge.
+              </div>
+              <!-- The platform, from a document to an answer in Teams -->
+              <ol class="stages" aria-label="How a company document becomes an answer in Microsoft Teams">
+                <li><b>Documents</b><span>company knowledge</span></li>
+                <li><b>Ingestion</b><span>JSON metadata</span></li>
+                <li><b>Data stores</b><span>Vertex AI, RAG</span></li>
+                <li><b>Agents</b><span>Google ADK</span></li>
+                <li><b>API</b><span>FastAPI</span></li>
+                <li><b>Teams</b><span>Azure Bot Service</span></li>
+              </ol>
+              <details class="role-more">
+                <summary><span class="cmd">git log --graph</span></summary>
+                <div class="tlog">
+                  <ol class="commits">
                     <!-- TODO: métrica (p. ej. volumen de documentos, frecuencia de actualización) -->
-                  </p>
-                </li>
-                <li>
-                  <h4>API</h4>
-                  <p>
-                    Developed the FastAPI (Python) backend that connects the
-                    agents with the rest of the platform.
-                  </p>
-                </li>
-                <li>
-                  <h4>Teams</h4>
-                  <p>
-                    Integrated the agents into Microsoft Teams through Azure
-                    Bot Service, in a multi-cloud setup (Google Cloud and Azure).
+                    <li><b><i>feat(ingestion):</i> document ingestion workflow<em>(HEAD -&gt; main)</em></b><span>JSON metadata, data store imports and content updates, so the agents always answer from current knowledge.</span></li>
+                    <li><b><i>feat(agents):</i> AI agents with Google ADK on Vertex AI</b><span>RAG over Vertex AI data stores grounds every answer in company documents.</span></li>
+                    <li><b><i>feat(api):</i> FastAPI backend</b><span>The Python service that connects the agents with the rest of the platform.</span></li>
                     <!-- TODO: métrica (p. ej. empleados con acceso) -->
-                  </p>
-                </li>
-                <li>
-                  <h4>Delivery</h4>
-                  <p>
-                    Built Azure DevOps CI/CD pipelines that deploy across four
-                    repositories: agents, bot, API and infrastructure.
+                    <li><b><i>feat(teams):</i> the agents inside Microsoft Teams</b><span>Through Azure Bot Service, in a multi-cloud setup (Google Cloud and Azure).</span></li>
                     <!-- TODO: métrica (p. ej. tiempo de despliegue) -->
-                  </p>
-                </li>
-                <li>
-                  <h4>Apps</h4>
-                  <p>
-                    Designed .NET REST APIs (CQRS, Clean Architecture) and React
-                    Native apps for iOS and Android, with Firebase release tooling.
+                    <li><b><i>ci(delivery):</i> Azure DevOps CI/CD pipelines</b><span>They deploy across four repositories: agents, bot, API and infrastructure.</span></li>
                     <!-- TODO: métrica (p. ej. crash-free rate, tiempo de release) -->
-                  </p>
-                </li>
-              </ul>
-                  <p class="stack">
-                    Google ADK, Vertex AI, RAG, Python, FastAPI, Azure Bot Service,
-                    Azure DevOps, .NET (C#), React Native, TypeScript, PostgreSQL, Firebase
-                  </p>
-                </details>
-              </li>
+                    <li><b><i>feat(apps):</i> .NET REST APIs and React Native apps</b><span>CQRS and Clean Architecture on the API; iOS and Android, with Firebase release tooling.</span></li>
+                  </ol>
+                  <p class="tlog-cmd">cat stack.txt</p>
+                  <ul class="tstack">
+                    <li>Google ADK</li><li>Vertex AI</li><li>RAG</li><li>Python</li><li>FastAPI</li><li>Azure Bot Service</li><li>Azure DevOps</li><li>.NET (C#)</li><li>React Native</li><li>TypeScript</li><li>PostgreSQL</li><li>Firebase</li>
+                  </ul>
+                  <p class="tlog-end" aria-hidden="true"></p>
+                </div>
+              </details>
+            </article>
 
-              <li class="tl-item">
+            <article class="panel panel--split" id="xp-quantion" aria-labelledby="xt-quantion">
+              <div>
                 <header class="role-head">
                   <span class="role-logo"><img src="images/logo_quantion.png?v=ba24d74d" alt="" width="450" height="138" loading="lazy" decoding="async" /></span>
                   <div>
                     <h3>Backend Developer (.NET), internship</h3>
                     <p class="role-org">Quantion, Barcelona.</p>
+                    <p class="role-when">Oct 2024 to Mar 2025</p>
                   </div>
-                  <p class="role-when">Oct 2024 to Mar 2025</p>
                 </header>
-                <p class="role-sum">Backend features and REST endpoints in .NET, shipped into a live production codebase from day one.</p>
-                <details class="role-more">
-                  <summary>What I did, in detail</summary>
-                  <ul class="role-grid role-grid--two">
-                    <li><p>Shipped backend features in .NET (C#) within a live production codebase from day one.</p></li>
-                    <li><p>Built and validated REST API endpoints with automated test coverage to ensure reliability.</p></li>
-                    <li><p>Refactored legacy code applying Clean Code principles and established architectural patterns.</p></li>
-                    <li><p>Contributed to iterative delivery cycles within a cross-functional Scrum team.</p></li>
+                <p class="role-sum role-sum--lead">Backend features and REST endpoints in .NET, shipped into a live production codebase from day one.</p>
+              </div>
+              <ul class="stages stages--two">
+                <li><b>Production features</b><span>.NET (C#)</span></li>
+                <li><b>REST endpoints</b><span>with automated tests</span></li>
+                <li><b>Legacy refactors</b><span>Clean Code</span></li>
+                <li><b>Scrum team</b><span>cross-functional</span></li>
+              </ul>
+              <details class="role-more">
+                <summary><span class="cmd">git log --graph</span></summary>
+                <div class="tlog">
+                  <ol class="commits">
+                    <li><b><i>feat(backend):</i> backend features in .NET (C#)<em>(HEAD -&gt; main)</em></b><span>Shipped within a live production codebase from day one.</span></li>
+                    <li><b><i>test(api):</i> REST endpoints with automated tests</b><span>Built and validated with test coverage to ensure reliability.</span></li>
+                    <li><b><i>refactor(legacy):</i> legacy code cleanup</b><span>Clean Code principles and established architectural patterns.</span></li>
+                    <li><b><i>chore(team):</i> Scrum delivery cycles</b><span>Iterative delivery within a cross-functional team.</span></li>
+                  </ol>
+                  <p class="tlog-cmd">cat stack.txt</p>
+                  <ul class="tstack">
+                    <li>.NET (C#)</li><li>REST APIs</li><li>Azure DevOps</li><li>Git</li>
                   </ul>
-                  <p class="stack">.NET (C#), REST APIs, Azure DevOps, Git</p>
-                </details>
-              </li>
+                  <p class="tlog-end" aria-hidden="true"></p>
+                </div>
+              </details>
+            </article>
 
-              <li class="tl-item tl-item--small">
-                <p class="role-when">Jul to Aug 2024</p>
-                <p><strong>Camp Counselor</strong>, SJAS Summer Camp, Lucerne, Switzerland. Led international groups in outdoor and team activities.</p>
-              </li>
-              <li class="tl-item tl-item--small">
-                <p class="role-when">May to Jul 2022</p>
-                <p><strong>Sales Representative &amp; Web Developer</strong>, CamperXpress, Barcelona. Sales and client support, and built and maintained the company website.</p>
-              </li>
-              <li class="tl-item tl-item--small">
-                <p class="role-when">Jun 2021 to Apr 2022</p>
-                <p><strong>Hardware Technician</strong>, Pista Cero Informática, Barcelona. Assembled, repaired and upgraded computers, and supported server maintenance.</p>
-              </li>
-            </ol>
+            <article class="panel" id="xp-sjas" aria-labelledby="xt-sjas">
+              <header class="role-head">
+                <div>
+                  <h3>Camp Counselor</h3>
+                  <p class="role-org">SJAS Summer Camp, Lucerne, Switzerland.</p>
+                  <p class="role-when">Jul to Aug 2024</p>
+                </div>
+              </header>
+              <p class="role-sum role-sum--lead">Led international groups in outdoor and team activities.</p>
+            </article>
+
+            <article class="panel" id="xp-camper" aria-labelledby="xt-camper">
+              <header class="role-head">
+                <div>
+                  <h3>Sales Representative &amp; Web Developer</h3>
+                  <p class="role-org">CamperXpress, Barcelona.</p>
+                  <p class="role-when">May to Jul 2022</p>
+                </div>
+              </header>
+              <p class="role-sum role-sum--lead">Sales and client support, and built and maintained the company website.</p>
+            </article>
+
+            <article class="panel" id="xp-pista" aria-labelledby="xt-pista">
+              <header class="role-head">
+                <div>
+                  <h3>Hardware Technician</h3>
+                  <p class="role-org">Pista Cero Informática, Barcelona.</p>
+                  <p class="role-when">Jun 2021 to Apr 2022</p>
+                </div>
+              </header>
+              <p class="role-sum role-sum--lead">Assembled, repaired and upgraded computers, and supported server maintenance.</p>
+            </article>
           </div>
         </div>
       </section>
@@ -417,92 +472,6 @@
         </div>
       </section>
 
-      <!-- ─── ABOUT (with education) ─────────────────────────────────────── -->
-      <section id="about" class="section">
-        <div class="container">
-          <header class="section-head">
-            <h2>About</h2>
-          </header>
-
-          <div class="about">
-            <img
-              src="images/alan-teixido.webp?v=03eca435"
-              alt="Alan Teixidó"
-              class="about-photo"
-              width="720"
-              height="960"
-              loading="lazy"
-              decoding="async"
-            />
-            <div>
-              <p class="about-bio">
-                I build AI agents that answer from company knowledge with
-                Google ADK, Vertex AI and RAG, the Python and .NET APIs behind
-                them, and React and React Native apps on top. I care about the
-                full picture: clean architecture on the server, polished UI on
-                the client, and reliable delivery pipelines in between.
-              </p>
-
-              <dl class="facts">
-                <div>
-                  <dt>Based in</dt>
-                  <dd>Barcelona, Spain</dd>
-                </div>
-                <div>
-                  <dt>Languages</dt>
-                  <dd>Catalan, Spanish and English (native), French (basic)</dd>
-                </div>
-                <div id="education">
-                  <dt>Education</dt>
-                  <dd>
-                    Higher VET Diploma in Web Application Development (CFGS DAW)
-                    <span>Institut Tecnològic de Barcelona, Sep 2023 to Jun 2025</span>
-                  </dd>
-                  <dd>
-                    Intermediate VET Diploma in Microcomputer Systems &amp; Networks (CFGM SMX)
-                    <span>IFP Hospitalet, 2021 to 2023</span>
-                  </dd>
-                  <dd>
-                    Secondary Education (ESO)
-                    <span><a href="https://catalunya.sek.es/" target="_blank" rel="noopener" class="link">SEK Catalunya</a>, international school, Sep 2017 to Jun 2019</span>
-                  </dd>
-                </div>
-              </dl>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ─── LOOKING FORWARD ────────────────────────────────────────────── -->
-      <section id="goals" class="section">
-        <div class="container">
-          <header class="section-head">
-            <h2>Looking forward</h2>
-          </header>
-
-          <div>
-            <p class="goals-quote" data-fill>
-              I already ship AI agents to production. Next, I want to make
-              them reliable at scale.
-            </p>
-            <div class="goals-text">
-              <p>
-                At Plain Concepts I build agents that answer from company
-                knowledge: the retrieval layer, the ingestion pipeline that keeps
-                it current, the APIs around it and the Microsoft Teams
-                integration that puts it in front of employees.
-              </p>
-              <p>
-                Where I want to grow is the engineering that keeps systems like
-                these dependable as usage grows: evaluating answer quality,
-                observability, grounding and guardrails, and keeping latency and
-                cost under control. AI systems deserve the same rigor as any
-                other production software.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
 
     <!-- ─── CONTACT / FOOTER ───────────────────────────────────────────── -->
@@ -532,10 +501,24 @@
       <video src="/video/cv-30s.mp4" poster="images/cv-video-poster.webp?v=5e0f5fea" controls playsinline preload="none"></video>
     </dialog>
 
+    <!-- Side panel that shows the long version of a job or a project.
+         main.js fills it from the <details> that was opened. -->
+    <dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
+      <header class="sheet-head">
+        <div>
+          <p class="sheet-kicker" id="sheetKicker"></p>
+          <h2 id="sheetTitle"></h2>
+          <p class="sheet-when" id="sheetWhen"></p>
+        </div>
+        <button type="button" class="sheet-close" aria-label="Close">&times;</button>
+      </header>
+      <div class="sheet-body" id="sheetBody"></div>
+    </dialog>
+
     <div id="clipboard-toast" role="status" aria-live="polite"></div>
 
-    <script src="main.js?v=09834a4d" defer></script>
-    <script src="terminal.js?v=ffa89899" defer></script>
+    <script src="main.js?v=fbfb10c9" defer></script>
+    <script src="terminal.js?v=d3335f7f" defer></script>
     <script src="cloud.js?v=d596a4ea" defer></script>
   </body>
 </html>
