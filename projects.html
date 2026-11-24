@@ -30,640 +30,236 @@
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=673fcd8c" />
 
-    <!-- Fonts: self-hosted (@font-face at the top of style.css). The headline
-         and body faces are preloaded because the first screen needs them. -->
-    <link rel="preload" href="fonts/space-grotesk-v22-latin.woff2?v=0f3474ee" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="fonts/plus-jakarta-sans-v12-latin.woff2?v=a180dc40" as="font" type="font/woff2" crossorigin />
+    <!-- Fonts: self-hosted (@font-face at the top of style.css) -->
+    <link rel="preload" href="fonts/archivo-var-latin.woff2?v=f799f904" as="font" type="font/woff2" crossorigin />
 
-    <!-- Icons: only the ones in use, as CSS masks (scripts/build-icons.js) -->
-    <link rel="stylesheet" href="icons.css?v=36da3a7d" />
+    <link rel="stylesheet" href="style.css?v=76a2c75a" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="style.css?v=698fc4f0" />
-
-    <meta name="theme-color" content="#09090b" />
+    <meta name="theme-color" content="#f5f6f8" />
   </head>
   <body>
     <a href="#projects-section" class="skip-link">Skip to content</a>
 
-    <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
-    <nav id="navbar">
+    <nav id="navbar" aria-label="Main">
       <div class="nav-inner">
-        <a href="index.html" class="nav-logo">AT<span>.</span></a>
+        <a href="index.html" class="nav-logo">Alan Teixidó</a>
         <ul class="nav-links">
-          <li><a href="index.html#about">About</a></li>
           <li><a href="index.html#experience">Experience</a></li>
-          <li><a href="projects.html" class="nav-active">Projects</a></li>
-          <li><a href="index.html#education">Education</a></li>
+          <li><a href="projects.html" aria-current="page">Projects</a></li>
           <li><a href="index.html#skills">Skills</a></li>
-          <li><a href="index.html#goals">Goals</a></li>
-          <li><a href="index.html#contact" class="nav-cta">Contact</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="#contact" class="nav-cta">Contact</a></li>
         </ul>
         <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
           <span></span><span></span><span></span>
         </button>
       </div>
     </nav>
-
-    <!-- Mobile nav -->
-    <nav class="mobile-menu" id="mobileMenu">
-      <a href="index.html#about"      onclick="closeMobile()">About</a>
-      <a href="index.html#experience" onclick="closeMobile()">Experience</a>
-      <a href="projects.html"         onclick="closeMobile()">Projects</a>
-      <a href="index.html#education"  onclick="closeMobile()">Education</a>
-      <a href="index.html#skills"     onclick="closeMobile()">Skills</a>
-      <a href="index.html#goals"      onclick="closeMobile()">Goals</a>
-      <a href="index.html#contact"    onclick="closeMobile()">Contact</a>
+    <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+      <a href="index.html#experience">Experience</a>
+      <a href="projects.html">Projects</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#about">About</a>
+      <a href="#contact">Contact</a>
     </nav>
 
-    <!-- ─── PAGE HEADER ───────────────────────────────────────────────────── -->
-    <div class="projects-header">
-      <div class="container">
-        <a href="index.html" class="back-link reveal">
-          <i class="fa-solid fa-arrow-left"></i> Back to CV
-        </a>
-        <div class="reveal reveal-delay-1">
-          <span class="section-label">Case studies &amp; side projects</span>
-          <h1>Projects</h1>
-          <p class="projects-sub">
-            Side projects, professional case studies and personal builds —
-            things I designed, built, and shipped.
+    <main>
+      <header class="page-head">
+        <div class="container">
+          <a href="index.html" class="link">Back to the CV</a>
+          <h1><span class="line"><span>Projects</span></span></h1>
+          <p>
+            What I build outside client work: AI systems first, then web
+            apps. Each one says what it does, how it is built and what I
+            learned from it.
           </p>
         </div>
-      </div>
-    </div>
+      </header>
 
-    <!-- ─── PROJECTS GRID ─────────────────────────────────────────────────── -->
-    <section id="projects-section">
-      <div class="container">
-        <div class="projects-grid">
-
-          <!-- Ask my CV -->
-          <div class="project-card reveal reveal-delay-1" id="ask-my-cv">
-            <div class="project-card-visual" aria-hidden="true">
-              <div class="pp-term">
-                <div class="pp-term-bar"><span></span><span></span><span></span></div>
-                <p><span class="pp-term-prompt">$</span> ask what has Alan built with RAG?</p>
-                <p><span class="pp-term-arrow">→</span> AI agents on Vertex AI, grounded in company documents, plus the FastAPI backend…</p>
-                <p class="pp-term-dim">streamed live · written only from my CV</p>
+      <section id="projects-section" class="project-list">
+        <div class="container">
+          <h2 class="project-group">AI systems</h2>
+          <div class="project-grid">
+            <article class="project-card project-card--lead" id="nox">
+              <button type="button" class="project-shot project-shot--video" data-video-dialog="noxVideo" aria-haspopup="dialog" aria-label="Play the Nox demo, 45 seconds">
+                <img src="images/nox_cover.webp?v=2c5d9dca" alt="The Nox island answering a spoken question about today's agenda" class="is-cover" width="1600" height="900" loading="lazy" decoding="async" />
+                <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg> Watch the demo, 45 s</span>
+              </button>
+              <div class="project-card-body">
+                <span class="project-kind">Personal project, in daily use</span>
+                <h3>Nox</h3>
+                <p>A voice assistant for Windows that answers only to my voice. Speech is transcribed on my own GPU; a router handles simple requests locally and sends the rest to a headless Claude Code process limited to an allowlist of tools.</p>
+                <p class="stack">Python, PySide6 (Qt), faster-whisper (CUDA), Resemblyzer, edge-tts, Claude Code headless with MCP, Postgres (Supabase), Strava API</p>
+                <details>
+                  <summary>How it is built</summary>
+                  <p>A voice assistant for Windows that lives as an island at the top of the screen and answers only to my voice. Listening is local: wake word, Whisper on the GPU and a speaker check, so only text reaches the model. A router sends simple requests (open a file, take a note, log food) to local shortcuts, which took opening a file from 11.7 seconds to 0.1; everything else goes to a persistent headless Claude Code process that picks the model per request. Security was most of the work: connectors come from an allowlist, about 120 deny rules block anything that sends, deletes or pays, emails and web pages are treated as data and never as instructions, secrets live in the Windows Credential Manager, and its database role is read-only with row-level security. The repository is a showcase: architecture, security model and demo, with the source kept private.</p>
+                </details>
+                <p class="project-links">
+                  <a href="https://github.com/AlanTeixido/nox" target="_blank" rel="noopener" class="link">Architecture and demo on GitHub</a>
+                </p>
               </div>
-            </div>
-            <div class="project-card-body">
-              <div class="project-meta">
-                <span class="project-status">Live</span>
-                <span class="project-tag">AI</span>
+            </article>
+            <article class="project-card" id="ask-my-cv">
+              <div class="project-shot">
+                <img src="images/askmycv_cover.webp?v=5b488e29" alt="The terminal answering two questions about Alan, one in English and one in Spanish" class="is-cover" width="1600" height="900" loading="lazy" decoding="async" />
               </div>
-              <h2 class="project-title">Ask my CV</h2>
-              <p class="project-desc">
-                An AI assistant built into the terminal on my home page.
-                Visitors ask about my experience in English, Spanish or Catalan
-                and the answer streams in live, written only from my CV. A small
-                Python service (standard library, no dependencies) runs behind
-                nginx on my own VPS and calls the Gemini API with my profile as
-                context. Production details on a zero budget: the prompt keeps
-                it on topic and treats every message as a question, never as
-                instructions; length limits, per-visitor and daily caps and
-                nginx rate limiting keep it safe and free to run; questions are
-                never logged; and systemd runs it sandboxed, restarting it on
-                every deploy.
-              </p>
-              <div class="project-tech">
-                <span class="project-tech-pill">
-                  <i class="devicon-python-plain colored"></i>Python
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-robot" style="color:var(--accent-cyan);font-size:11px"></i>Gemini API
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-nginx-original colored"></i>nginx
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-server" style="color:var(--accent-cyan);font-size:11px"></i>systemd
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-javascript-plain colored"></i>JavaScript
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-bolt" style="color:var(--accent-cyan);font-size:11px"></i>Streaming
-                </span>
+              <div class="project-card-body">
+                <span class="project-kind">Live</span>
+                <h3>Ask my CV</h3>
+                <p>The assistant in the terminal on my home page. A small Python service on my own server answers only from my CV and streams the reply.</p>
+                <p class="stack">Python, Gemini API, nginx, systemd, JavaScript, Streaming</p>
+                <details>
+                  <summary>How it is built</summary>
+                  <p>An AI assistant built into the terminal on my home page. Visitors ask about my experience in English, Spanish or Catalan and the answer streams in live, written only from my CV. A small Python service (standard library, no dependencies) runs behind nginx on my own VPS and calls the Gemini API with my profile as context. Production details on a zero budget: the prompt keeps it on topic and treats every message as a question, never as instructions; length limits, per-visitor and daily caps and nginx rate limiting keep it safe and free to run; questions are never logged; and systemd runs it sandboxed, restarting it on every deploy.</p>
+                </details>
+                <p class="project-links">
+                  <a href="index.html#ask" class="link">Try it in the terminal</a>
+                  <a href="https://github.com/AlanTeixido/cvAlanTeixido/tree/main/api" target="_blank" rel="noopener" class="link">Code on GitHub</a>
+                </p>
               </div>
-              <div class="project-links">
-                <a href="index.html#ask" class="btn btn-primary btn-sm">
-                  <i class="fa-solid fa-terminal"></i> Try it
-                </a>
-                <a
-                  href="https://github.com/AlanTeixido/cvAlanTeixido/tree/main/api"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-secondary btn-sm"
-                >
-                  <i class="fa-brands fa-github"></i> Code
-                </a>
+            </article>
+            <article class="project-card" id="genai-data-platform">
+              <div class="project-shot">
+                <img src="images/genai_cover.webp?v=ea2ad885" alt="A question becomes governed SQL and then a dashboard" class="is-cover" width="1600" height="900" loading="lazy" decoding="async" />
               </div>
-            </div>
+              <div class="project-card-body">
+                <span class="project-kind">Case study</span>
+                <h3>GenAI Data Platform</h3>
+                <p>Business users ask in plain language. An LLM writes the SQL, a governed semantic layer validates it, and the result is published as Metabase dashboards.</p>
+                <p class="stack">Python, PostgreSQL, Docker, LLM text-to-SQL, Metabase API, Streamlit</p>
+                <details>
+                  <summary>How it is built</summary>
+                  <p>Natural-language analytics platform built during a corporate GenAI mentorship program. Business users ask questions in plain language; an LLM translates them into SQL, a governed semantic layer validates every query (read-only, row-level security), and the result is executed on a PostgreSQL warehouse and published automatically as charts and dashboards in Metabase through its REST API. I authored the semantic business-term definitions, built the Metabase integration bridge and automated dashboard composition, and developed the Streamlit web interface — working hands-on with AI agents as part of the development workflow.</p>
+                </details>
+              </div>
+            </article>
+            <article class="project-card">
+              <div class="project-shot">
+                <img src="images/fit_preview.webp?v=8e557abe" alt="Fit — training and recovery app screenshot" width="800" height="500" loading="lazy" decoding="async" />
+              </div>
+              <div class="project-card-body">
+                <span class="project-kind">Live</span>
+                <h3>Fit</h3>
+                <p>Personal training app with an AI coach, built on the Claude API with tool use over my own training data.</p>
+                <p class="stack">Next.js, React, TypeScript, Supabase, Vercel, Claude API</p>
+                <details>
+                  <summary>How it is built</summary>
+                  <p>Personal training app with an AI coach, dashboard and activity tracking that I use daily. The coach is built on the Claude API with tool use over my own data (meals, workouts, daily metrics and goals), plus Strava and Google Health Connect integrations.</p>
+                </details>
+                <p class="project-links">
+                  <a href="https://fit.alanteixido.dev" target="_blank" rel="noopener" class="link">Open the live site</a>
+                </p>
+              </div>
+            </article>
+            <article class="project-card" id="polymarket-bot">
+              <div class="project-shot">
+                <img src="images/polymarket_cover.webp?v=3160db82" alt="81% in simulation against 41% with real money" class="is-cover" width="1600" height="900" loading="lazy" decoding="async" />
+              </div>
+              <div class="project-card-body">
+                <span class="project-kind">Retired, with a post-mortem</span>
+                <h3>Polymarket trading bot</h3>
+                <p>Two Claude agents built and reviewed trading strategies. Right 81% of the time in simulation and 41% with real money, so I shut it down.</p>
+                <p class="stack">Claude agents, Docker, Hetzner VPS</p>
+                <details>
+                  <summary>How it is built</summary>
+                  <p>A bot that traded prediction markets, built by two Claude agents: one implemented strategies and the other reviewed them. It was right 81% of the time in simulation and 41% with real money, so I shut it down. What I kept from it: a backtest only proves the simulator, so validate with small real stakes before scaling anything.</p>
+                </details>
+              </div>
+            </article>
           </div>
 
-          <!-- GenAI Data Platform -->
-          <div class="project-card reveal reveal-delay-1" id="genai-data-platform">
-            <div class="project-card-visual" aria-hidden="true">
-              <div class="pp-flow">
-                <span class="pp-flow-step"><i class="fa-regular fa-comment"></i>Question</span>
-                <i class="fa-solid fa-arrow-down pp-flow-arrow"></i>
-                <span class="pp-flow-step"><i class="fa-solid fa-code"></i>SQL</span>
-                <i class="fa-solid fa-arrow-down pp-flow-arrow"></i>
-                <span class="pp-flow-step"><i class="fa-solid fa-chart-column"></i>Dashboard</span>
+          <h2 class="project-group">Web apps</h2>
+          <div class="project-grid project-grid--three">
+            <article class="project-card">
+              <div class="project-shot">
+                <img src="images/protactics_preview.svg?v=bac0905b" alt="ProTactics — Football Club Management Platform" width="800" height="500" loading="lazy" decoding="async" />
               </div>
-            </div>
-            <div class="project-card-body">
-              <div class="project-meta">
-                <span class="project-status">Case Study</span>
+              <div class="project-card-body">
+                <span class="project-kind">Live, team of three</span>
+                <h3>ProTactics</h3>
+                <p>Football club management platform built by a team of three: training planner, player tracking and an interactive tactics board.</p>
+                <p class="stack">Vue 3, Node.js, Express, PostgreSQL, JWT, Cloudinary</p>
+                <details>
+                  <summary>How it is built</summary>
+                  <p>Full-stack football club management platform, built as a team of three developers. Clubs manage coaches and teams; coaches plan training sessions, track players with stats and positions, share publications with the club, and draw tactics on an interactive Canvas board with drag-and-drop tokens and freehand drawing. JWT auth with role-based access (club / coach).</p>
+                </details>
+                <p class="project-links">
+                  <a href="https://alanteixido.github.io/ProTactics/" target="_blank" rel="noopener" class="link">Open the live demo</a>
+                  <a href="https://github.com/AlanTeixido/ProTactics" target="_blank" rel="noopener" class="link">Frontend code</a>
+                  <a href="https://github.com/AlanTeixido/ProTactics-API" target="_blank" rel="noopener" class="link">API code</a>
+                </p>
               </div>
-              <h2 class="project-title">GenAI Data Platform</h2>
-              <p class="project-desc">
-                Natural-language analytics platform built during a corporate
-                GenAI mentorship program. Business users ask questions in plain
-                language; an LLM translates them into SQL, a governed semantic
-                layer validates every query (read-only, row-level security),
-                and the result is executed on a PostgreSQL warehouse and
-                published automatically as charts and dashboards in Metabase
-                through its REST API. I authored the semantic business-term
-                definitions, built the Metabase integration bridge and
-                automated dashboard composition, and developed the Streamlit
-                web interface — working hands-on with AI agents as part of the
-                development workflow.
-              </p>
-              <div class="project-tech">
-                <span class="project-tech-pill">
-                  <i class="devicon-python-plain colored"></i>Python
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-postgresql-plain colored"></i>PostgreSQL
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-docker-plain colored"></i>Docker
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-robot" style="color:var(--accent-cyan);font-size:11px"></i>LLM · Text-to-SQL
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-chart-column" style="color:var(--accent-cyan);font-size:11px"></i>Metabase API
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-bolt" style="color:var(--accent-cyan);font-size:11px"></i>Streamlit
-                </span>
+            </article>
+            <article class="project-card">
+              <div class="project-shot">
+                <img src="images/pokedex_project.webp?v=3b5f0867" alt="Pokédex App screenshot" width="800" height="500" loading="lazy" decoding="async" />
               </div>
-            </div>
-          </div>
-
-          <!-- ProTactics -->
-          <div class="project-card reveal reveal-delay-2">
-            <div class="project-card-visual project-card-visual--img">
-              <img src="images/protactics_preview.svg?v=bac0905b" alt="ProTactics — Football Club Management Platform" class="project-thumb" loading="lazy" decoding="async" />
-            </div>
-            <div class="project-card-body">
-              <div class="project-meta">
-                <span class="project-status">Live</span>
-                <span class="project-tag">Team project</span>
+              <div class="project-card-body">
+                <span class="project-kind">Live</span>
+                <h3>Pokédex App</h3>
+                <p>A Pokédex with real-time search, filters, evolution chains and side-by-side stat comparison, on the PokéAPI.</p>
+                <p class="stack">Next.js, TypeScript, Tailwind CSS, SWR, Framer Motion, PokéAPI</p>
+                <details>
+                  <summary>How it is built</summary>
+                  <p>Full-featured Pokédex built with Next.js and TypeScript, consuming the free PokéAPI. Includes real-time search, type and generation filters, detailed Pokémon pages with evolution chains, shiny toggle, type matchup charts, and a side-by-side stat comparison with radar chart.</p>
+                </details>
+                <p class="project-links">
+                  <a href="https://pokedex.alanteixido.dev" target="_blank" rel="noopener" class="link">Open the live site</a>
+                  <a href="https://github.com/AlanTeixido/pokedex" target="_blank" rel="noopener" class="link">Code on GitHub</a>
+                </p>
               </div>
-              <h2 class="project-title">ProTactics</h2>
-              <p class="project-desc">
-                Full-stack football club management platform, built as a team of three developers.
-                Clubs manage coaches and teams;
-                coaches plan training sessions, track players with stats and positions,
-                share publications with the club, and draw tactics on an interactive
-                Canvas board with drag-and-drop tokens and freehand drawing.
-                JWT auth with role-based access (club / coach).
-              </p>
-              <div class="project-tech">
-                <span class="project-tech-pill">
-                  <i class="devicon-vuejs-plain colored"></i>Vue 3
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-nodejs-plain colored"></i>Node.js
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-express-original" style="color:var(--text-1)"></i>Express
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-postgresql-plain colored"></i>PostgreSQL
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-key" style="color:var(--accent-cyan);font-size:11px"></i>JWT
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-cloud" style="color:var(--accent-cyan);font-size:11px"></i>Cloudinary
-                </span>
+            </article>
+            <article class="project-card">
+              <div class="project-shot">
+                <img src="images/crypto_preview.webp?v=2de729f1" alt="Crypto Tracker screenshot" width="800" height="500" loading="lazy" decoding="async" />
               </div>
-              <div class="project-links">
-                <a
-                  href="https://alanteixido.github.io/ProTactics/"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-primary btn-sm"
-                >
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Live demo
-                </a>
-                <a
-                  href="https://github.com/AlanTeixido/ProTactics"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-secondary btn-sm"
-                >
-                  <i class="fa-brands fa-github"></i> Frontend
-                </a>
-                <a
-                  href="https://github.com/AlanTeixido/ProTactics-API"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-secondary btn-sm"
-                >
-                  <i class="fa-brands fa-github"></i> API
-                </a>
+              <div class="project-card-body">
+                <span class="project-kind">Live</span>
+                <h3>Crypto Tracker</h3>
+                <p>Live prices for the top 100 coins, with sparklines, filters and a watchlist saved in the browser, on the CoinGecko API.</p>
+                <p class="stack">Next.js, TypeScript, Tailwind CSS, SWR, Framer Motion, CoinGecko API</p>
+                <details>
+                  <summary>How it is built</summary>
+                  <p>Live cryptocurrency tracker built with Next.js and TypeScript, consuming the free CoinGecko API. Features real-time prices for the top 100 coins, 7-day sparkline charts, market cap and volume stats, search and filters (Gainers, Losers, Top 10), auto-refresh every 60 seconds, coin detail pages with interactive price charts, and a personal watchlist saved in localStorage.</p>
+                </details>
+                <p class="project-links">
+                  <a href="https://crypto.alanteixido.dev" target="_blank" rel="noopener" class="link">Open the live site</a>
+                </p>
               </div>
-            </div>
-          </div>
-
-          <!-- Fit -->
-          <div class="project-card reveal reveal-delay-1">
-            <div class="project-card-visual project-card-visual--img">
-              <img src="images/fit_preview.webp?v=8e557abe" alt="Fit — training and recovery app screenshot" class="project-thumb" loading="lazy" decoding="async" />
-            </div>
-            <div class="project-card-body">
-              <div class="project-meta">
-                <span class="project-status">Live</span>
-              </div>
-              <h2 class="project-title">Fit</h2>
-              <p class="project-desc">
-                Personal training app with an AI coach, dashboard and activity
-                tracking that I use daily. The coach is built on the Claude API
-                with tool use over my own data (meals, workouts, daily metrics
-                and goals), plus Strava and Google Health Connect integrations.
-              </p>
-              <div class="project-tech">
-                <span class="project-tech-pill">
-                  <i class="devicon-nextjs-plain"></i>Next.js
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-react-original colored"></i>React
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-typescript-original colored"></i>TypeScript
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-supabase-plain colored"></i>Supabase
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-vercel-original"></i>Vercel
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-robot" style="color:var(--accent-cyan);font-size:11px"></i>Claude API
-                </span>
-              </div>
-              <div class="project-links">
-                <a
-                  href="https://fit.alanteixido.dev"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-primary btn-sm"
-                >
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Live
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Pokédex App -->
-          <div class="project-card reveal reveal-delay-2">
-            <div class="project-card-visual project-card-visual--img">
-              <img src="images/pokedex_project.webp?v=3b5f0867" alt="Pokédex App screenshot" class="project-thumb" loading="lazy" decoding="async" />
-            </div>
-            <div class="project-card-body">
-              <div class="project-meta">
-                <span class="project-status">Live</span>
-              </div>
-              <h2 class="project-title">Pokédex App</h2>
-              <p class="project-desc">
-                Full-featured Pokédex built with Next.js and TypeScript,
-                consuming the free PokéAPI. Includes real-time search, type
-                and generation filters, detailed Pokémon pages with evolution
-                chains, shiny toggle, type matchup charts, and a side-by-side
-                stat comparison with radar chart.
-              </p>
-              <div class="project-tech">
-                <span class="project-tech-pill">
-                  <i class="devicon-nextjs-plain"></i>Next.js
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-typescript-original colored"></i>TypeScript
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-tailwindcss-plain colored"></i>Tailwind CSS
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-rotate" style="color:var(--accent-cyan);font-size:11px"></i>SWR
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent-cyan);font-size:11px"></i>Framer Motion
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-database" style="color:var(--accent-cyan);font-size:11px"></i>PokéAPI
-                </span>
-              </div>
-              <div class="project-links">
-                <a
-                  href="https://pokedex.alanteixido.dev"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-primary btn-sm"
-                >
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Live
-                </a>
-                <a
-                  href="https://github.com/AlanTeixido/pokedex"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-secondary btn-sm"
-                >
-                  <i class="fa-brands fa-github"></i> GitHub
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Crypto Tracker -->
-          <div class="project-card reveal reveal-delay-1">
-            <div class="project-card-visual project-card-visual--img">
-              <img src="images/crypto_preview.webp?v=2de729f1" alt="Crypto Tracker screenshot" class="project-thumb" loading="lazy" decoding="async" />
-            </div>
-            <div class="project-card-body">
-              <div class="project-meta">
-                <span class="project-status">Live</span>
-              </div>
-              <h2 class="project-title">Crypto Tracker</h2>
-              <p class="project-desc">
-                Live cryptocurrency tracker built with Next.js and TypeScript,
-                consuming the free CoinGecko API. Features real-time prices for
-                the top 100 coins, 7-day sparkline charts, market cap and volume
-                stats, search and filters (Gainers, Losers, Top 10), auto-refresh
-                every 60 seconds, coin detail pages with interactive price charts,
-                and a personal watchlist saved in localStorage.
-              </p>
-              <div class="project-tech">
-                <span class="project-tech-pill">
-                  <i class="devicon-nextjs-plain"></i>Next.js
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-typescript-original colored"></i>TypeScript
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-tailwindcss-plain colored"></i>Tailwind CSS
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-rotate" style="color:var(--accent-cyan);font-size:11px"></i>SWR
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent-cyan);font-size:11px"></i>Framer Motion
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-chart-line" style="color:var(--accent-cyan);font-size:11px"></i>CoinGecko API
-                </span>
-              </div>
-              <div class="project-links">
-                <a
-                  href="https://crypto.alanteixido.dev"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-primary btn-sm"
-                >
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Live
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Minesweeper -->
-          <div class="project-card reveal reveal-delay-2">
-            <div class="project-card-visual project-card-visual--img">
-              <img src="images/minesweeper_preview.webp?v=bb87a2e7" alt="Minesweeper screenshot" class="project-thumb" loading="lazy" decoding="async" />
-            </div>
-            <div class="project-card-body">
-              <div class="project-meta">
-                <span class="project-status">Live</span>
-              </div>
-              <h2 class="project-title">Minesweeper</h2>
-              <p class="project-desc">
-                Classic Minesweeper fully rebuilt with vanilla HTML, CSS and
-                JavaScript. Features a premium dark theme with neon accents,
-                difficulty presets (Easy, Medium, Hard, Custom), first-click
-                safety guarantee, chord clicking, question mark mode, win/lose
-                animations, confetti on win, sound effects via Web Audio API,
-                mobile support with long-press to flag, and a top 5 leaderboard
-                saved in localStorage.
-              </p>
-              <div class="project-tech">
-                <span class="project-tech-pill">
-                  <i class="devicon-html5-plain colored"></i>HTML
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-css3-plain colored"></i>CSS
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-javascript-plain colored"></i>JavaScript
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-volume-high" style="color:var(--accent-cyan);font-size:11px"></i>Web Audio API
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-floppy-disk" style="color:var(--accent-cyan);font-size:11px"></i>localStorage
-                </span>
-              </div>
-              <div class="project-links">
-                <a
-                  href="https://minesweeper.alanteixido.dev"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-primary btn-sm"
-                >
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Live
-                </a>
-                <a
-                  href="https://github.com/AlanTeixido/BuscaMinas_JS_Alan"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-secondary btn-sm"
-                >
-                  <i class="fa-brands fa-github"></i> GitHub
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- BarberStyle BCN -->
-          <div class="project-card reveal reveal-delay-1">
-            <div class="project-card-visual project-card-visual--img">
-              <img src="images/barberia_preview.webp?v=86140c84" alt="BarberStyle BCN — Barbería Demo screenshot" class="project-thumb" loading="lazy" decoding="async" />
-            </div>
-            <div class="project-card-body">
-              <div class="project-meta">
-                <span class="project-status">Live</span>
-                <span class="project-tag">Portfolio</span>
-              </div>
-              <h2 class="project-title">BarberStyle BCN</h2>
-              <p class="project-desc">
-                Full demo barbershop website built as a portfolio piece with Vue 3,
-                Vite and Tailwind CSS. Features a premium dark + gold design, AOS scroll
-                animations, booking form with reactive validation, CSS masonry gallery,
-                Google Maps embed, and fully responsive layout.
-              </p>
-              <div class="project-tech">
-                <span class="project-tech-pill">
-                  <i class="devicon-vuejs-plain colored"></i>Vue 3
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-vitejs-plain colored"></i>Vite
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-tailwindcss-plain colored"></i>Tailwind CSS
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-mobile-screen" style="color:var(--accent-cyan);font-size:11px"></i>Responsive
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent-cyan);font-size:11px"></i>AOS
-                </span>
-              </div>
-              <div class="project-links">
-                <a
-                  href="https://barberia-demo.alanteixido.dev/"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-primary btn-sm"
-                >
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Live
-                </a>
-                <a
-                  href="https://github.com/AlanTeixido/barberia-demo"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-secondary btn-sm"
-                >
-                  <i class="fa-brands fa-github"></i> GitHub
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- AutoTech Demo -->
-          <div class="project-card reveal reveal-delay-2">
-            <div class="project-card-visual project-card-visual--img">
-              <img src="images/taller_preview.webp?v=5d167f9b" alt="AutoTech Demo — Taller Mecánico screenshot" class="project-thumb" loading="lazy" decoding="async" />
-            </div>
-            <div class="project-card-body">
-              <div class="project-meta">
-                <span class="project-status">Live</span>
-                <span class="project-tag">Portfolio</span>
-              </div>
-              <h2 class="project-title">AutoTech Demo</h2>
-              <p class="project-desc">
-                Full fictional car repair shop website built as a portfolio piece.
-                Includes a sticky navbar, hero with parallax background, services
-                grid, pricing cards, Google-style reviews, a booking form with JS
-                validation, Google Maps embed, and a fully responsive layout.
-                Built entirely with vanilla HTML, CSS and JavaScript — no frameworks.
-              </p>
-              <div class="project-tech">
-                <span class="project-tech-pill">
-                  <i class="devicon-html5-plain colored"></i>HTML
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-css3-plain colored"></i>CSS
-                </span>
-                <span class="project-tech-pill">
-                  <i class="devicon-javascript-plain colored"></i>JavaScript
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-mobile-screen" style="color:var(--accent-cyan);font-size:11px"></i>Responsive
-                </span>
-                <span class="project-tech-pill">
-                  <i class="fa-solid fa-magnifying-glass" style="color:var(--accent-cyan);font-size:11px"></i>SEO
-                </span>
-              </div>
-              <div class="project-links">
-                <a
-                  href="https://taller.alanteixido.dev"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-primary btn-sm"
-                >
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Live
-                </a>
-                <a
-                  href="https://github.com/AlanTeixido/taller"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn btn-secondary btn-sm"
-                >
-                  <i class="fa-brands fa-github"></i> GitHub
-                </a>
-              </div>
-            </div>
+            </article>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
-    <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
-    <section id="contact">
+    <footer id="contact">
       <div class="container">
-        <div class="contact-inner">
-          <div class="reveal">
-            <span class="section-label">Contact</span>
-            <h2 class="contact-heading">
-              Let's <span class="gradient-text">build<br />something.</span>
-            </h2>
-            <p class="contact-sub">
-              Always up for a conversation about AI systems, software or a good
-              side project. I'd love to hear from you.
-            </p>
-          </div>
+        <h2>Get in touch</h2>
+        <p class="contact-sub">
+          Always up for a conversation about AI systems, software or a good
+          side project. I'd love to hear from you.
+        </p>
+        <a href="mailto:teixido.alan@gmail.com" class="contact-email" data-copy="teixido.alan@gmail.com">teixido.alan@gmail.com</a>
+        <div class="contact-links">
+          <a href="https://www.linkedin.com/in/alanteixidosararols" target="_blank" rel="noopener me" class="link">LinkedIn</a>
+          <a href="https://github.com/AlanTeixido" target="_blank" rel="noopener me" class="link">GitHub</a>
+          <a href="/cv/Alan_Teixido_CV.pdf" download class="link">Download CV (PDF)</a>
+        </div>
 
-          <div class="contact-links reveal reveal-delay-1">
-            <a href="mailto:teixido.alan@gmail.com" class="contact-link">
-              <i class="fa-regular fa-envelope"></i> teixido.alan@gmail.com
-            </a>
-            <a
-              href="https://www.linkedin.com/in/alanteixidosararols"
-              target="_blank"
-              rel="noopener"
-              class="contact-link"
-            >
-              <i class="fa-brands fa-linkedin-in"></i> LinkedIn
-            </a>
-            <a
-              href="https://github.com/AlanTeixido"
-              target="_blank"
-              rel="noopener"
-              class="contact-link"
-            >
-              <i class="fa-brands fa-github"></i> GitHub
-            </a>
-          </div>
-
-          <div class="footer-divider reveal reveal-delay-2"></div>
-          <div class="footer-bottom reveal reveal-delay-3">
-            <div class="footer-copy">
-              © 2026 <span>Alan Teixidó Sararols</span> · Barcelona, Spain
-            </div>
-            <div class="footer-built">Designed &amp; built by Alan Teixidó</div>
-          </div>
+        <div class="footer">
+          <span>© 2026 Alan Teixidó Sararols, Barcelona</span>
+          <span>Designed and built by Alan Teixidó</span>
         </div>
       </div>
-    </section>
+    </footer>
 
-    <button id="back-to-top" aria-label="Back to top">
-      <i class="fa-solid fa-arrow-up"></i>
-    </button>
+    <dialog id="noxVideo" class="cv-video" aria-label="Nox demo, 45 seconds">
+      <button type="button" class="cv-video-close" aria-label="Close video">&times;</button>
+      <video src="/video/nox-demo.mp4" poster="images/nox_cover.webp?v=2c5d9dca" controls playsinline preload="none"></video>
+    </dialog>
 
-    <script src="main.js?v=0cfb6d3e" defer></script>
+    <div id="clipboard-toast" role="status" aria-live="polite"></div>
+
+    <script src="main.js?v=09834a4d" defer></script>
   </body>
 </html>

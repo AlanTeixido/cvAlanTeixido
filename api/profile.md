@@ -59,6 +59,24 @@ Barcelona, Spain.
   maintenance.
 
 ## Projects
+- Nox (personal project, in daily use): a voice assistant for Windows that
+  lives as an island at the top of the screen and answers only to Alan's voice.
+  Listening is local (wake word, Whisper on the GPU, speaker verification), so
+  only text reaches the model. A router sends simple requests to local
+  shortcuts (opening a file went from 11.7 seconds to 0.1) and everything else
+  to a persistent headless Claude Code process that picks the model per
+  request. Security model: an allowlist of connectors, about 120 deny rules for
+  anything that sends, deletes or pays, external content treated as data and
+  never as instructions, secrets in the Windows Credential Manager, and a
+  least-privilege Postgres role with row-level security. Python, PySide6,
+  faster-whisper, Resemblyzer, edge-tts, Claude Code with MCP, Postgres
+  (Supabase). Showcase (architecture, security, demo; source is private):
+  github.com/AlanTeixido/nox
+- Polymarket trading bot (retired): a bot that traded prediction markets,
+  built by two Claude agents, one implementing strategies and one reviewing
+  them. It was right 81% of the time in simulation and 41% with real money, so
+  Alan shut it down. The lesson he took: validate with small real stakes
+  before trusting a backtest.
 - GenAI Data Platform (case study): natural-language analytics platform built
   during a corporate GenAI mentorship program. Business users ask questions in
   plain language; an LLM translates them into SQL, a governed semantic layer

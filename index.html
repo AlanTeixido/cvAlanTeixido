@@ -41,18 +41,15 @@
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=673fcd8c" />
 
-    <!-- Fonts: self-hosted (@font-face at the top of style.css). The headline
-         and body faces are preloaded because the first screen needs them. -->
-    <link rel="preload" href="fonts/space-grotesk-v22-latin.woff2?v=0f3474ee" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="fonts/plus-jakarta-sans-v12-latin.woff2?v=a180dc40" as="font" type="font/woff2" crossorigin />
+    <!-- Fonts: self-hosted (@font-face at the top of style.css). Both are
+         preloaded because the first screen needs them. -->
+    <link rel="preload" href="fonts/archivo-var-latin.woff2?v=f799f904" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="fonts/jetbrains-mono-v24-latin.woff2?v=4d09cda4" as="font" type="font/woff2" crossorigin />
 
-    <!-- Icons: only the ones in use, as CSS masks (scripts/build-icons.js) -->
-    <link rel="stylesheet" href="icons.css?v=36da3a7d" />
+    <link rel="stylesheet" href="icons.css?v=d8136626" />
+    <link rel="stylesheet" href="style.css?v=76a2c75a" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="style.css?v=698fc4f0" />
-
-    <meta name="theme-color" content="#09090b" />
+    <meta name="theme-color" content="#f5f6f8" />
 
     <!-- Structured data (SEO) -->
     <script type="application/ld+json">
@@ -76,19 +73,16 @@
     </script>
   </head>
   <body>
-    <a href="#about" class="skip-link">Skip to content</a>
+    <a href="#experience" class="skip-link">Skip to content</a>
 
-    <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
-    <nav id="navbar">
+    <nav id="navbar" aria-label="Main">
       <div class="nav-inner">
-        <a href="#hero" class="nav-logo">AT<span>.</span></a>
+        <a href="#hero" class="nav-logo">Alan Teixidó</a>
         <ul class="nav-links">
-          <li><a href="#about">About</a></li>
           <li><a href="#experience">Experience</a></li>
           <li><a href="#projects">Projects</a></li>
-          <li><a href="#education">Education</a></li>
           <li><a href="#skills">Skills</a></li>
-          <li><a href="#goals">Goals</a></li>
+          <li><a href="#about">About</a></li>
           <li><a href="#contact" class="nav-cta">Contact</a></li>
         </ul>
         <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
@@ -96,782 +90,452 @@
         </button>
       </div>
     </nav>
-
-    <!-- Mobile nav (toggled by hamburger) -->
-    <nav class="mobile-menu" id="mobileMenu">
-      <a href="#about" onclick="closeMobile()">About</a>
-      <a href="#experience" onclick="closeMobile()">Experience</a>
-      <a href="#projects" onclick="closeMobile()">Projects</a>
-      <a href="#education" onclick="closeMobile()">Education</a>
-      <a href="#skills" onclick="closeMobile()">Skills</a>
-      <a href="#goals" onclick="closeMobile()">Goals</a>
-      <a href="#contact" onclick="closeMobile()">Contact</a>
+    <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
     </nav>
 
-    <!-- ─── HERO ─────────────────────────────────────────────────────────── -->
-    <section id="hero" data-section-theme="dark">
-      <div class="container">
-        <div class="hero-grid">
-          <div class="hero-content">
-            <h1 class="hero-name">
-              <span class="hero-line1">Alan</span><br />
-              <span class="line2">Teixidó.</span>
-            </h1>
+    <main>
+      <!-- ─── HERO ───────────────────────────────────────────────────────── -->
+      <section id="hero">
+        <!-- cloud.js draws the point cloud here; without WebGL it stays empty -->
+        <canvas class="hero-cloud" id="heroCloud" aria-hidden="true"></canvas>
 
-            <p class="hero-title">Fullstack &amp; AI Engineer</p>
-            <div class="hero-rule" aria-hidden="true"></div>
+        <div class="container">
+          <div class="hero-grid">
+            <div class="hero-content">
+              <h1 class="hero-name"><span class="line"><span>Alan</span></span> <span class="line"><span>Teixidó</span></span></h1>
+              <p class="hero-lead">
+                I build AI agents that answer from company knowledge, and the
+                APIs and apps around them.
+              </p>
+              <p class="hero-meta">Fullstack &amp; AI engineer at Plain Concepts, Barcelona.</p>
 
-            <p class="hero-tagline">
-              AI agents on Google ADK and Vertex AI grounded with RAG, FastAPI
-              and .NET backends, and React Native apps for iOS and Android —
-              built to production standard.
-            </p>
-
-            <p class="hero-location">
-              <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
-              Based in Barcelona, Spain
-            </p>
-
-            <div class="hero-actions">
-              <a href="#experience" class="btn btn-primary">
-                <i class="fa-solid fa-code-branch"></i> View experience
-              </a>
-              <a href="#contact" class="btn btn-secondary">
-                <i class="fa-regular fa-paper-plane"></i> Get in touch
-              </a>
-              <a href="/cv/Alan_Teixido_CV.pdf" download class="btn btn-ghost">
-                <i class="fa-solid fa-download"></i> Download CV
-              </a>
-              <button type="button" class="btn btn-ghost" id="cvVideoBtn" aria-haspopup="dialog">
-                <svg class="btn-play-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg> Watch my CV · 30s
-              </button>
+              <div class="hero-actions">
+                <a href="/cv/Alan_Teixido_CV.pdf" download class="btn">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" /></svg>
+                  Download CV
+                </a>
+                <button type="button" class="link" data-video-dialog="cvVideo" aria-haspopup="dialog">Watch it in 30 seconds</button>
+                <a href="mailto:teixido.alan@gmail.com" class="link">Email me</a>
+              </div>
             </div>
+
+            <!-- Status terminal: real text, typed out on the first visit.
+                 terminal.js turns the chips into buttons and the last line into an input. -->
+            <aside class="hero-term" aria-label="Terminal">
+              <div class="term-bar" aria-hidden="true">
+                <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+                <span class="term-name">alan@barcelona: ~</span>
+              </div>
+              <div class="term-body">
+                <p class="term-line"><span class="term-prompt">$</span> <span class="term-cmd">alan --status</span></p>
+                <p class="term-line"><span class="term-arrow">→</span> Building AI agents @ Plain Concepts</p>
+                <p class="term-line"><span class="term-arrow">→</span> Stack: .NET · Python · React · React&nbsp;Native</p>
+                <p class="term-line"><span class="term-arrow">→</span> Based in Barcelona, Spain</p>
+                <p class="term-hint"><span class="term-arrow">→</span> try <span class="term-chip">about</span> <span class="term-chip">projects</span> <span class="term-chip">stack</span> <span class="term-chip">contact</span></p>
+                <p class="term-prompt-line"><span class="term-prompt">$</span> <span class="term-caret" aria-hidden="true"></span></p>
+              </div>
+            </aside>
           </div>
-
-          <!-- Status terminal: real text, typed out after the intro on the first visit -->
-          <aside class="hero-term" aria-label="Terminal">
-            <div class="term-bar" aria-hidden="true">
-              <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
-              <span class="term-name">alan@barcelona: ~</span>
-            </div>
-            <div class="term-body">
-              <p class="term-line"><span class="term-prompt">$</span> <span class="term-cmd">alan --status</span></p>
-              <p class="term-line"><span class="term-arrow">→</span> Building AI agents @ Plain Concepts</p>
-              <p class="term-line"><span class="term-arrow">→</span> Stack: .NET · Python · React · React&nbsp;Native</p>
-              <p class="term-line"><span class="term-arrow">→</span> Based in Barcelona, Spain</p>
-              <!-- terminal.js turns the chips into buttons and this prompt into an input -->
-              <p class="term-hint"><span class="term-arrow">→</span> try <span class="term-chip">about</span> <span class="term-chip">projects</span> <span class="term-chip">stack</span> <span class="term-chip">contact</span></p>
-              <p class="term-prompt-line"><span class="term-prompt">$</span> <span class="term-caret" aria-hidden="true"></span></p>
-            </div>
-          </aside>
         </div>
-      </div>
+      </section>
 
-      <div class="hero-scroll-hint">
-        <span>Scroll</span>
-        <div class="scroll-line"></div>
-      </div>
-    </section>
+      <!-- ─── EXPERIENCE ─────────────────────────────────────────────────── -->
+      <section id="experience" class="section">
+        <div class="container">
+          <header class="section-head">
+            <h2>Experience</h2>
+          </header>
 
-    <!-- ─── ABOUT ────────────────────────────────────────────────────────── -->
-    <section id="about" data-section-theme="light">
-      <div class="container">
-        <div class="reveal">
-          <span class="section-label">Profile</span>
-          <h2 class="section-title">About me</h2>
-        </div>
+          <div>
+            <ol class="timeline">
+              <li class="tl-item tl-item--lead">
+                <header class="role-head">
+                  <span class="role-logo"><img src="images/logo_plain.png?v=20c978dc" alt="" width="500" height="269" loading="lazy" decoding="async" /></span>
+                  <div>
+                    <h3>Software Engineer, Fullstack &amp; AI</h3>
+                    <p class="role-org">Plain Concepts, Barcelona. Client: Puig.</p>
+                  </div>
+                  <p class="role-when">Jun 2025 to now</p>
+                </header>
 
-        <div class="about-grid">
-          <!-- Photo -->
-          <div class="about-photo-col reveal reveal-delay-1">
-            <div class="about-photo-wrap">
-              <img
-                src="images/alan-teixido.webp?v=03eca435"
-                alt="Alan Teixidó, Fullstack &amp; AI Engineer"
-                class="about-photo"
-                width="720"
-                height="960"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-          </div>
+                <p class="role-sum role-sum--lead">
+                  I build the AI assistants that employees talk to in Microsoft
+                  Teams. Each one answers from a specific set of company
+                  documents: it finds the passages that matter and replies in
+                  plain language.
+                </p>
+                <p class="role-sum">
+                  I take them from the first document to production: the
+                  ingestion that keeps the knowledge current, the agent itself,
+                  the API behind it and the bot in Teams.
+                </p>
 
-          <!-- Bio + contact -->
-          <div class="about-left reveal reveal-delay-2">
-            <p class="about-bio">
-              Fullstack &amp; AI engineer. I build <strong>AI agents</strong>
-              that answer from company knowledge with Google ADK, Vertex AI and
-              RAG, the <strong>Python and .NET APIs</strong> behind them, and
-              <strong>React &amp; React Native</strong> apps on top. I care
-              about the full picture: clean architecture on the server,
-              polished UI on the client, and reliable delivery pipelines in
-              between.
-            </p>
-            <ul class="about-contact-list">
-              <li>
-                <i class="fa-solid fa-location-dot"></i>
-                Based in Barcelona, Spain
+                <!-- The platform, from a document to an answer in Teams -->
+                <ol class="pipeline" aria-label="How a company document becomes an answer in Microsoft Teams">
+                  <li><b>Documents</b><span>company knowledge</span></li>
+                  <li><b>Ingestion</b><span>JSON metadata</span></li>
+                  <li><b>Data stores</b><span>Vertex AI, RAG</span></li>
+                  <li><b>Agents</b><span>Google ADK</span></li>
+                  <li><b>API</b><span>FastAPI</span></li>
+                  <li><b>Teams</b><span>Azure Bot Service</span></li>
+                </ol>
+
+                <details class="role-more">
+                  <summary>What I did, in detail</summary>
+              <ul class="role-grid">
+                <li>
+                  <h4>Agents</h4>
+                  <p>
+                    Built AI agents with Google ADK on Vertex AI, using RAG over
+                    Vertex AI data stores to ground answers in company documents.
+                  </p>
+                </li>
+                <li>
+                  <h4>Ingestion</h4>
+                  <p>
+                    Designed the document ingestion workflow (JSON metadata,
+                    data store imports, content updates) so the agents always
+                    answer from current knowledge.
+                    <!-- TODO: métrica (p. ej. volumen de documentos, frecuencia de actualización) -->
+                  </p>
+                </li>
+                <li>
+                  <h4>API</h4>
+                  <p>
+                    Developed the FastAPI (Python) backend that connects the
+                    agents with the rest of the platform.
+                  </p>
+                </li>
+                <li>
+                  <h4>Teams</h4>
+                  <p>
+                    Integrated the agents into Microsoft Teams through Azure
+                    Bot Service, in a multi-cloud setup (Google Cloud and Azure).
+                    <!-- TODO: métrica (p. ej. empleados con acceso) -->
+                  </p>
+                </li>
+                <li>
+                  <h4>Delivery</h4>
+                  <p>
+                    Built Azure DevOps CI/CD pipelines that deploy across four
+                    repositories: agents, bot, API and infrastructure.
+                    <!-- TODO: métrica (p. ej. tiempo de despliegue) -->
+                  </p>
+                </li>
+                <li>
+                  <h4>Apps</h4>
+                  <p>
+                    Designed .NET REST APIs (CQRS, Clean Architecture) and React
+                    Native apps for iOS and Android, with Firebase release tooling.
+                    <!-- TODO: métrica (p. ej. crash-free rate, tiempo de release) -->
+                  </p>
+                </li>
+              </ul>
+                  <p class="stack">
+                    Google ADK, Vertex AI, RAG, Python, FastAPI, Azure Bot Service,
+                    Azure DevOps, .NET (C#), React Native, TypeScript, PostgreSQL, Firebase
+                  </p>
+                </details>
               </li>
-              <li>
-                <i class="fa-regular fa-envelope"></i>
-                <a href="mailto:teixido.alan@gmail.com"
-                  >teixido.alan@gmail.com</a
-                >
+
+              <li class="tl-item">
+                <header class="role-head">
+                  <span class="role-logo"><img src="images/logo_quantion.png?v=ba24d74d" alt="" width="450" height="138" loading="lazy" decoding="async" /></span>
+                  <div>
+                    <h3>Backend Developer (.NET), internship</h3>
+                    <p class="role-org">Quantion, Barcelona.</p>
+                  </div>
+                  <p class="role-when">Oct 2024 to Mar 2025</p>
+                </header>
+                <p class="role-sum">Backend features and REST endpoints in .NET, shipped into a live production codebase from day one.</p>
+                <details class="role-more">
+                  <summary>What I did, in detail</summary>
+                  <ul class="role-grid role-grid--two">
+                    <li><p>Shipped backend features in .NET (C#) within a live production codebase from day one.</p></li>
+                    <li><p>Built and validated REST API endpoints with automated test coverage to ensure reliability.</p></li>
+                    <li><p>Refactored legacy code applying Clean Code principles and established architectural patterns.</p></li>
+                    <li><p>Contributed to iterative delivery cycles within a cross-functional Scrum team.</p></li>
+                  </ul>
+                  <p class="stack">.NET (C#), REST APIs, Azure DevOps, Git</p>
+                </details>
               </li>
-              <li>
-                <i class="fa-brands fa-linkedin-in"></i>
-                <a href="https://www.linkedin.com/in/alanteixidosararols" target="_blank" rel="noopener">linkedin.com/in/alanteixidosararols</a>
+
+              <li class="tl-item tl-item--small">
+                <p class="role-when">Jul to Aug 2024</p>
+                <p><strong>Camp Counselor</strong>, SJAS Summer Camp, Lucerne, Switzerland. Led international groups in outdoor and team activities.</p>
               </li>
-              <li>
-                <i class="fa-brands fa-github"></i>
-                <a href="https://github.com/AlanTeixido" target="_blank" rel="noopener">github.com/AlanTeixido</a>
+              <li class="tl-item tl-item--small">
+                <p class="role-when">May to Jul 2022</p>
+                <p><strong>Sales Representative &amp; Web Developer</strong>, CamperXpress, Barcelona. Sales and client support, and built and maintained the company website.</p>
               </li>
-            </ul>
-
-            <div class="about-status">
-              <div class="about-status-dot"></div>
-              <span>Currently building <strong>AI agents</strong> on <strong>Vertex AI</strong> at Plain Concepts</span>
-            </div>
+              <li class="tl-item tl-item--small">
+                <p class="role-when">Jun 2021 to Apr 2022</p>
+                <p><strong>Hardware Technician</strong>, Pista Cero Informática, Barcelona. Assembled, repaired and upgraded computers, and supported server maintenance.</p>
+              </li>
+            </ol>
           </div>
+        </div>
+      </section>
 
-          <!-- Languages -->
-          <div class="about-right reveal reveal-delay-3">
-            <div class="about-card">
-              <div class="about-card-title">Language proficiency</div>
-              <div class="langs-grid">
-                <div class="lang-item">
-                  <div class="lang-top">
-                    <span class="lang-name">Catalan</span>
-                    <span class="lang-level">Native</span>
-                  </div>
-                  <div class="lang-bar">
-                    <div class="lang-bar-fill" data-width="1"></div>
-                  </div>
+      <!-- ─── PROJECTS ───────────────────────────────────────────────────── -->
+      <section id="projects" class="section">
+        <div class="container">
+          <header class="section-head">
+            <h2>Projects</h2>
+            <p>The terminal at the top of this page is one of them.</p>
+          </header>
+
+          <div>
+            <a href="projects.html#nox" class="feature">
+              <div class="nox">
+                <div class="nox-island" aria-hidden="true">
+                  <span class="nox-eyes"><i></i><i></i></span>
+                  <span class="nox-sub">searching files…</span>
                 </div>
-                <div class="lang-item">
-                  <div class="lang-top">
-                    <span class="lang-name">Spanish</span>
-                    <span class="lang-level">Native</span>
-                  </div>
-                  <div class="lang-bar">
-                    <div class="lang-bar-fill" data-width="1"></div>
-                  </div>
-                </div>
-                <div class="lang-item">
-                  <div class="lang-top">
-                    <span class="lang-name">English</span>
-                    <span class="lang-level">Native</span>
-                  </div>
-                  <div class="lang-bar">
-                    <div class="lang-bar-fill" data-width="1"></div>
-                  </div>
-                </div>
-                <div class="lang-item">
-                  <div class="lang-top">
-                    <span class="lang-name">French</span>
-                    <span class="lang-level">Basic</span>
-                  </div>
-                  <div class="lang-bar">
-                    <div class="lang-bar-fill" data-width="0.25"></div>
-                  </div>
-                </div>
+                <ul class="nox-times" aria-label="Seconds to respond, before and after the local router">
+                  <li><span class="t-label">Open a file</span><span class="t-bars"><span class="t-bar" style="--w: 100%"><b>11.7 s</b></span><span class="t-bar is-now" style="--w: 1%"><b>0.1 s</b></span></span></li>
+                  <li><span class="t-label">Summarise the clipboard</span><span class="t-bars"><span class="t-bar" style="--w: 67.5%"><b>7.9 s</b></span><span class="t-bar is-now" style="--w: 28.2%"><b>3.3 s</b></span></span></li>
+                  <li><span class="t-label">Explain what's on screen</span><span class="t-bars"><span class="t-bar" style="--w: 45.3%"><b>5.3 s</b></span><span class="t-bar is-now" style="--w: 24.8%"><b>2.9 s</b></span></span></li>
+                  <li><span class="t-label">Answer a simple question</span><span class="t-bars"><span class="t-bar" style="--w: 25.6%"><b>3.0 s</b></span><span class="t-bar is-now" style="--w: 17.9%"><b>2.1 s</b></span></span></li>
+                </ul>
+                <p class="nox-key"><span>Before</span><span class="is-now">Now, with a local router and a warm model process</span></p>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─── EXPERIENCE ────────────────────────────────────────────────────── -->
-    <section id="experience" data-section-theme="light">
-      <div class="container">
-        <div class="experience-header reveal">
-          <span class="section-label">Career</span>
-          <h2 class="section-title">Experience</h2>
-        </div>
-
-        <div class="timeline">
-          <!-- Plain Concepts -->
-          <div class="timeline-item reveal reveal-delay-1">
-            <div class="timeline-dot"></div>
-            <div class="timeline-card">
-              <div class="timeline-header">
-                <div class="timeline-company-wrap">
-                  <div class="timeline-logo">
-                    <img src="images/logo_plain.png?v=20c978dc" alt="Plain Concepts" loading="lazy" />
-                  </div>
-                  <div class="timeline-company">Plain Concepts</div>
-                </div>
-                <div class="timeline-period">Jun 2025 — Present</div>
+              <div class="feature-body">
+                <span class="feature-kind">Personal project, in daily use</span>
+                <h3>Nox</h3>
+                <p>
+                  A voice assistant for Windows that answers only to my voice.
+                  Speech is transcribed on my own GPU, so only text reaches
+                  the model. A router handles simple requests locally and
+                  sends the rest to a headless Claude Code process that can
+                  only use an allowlist of tools.
+                </p>
+                <p class="stack">Python, PySide6, Whisper, Claude Code with MCP, Postgres</p>
+                <span class="feature-more link">Read how it works</span>
               </div>
-              <div class="timeline-role">
-                Software Engineer — Fullstack &amp; AI
-                <span class="timeline-client">· Client: Puig</span>
-              </div>
-              <div class="timeline-location">
-                <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
-                Barcelona, Spain
-              </div>
-              <div class="timeline-stack">
-                <span class="stack-pill">Google ADK</span>
-                <span class="stack-pill">Vertex AI</span>
-                <span class="stack-pill">RAG</span>
-                <span class="stack-pill">Python</span>
-                <span class="stack-pill">FastAPI</span>
-                <span class="stack-pill">Azure Bot Service</span>
-                <span class="stack-pill">Azure DevOps</span>
-                <span class="stack-pill">.NET (C#)</span>
-                <span class="stack-pill">React Native</span>
-                <span class="stack-pill">TypeScript</span>
-                <span class="stack-pill">PostgreSQL</span>
-                <span class="stack-pill">Firebase</span>
-              </div>
-              <ul class="timeline-bullets">
-                <li>
-                  Built AI agents with Google ADK on Vertex AI, using RAG over
-                  Vertex AI data stores to ground answers in company documents
-                  <!-- TODO: métrica (p. ej. nº de agentes, documentos o usuarios) -->
-                </li>
-                <li>
-                  Designed the document ingestion workflow: JSON metadata, data
-                  store imports and content updates so the agents always answer
-                  from current knowledge
-                  <!-- TODO: métrica (p. ej. volumen de documentos, frecuencia de actualización) -->
-                </li>
-                <li>
-                  Developed the FastAPI (Python) backend connecting the agents
-                  with the rest of the platform
-                </li>
-                <li>
-                  Integrated the agents into Microsoft Teams via Azure Bot
-                  Service, in a multi-cloud architecture (Google Cloud + Azure)
-                  <!-- TODO: métrica (p. ej. empleados con acceso) -->
-                </li>
-                <li>
-                  Built Azure DevOps CI/CD pipelines to deploy across four
-                  repositories (agents, bot, API and infrastructure)
-                  <!-- TODO: métrica (p. ej. tiempo de despliegue) -->
-                </li>
-                <li>
-                  Designed .NET REST APIs (CQRS, Clean Architecture) and React
-                  Native apps for iOS and Android, with Firebase release tooling
-                  (App Distribution, Crashlytics, Analytics)
-                  <!-- TODO: métrica (p. ej. crash-free rate, tiempo de release) -->
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Quantion -->
-          <div class="timeline-item reveal reveal-delay-2">
-            <div class="timeline-dot"></div>
-            <div class="timeline-card">
-              <div class="timeline-header">
-                <div class="timeline-company-wrap">
-                  <div class="timeline-logo">
-                    <img src="images/logo_quantion.png?v=ba24d74d" alt="Quantion" loading="lazy" />
-                  </div>
-                  <div class="timeline-company">Quantion</div>
-                </div>
-                <div class="timeline-period">Oct 2024 — Mar 2025</div>
-              </div>
-              <div class="timeline-role">
-                Backend Developer (.NET) — Internship
-              </div>
-              <div class="timeline-location">
-                <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
-                Barcelona, Spain
-              </div>
-              <div class="timeline-stack">
-                <span class="stack-pill">.NET (C#)</span>
-                <span class="stack-pill">REST APIs</span>
-                <span class="stack-pill">Azure DevOps</span>
-                <span class="stack-pill">Git</span>
-              </div>
-              <ul class="timeline-bullets">
-                <li>
-                  Shipped backend features in .NET (C#) within a live
-                  production codebase from day one
-                </li>
-                <li>
-                  Built and validated REST API endpoints with automated test
-                  coverage to ensure reliability
-                </li>
-                <li>
-                  Refactored legacy code applying Clean Code principles and
-                  established architectural patterns
-                </li>
-                <li>
-                  Contributed to iterative delivery cycles within a
-                  cross-functional Scrum team
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- SJAS -->
-          <div class="timeline-item reveal reveal-delay-3">
-            <div class="timeline-dot"></div>
-            <div class="timeline-card non-tech non-tech--visible">
-              <div class="timeline-header">
-                <div class="timeline-company">SJAS Summer Camp</div>
-                <div class="timeline-period">Jul — Aug 2024</div>
-              </div>
-              <div class="timeline-role">Camp Counselor</div>
-              <div class="timeline-location">
-                <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
-                Lucerne, Switzerland
-              </div>
-              <ul class="timeline-bullets">
-                <li>
-                  Led international groups in structured outdoor and team-based
-                  activities
-                </li>
-                <li>
-                  Strengthened leadership, communication, and cross-cultural
-                  teamwork skills
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- CamperXpress -->
-          <div class="timeline-item reveal reveal-delay-4">
-            <div class="timeline-dot"></div>
-            <div class="timeline-card non-tech">
-              <div class="timeline-header">
-                <div class="timeline-company-wrap">
-                  <div class="timeline-logo">
-                    <img src="images/logo_camper.webp?v=48087310" alt="CamperXpress" loading="lazy" />
-                  </div>
-                  <div class="timeline-company">CamperXpress</div>
-                </div>
-                <div class="timeline-period">May — Jul 2022</div>
-              </div>
-              <div class="timeline-role">
-                Sales Representative &amp; Web Developer
-              </div>
-              <div class="timeline-location">
-                <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
-                Barcelona, Spain
-              </div>
-              <ul class="timeline-bullets">
-                <li>Handled sales and client support, and built and maintained the company website</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Pista Cero -->
-          <div class="timeline-item reveal reveal-delay-5">
-            <div class="timeline-dot"></div>
-            <div class="timeline-card non-tech">
-              <div class="timeline-header">
-                <div class="timeline-company-wrap">
-                  <div class="timeline-logo">
-                    <img
-                      src="images/logo_pistazero.webp?v=5b0f1dd9" loading="lazy"
-                      alt="Pista Cero Informática"
-                    />
-                  </div>
-                  <div class="timeline-company">Pista Cero Informática</div>
-                </div>
-                <div class="timeline-period">Jun 2021 — Apr 2022</div>
-              </div>
-              <div class="timeline-role">Hardware Technician</div>
-              <div class="timeline-location">
-                <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
-                Barcelona, Spain
-              </div>
-              <ul class="timeline-bullets">
-                <li>Assembled, repaired and upgraded computers, and supported end users and server maintenance</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─── PERSONAL PROJECTS ────────────────────────────────────────────── -->
-    <section id="projects" data-section-theme="dark">
-      <div class="container">
-        <div class="reveal">
-          <span class="section-label">Case studies &amp; side projects</span>
-          <h2 class="section-title">Projects</h2>
-        </div>
-
-        <!-- ─── 3D PROJECTS CAROUSEL ──────────────────────────────────── -->
-        <div class="proj-car-wrap reveal">
-
-          <a href="projects.html#genai-data-platform" class="pp-card proj-slide" data-idx="0">
-            <div class="pp-thumb pp-thumb--flow" aria-hidden="true">
-              <div class="pp-flow">
-                <span class="pp-flow-step"><i class="fa-regular fa-comment"></i>Question</span>
-                <i class="fa-solid fa-arrow-down pp-flow-arrow"></i>
-                <span class="pp-flow-step"><i class="fa-solid fa-code"></i>SQL</span>
-                <i class="fa-solid fa-arrow-down pp-flow-arrow"></i>
-                <span class="pp-flow-step"><i class="fa-solid fa-chart-column"></i>Dashboard</span>
-              </div>
-            </div>
-            <div class="pp-body">
-              <div class="pp-live pp-live--case"><span class="fp-live-dot"></span> Case study</div>
-              <h3 class="pp-title">GenAI Data Platform</h3>
-              <p class="pp-desc">Natural-language analytics: an LLM turns business questions into governed SQL and publishes the results as Metabase dashboards.</p>
-              <div class="pp-tech">
-                <span><i class="devicon-python-plain colored"></i> Python</span>
-                <span><i class="devicon-postgresql-plain colored"></i> PostgreSQL</span>
-                <span><i class="fa-solid fa-robot" style="color:var(--accent-cyan)"></i> Text-to-SQL</span>
-              </div>
-              <div class="pp-cta">Read case study <i class="fa-solid fa-arrow-right"></i></div>
-            </div>
-          </a>
-
-          <a href="https://fit.alanteixido.dev" target="_blank" rel="noopener" class="pp-card proj-slide" data-idx="1">
-            <div class="pp-thumb">
-              <img src="images/fit_preview.webp?v=8e557abe" alt="Fit — training and recovery app" loading="lazy" />
-            </div>
-            <div class="pp-body">
-              <div class="pp-live"><span class="fp-live-dot"></span> Live</div>
-              <h3 class="pp-title">Fit</h3>
-              <p class="pp-desc">Personal training app with an AI coach, dashboard and activity tracking.</p>
-              <div class="pp-tech">
-                <span><i class="devicon-nextjs-plain"></i> Next.js</span>
-                <span><i class="devicon-supabase-plain colored"></i> Supabase</span>
-                <span><i class="fa-solid fa-robot" style="color:var(--accent-cyan)"></i> Claude API</span>
-              </div>
-              <div class="pp-cta">View project <i class="fa-solid fa-arrow-right"></i></div>
-            </div>
-          </a>
-
-          <a href="https://alanteixido.github.io/ProTactics/" target="_blank" rel="noopener" class="pp-card proj-slide" data-idx="2">
-            <div class="pp-thumb">
-              <img src="images/protactics_preview.svg?v=bac0905b" alt="ProTactics — Football Club Management" loading="lazy" />
-            </div>
-            <div class="pp-body">
-              <div class="pp-live"><span class="fp-live-dot"></span> Live demo</div>
-              <h3 class="pp-title">ProTactics</h3>
-              <p class="pp-desc">Team project (3 developers): football club management platform with role-based auth, training planner, player tracking and an interactive tactics board.</p>
-              <div class="pp-tech">
-                <span><i class="devicon-vuejs-plain colored"></i> Vue 3</span>
-                <span><i class="devicon-nodejs-plain colored"></i> Node.js</span>
-                <span><i class="devicon-postgresql-plain colored"></i> PostgreSQL</span>
-              </div>
-              <div class="pp-cta">Try the demo <i class="fa-solid fa-arrow-right"></i></div>
-            </div>
-          </a>
-
-          <!-- Navigation -->
-          <button class="proj-nav-btn proj-prev" id="projPrev" aria-label="Previous project">
-            <i class="fa-solid fa-chevron-left"></i>
-          </button>
-          <button class="proj-nav-btn proj-next" id="projNext" aria-label="Next project">
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
-
-          <!-- Dots -->
-          <div class="proj-dots" id="projDots">
-            <button class="proj-dot" data-idx="0" aria-label="GenAI Data Platform"></button>
-            <button class="proj-dot" data-idx="1" aria-label="Fit"></button>
-            <button class="proj-dot" data-idx="2" aria-label="ProTactics"></button>
-          </div>
-
-          <!-- Counter -->
-          <div class="proj-counter" id="projCounter">1 / 3</div>
-
-          <!-- Progress bar -->
-          <div class="proj-progress">
-            <div class="proj-progress-bar filling" id="projProgress"></div>
-          </div>
-
-        </div>
-
-        <div class="work-cta reveal">
-          <a href="projects.html" class="btn btn-secondary">
-            <i class="fa-solid fa-folder-open"></i> View all projects
-            <i class="fa-solid fa-arrow-right" style="font-size:11px;opacity:0.7"></i>
-          </a>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ─── EDUCATION ─────────────────────────────────────────────────────── -->
-    <section id="education" data-section-theme="light">
-      <div class="container">
-        <div class="reveal">
-          <span class="section-label">Academics</span>
-          <h2 class="section-title">Education</h2>
-        </div>
-
-        <div class="edu-grid">
-          <div class="edu-card reveal reveal-delay-1">
-            <div class="edu-card-logo">
-              <img
-                src="images/logo_ITB.webp?v=72e62b2f"
-                alt="Institut Tecnològic de Barcelona"
-                loading="lazy"
-              />
-            </div>
-            <div class="edu-degree">Higher VET Diploma in Web Application Development (CFGS DAW)</div>
-            <div class="edu-institution">Institut Tecnològic de Barcelona</div>
-            <div class="edu-period">Sep 2023 — Jun 2025</div>
-            <div class="edu-location">
-              <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
-              Barcelona, Spain
-            </div>
-          </div>
-
-          <div class="edu-card reveal reveal-delay-2">
-            <div class="edu-card-logo">
-              <img src="images/logo_ifp.webp?v=8ff64457" alt="IFP Hospitalet" loading="lazy" />
-            </div>
-            <div class="edu-degree">
-              Intermediate VET Diploma in Microcomputer Systems &amp; Networks (CFGM SMX)
-            </div>
-            <div class="edu-institution">IFP Hospitalet</div>
-            <div class="edu-period">2021 — 2023</div>
-            <div class="edu-location">
-              <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
-              L'Hospitalet de Llobregat, Spain
-            </div>
-          </div>
-
-          <div class="edu-card reveal reveal-delay-3">
-            <div class="edu-card-logo">
-              <img src="images/logo_sek.webp?v=1deb7106" alt="SEK Catalunya" loading="lazy" />
-            </div>
-            <div class="edu-degree">Secondary Education (ESO)</div>
-            <div class="edu-institution">
-              <a href="https://catalunya.sek.es/" target="_blank" rel="noopener">SEK Catalunya</a>
-            </div>
-            <div class="edu-period">Sep 2017 — Jun 2019</div>
-            <div class="edu-location">
-              <i class="fa-solid fa-location-dot" style="font-size: 10px"></i>
-              La Garriga, Spain
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─── SKILLS ────────────────────────────────────────────────────────── -->
-    <section id="skills" data-section-theme="light">
-      <div class="container">
-        <div class="reveal">
-          <span class="section-label">Stack</span>
-          <h2 class="section-title">Technical skills</h2>
-        </div>
-
-        <div class="skills-grid">
-          <!-- AI & Agents -->
-          <div class="skill-group reveal reveal-delay-1">
-            <div class="skill-group-header">
-              <div class="skill-group-icon">
-                <i class="fa-solid fa-robot"></i>
-              </div>
-              <div class="skill-group-name">AI &amp; Agents</div>
-            </div>
-            <div class="skill-pills">
-              <span class="skill-pill"><i class="devicon-google-plain colored"></i>Google ADK</span>
-              <span class="skill-pill"><i class="devicon-googlecloud-plain colored"></i>Vertex AI</span>
-              <span class="skill-pill"><i class="fa-solid fa-book-open skill-icon-fa"></i>RAG</span>
-              <span class="skill-pill"><i class="fa-solid fa-database skill-icon-fa"></i>Vertex AI Data Stores</span>
-              <span class="skill-pill"><i class="devicon-azure-plain colored"></i>Azure Bot Service</span>
-            </div>
-          </div>
-
-          <!-- Backend & Architecture -->
-          <div class="skill-group reveal reveal-delay-2">
-            <div class="skill-group-header">
-              <div class="skill-group-icon">
-                <i class="fa-solid fa-server"></i>
-              </div>
-              <div class="skill-group-name">Backend &amp; Architecture</div>
-            </div>
-            <div class="skill-pills">
-              <span class="skill-pill"><i class="devicon-csharp-plain colored"></i>.NET (C#)</span>
-              <span class="skill-pill"><i class="devicon-dotnetcore-plain colored"></i>ASP.NET Core</span>
-              <span class="skill-pill"><i class="devicon-python-plain colored"></i>Python</span>
-              <span class="skill-pill"><i class="devicon-fastapi-plain colored"></i>FastAPI</span>
-              <span class="skill-pill"><i class="fa-solid fa-arrow-right-arrow-left skill-icon-fa"></i>REST APIs</span>
-              <span class="skill-pill"><i class="fa-solid fa-shuffle skill-icon-fa"></i>CQRS</span>
-              <span class="skill-pill"><i class="fa-solid fa-code-branch skill-icon-fa"></i>API Versioning</span>
-              <span class="skill-pill"><i class="fa-solid fa-layer-group skill-icon-fa"></i>Clean Architecture</span>
-            </div>
-          </div>
-
-          <!-- Frontend -->
-          <div class="skill-group reveal reveal-delay-3">
-            <div class="skill-group-header">
-              <div class="skill-group-icon">
-                <i class="fa-solid fa-display"></i>
-              </div>
-              <div class="skill-group-name">Frontend</div>
-            </div>
-            <div class="skill-pills">
-              <span class="skill-pill"><i class="devicon-nextjs-plain"></i>Next.js</span>
-              <span class="skill-pill"><i class="devicon-react-original colored"></i>React</span>
-              <span class="skill-pill"><i class="devicon-vuejs-plain colored"></i>Vue.js</span>
-              <span class="skill-pill"><i class="devicon-typescript-original colored"></i>TypeScript</span>
-              <span class="skill-pill"><i class="devicon-javascript-plain colored"></i>JavaScript</span>
-              <span class="skill-pill"><i class="devicon-html5-plain colored"></i>HTML5</span>
-              <span class="skill-pill"><i class="devicon-css3-plain colored"></i>CSS3</span>
-              <span class="skill-pill"><i class="devicon-tailwindcss-plain colored"></i>Tailwind CSS</span>
-            </div>
-          </div>
-
-          <!-- Mobile -->
-          <div class="skill-group reveal reveal-delay-4">
-            <div class="skill-group-header">
-              <div class="skill-group-icon">
-                <i class="fa-solid fa-mobile-screen"></i>
-              </div>
-              <div class="skill-group-name">Mobile</div>
-            </div>
-            <div class="skill-pills">
-              <span class="skill-pill"><i class="devicon-react-original colored"></i>React Native</span>
-              <span class="skill-pill"><i class="fa-solid fa-mobile-screen-button skill-icon-fa"></i>Expo</span>
-              <span class="skill-pill"><i class="devicon-kotlin-plain colored"></i>Kotlin</span>
-              <span class="skill-pill"><i class="fa-brands fa-android skill-icon-fa"></i>Android</span>
-              <span class="skill-pill"><i class="fa-brands fa-apple skill-icon-fa"></i>iOS</span>
-              <span class="skill-pill"><i class="devicon-firebase-plain colored"></i>Firebase App Distribution</span>
-              <span class="skill-pill"><i class="devicon-firebase-plain colored"></i>Crashlytics</span>
-              <span class="skill-pill"><i class="devicon-firebase-plain colored"></i>Firebase Analytics</span>
-            </div>
-          </div>
-
-          <!-- DevOps & Cloud -->
-          <div class="skill-group reveal reveal-delay-5">
-            <div class="skill-group-header">
-              <div class="skill-group-icon">
-                <i class="fa-solid fa-cloud"></i>
-              </div>
-              <div class="skill-group-name">DevOps &amp; Cloud</div>
-            </div>
-            <div class="skill-pills">
-              <span class="skill-pill"><i class="devicon-azure-plain colored"></i>Azure</span>
-              <span class="skill-pill"><i class="devicon-azuredevops-plain colored"></i>Azure DevOps</span>
-              <span class="skill-pill"><i class="devicon-googlecloud-plain colored"></i>Google Cloud</span>
-              <span class="skill-pill"><i class="devicon-docker-plain colored"></i>Docker</span>
-              <span class="skill-pill"><i class="devicon-git-plain colored"></i>Git</span>
-              <span class="skill-pill"><i class="fa-solid fa-infinity skill-icon-fa"></i>CI/CD Pipelines</span>
-              <span class="skill-pill"><i class="devicon-azure-plain colored"></i>App Insights</span>
-            </div>
-          </div>
-
-          <!-- Databases -->
-          <div class="skill-group reveal reveal-delay-1">
-            <div class="skill-group-header">
-              <div class="skill-group-icon">
-                <i class="fa-solid fa-database"></i>
-              </div>
-              <div class="skill-group-name">Databases</div>
-            </div>
-            <div class="skill-pills">
-              <span class="skill-pill"><i class="devicon-postgresql-plain colored"></i>PostgreSQL</span>
-              <span class="skill-pill"><i class="devicon-dotnetcore-plain colored"></i>Entity Framework Core</span>
-              <span class="skill-pill"><i class="fa-solid fa-database skill-icon-fa"></i>SQL</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─── LOOKING FORWARD / GOALS ─────────────────────────────────────────── -->
-    <section id="goals" data-section-theme="dark">
-      <div class="container">
-        <div class="reveal">
-          <span class="section-label">What's Next</span>
-          <h2 class="section-title">Looking forward</h2>
-        </div>
-
-        <div class="goals-layout">
-          <p class="goals-quote reveal reveal-delay-1">
-            “I already ship AI agents to production. Next, I want to make them
-            <span class="gradient-text">reliable</span> at
-            <span class="gradient-text">scale</span>.”
-          </p>
-
-          <div class="goals-text reveal reveal-delay-2">
-            <p class="goals-body">
-              At Plain Concepts I build agents that answer from company
-              knowledge: the retrieval layer, the ingestion pipeline that keeps
-              it current, the APIs around it and the Microsoft Teams
-              integration that puts it in front of employees.
-            </p>
-            <p class="goals-body">
-              Where I want to grow is the engineering that keeps systems like
-              these dependable as usage grows: evaluating answer quality,
-              observability, grounding and guardrails, and keeping latency and
-              cost under control. AI systems deserve the same rigor as any
-              other production software.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─── CONTACT / FOOTER ──────────────────────────────────────────────── -->
-    <section id="contact" data-section-theme="dark">
-      <div class="container">
-        <div class="contact-inner">
-          <div class="reveal">
-            <span class="section-label">Contact</span>
-            <h2 class="contact-heading">
-              Let's <span class="gradient-text">build<br />something.</span>
-            </h2>
-            <p class="contact-sub">
-              Always up for a conversation about AI systems, software or a good
-              side project. I'd love to hear from you.
-            </p>
-          </div>
-
-          <div class="contact-links reveal reveal-delay-1">
-            <a href="mailto:teixido.alan@gmail.com" class="contact-link" data-copy="teixido.alan@gmail.com">
-              <i class="fa-regular fa-envelope"></i> teixido.alan@gmail.com
             </a>
-            <a
-              href="https://www.linkedin.com/in/alanteixidosararols"
-              target="_blank"
-              rel="noopener me"
-              class="contact-link"
-            >
-              <i class="fa-brands fa-linkedin-in"></i> LinkedIn
-            </a>
-            <a
-              href="https://github.com/AlanTeixido"
-              target="_blank"
-              rel="noopener me"
-              class="contact-link"
-            >
-              <i class="fa-brands fa-github"></i> GitHub
-            </a>
-          </div>
 
-          <div class="footer-divider reveal reveal-delay-2"></div>
-          <div class="footer-bottom reveal reveal-delay-3">
-            <div class="footer-copy">
-              © 2026 <span>Alan Teixidó Sararols</span> · Barcelona, Spain
+            <div class="project-pair">
+              <a href="projects.html#genai-data-platform" class="project">
+                <div class="project-shot">
+                  <img src="images/genai_cover.webp?v=ea2ad885" alt="A question becomes governed SQL and then a dashboard" class="is-cover" width="1600" height="900" loading="lazy" decoding="async" />
+                </div>
+                <span class="project-kind">Case study</span>
+                <h3>GenAI Data Platform</h3>
+                <p>An LLM turns business questions into governed SQL and publishes the results as Metabase dashboards.</p>
+                <p class="stack">Python, PostgreSQL, text-to-SQL</p>
+              </a>
+              <a href="projects.html#ask-my-cv" class="project">
+                <div class="project-shot">
+                  <img src="images/askmycv_cover.webp?v=5b488e29" alt="The terminal answering two questions about Alan, one in English and one in Spanish" class="is-cover" width="1600" height="900" loading="lazy" decoding="async" />
+                </div>
+                <span class="project-kind">Live, at the top of this page</span>
+                <h3>Ask my CV</h3>
+                <p>The assistant in the terminal: a small Python service on my own server that answers only from my CV, with rate limits and a sandbox.</p>
+                <p class="stack">Python, Gemini API, nginx, systemd</p>
+              </a>
             </div>
-            <div class="footer-built">Designed &amp; built by Alan Teixidó</div>
+
+            <div class="project-pair">
+              <a href="https://fit.alanteixido.dev" target="_blank" rel="noopener" class="project">
+                <div class="project-shot">
+                  <img src="images/fit_preview.webp?v=8e557abe" alt="Fit home screen: training and recovery dashboard" width="800" height="500" loading="lazy" decoding="async" />
+                </div>
+                <span class="project-kind">Live</span>
+                <h3>Fit</h3>
+                <p>Personal training app with an AI coach, dashboard and activity tracking.</p>
+                <p class="stack">Next.js, Supabase, Claude API</p>
+              </a>
+              <a href="https://alanteixido.github.io/ProTactics/" target="_blank" rel="noopener" class="project">
+                <div class="project-shot">
+                  <img src="images/protactics_cover.webp?v=2db56d0d" alt="ProTactics: soccer analysis and training" class="is-cover" width="1600" height="900" loading="lazy" decoding="async" />
+                </div>
+                <span class="project-kind">Live demo, team of three</span>
+                <h3>ProTactics</h3>
+                <p>Football club management platform with role-based auth, training planner, player tracking and an interactive tactics board.</p>
+                <p class="stack">Vue 3, Node.js, PostgreSQL</p>
+              </a>
+            </div>
+
+            <p class="projects-all"><a href="projects.html" class="btn btn-quiet">See all projects</a></p>
           </div>
         </div>
+      </section>
+
+      <!-- ─── SKILLS ─────────────────────────────────────────────────────── -->
+      <section id="skills" class="section">
+        <div class="container">
+          <header class="section-head">
+            <h2>Skills</h2>
+            <p>The closer to the centre, the more I use it.</p>
+          </header>
+
+          <div>
+            <!-- Three rings turning around what I build. The list is real
+                 text, so it is read out and found by search as usual. -->
+            <div class="orbit">
+              <div class="orbit-box">
+                <p class="orbit-core"><b>AI agents</b><span>with RAG</span></p>
+                <ul class="ring ring--1" style="--n: 5">
+                  <li style="--i: 0"><span class="chip"><i class="devicon-google-plain colored"></i><b>Google ADK</b></span></li>
+                  <li style="--i: 1"><span class="chip"><i class="devicon-googlecloud-plain colored"></i><b>Vertex AI</b></span></li>
+                  <li style="--i: 2"><span class="chip"><i class="devicon-python-plain colored"></i><b>Python</b></span></li>
+                  <li style="--i: 3"><span class="chip"><i class="devicon-fastapi-plain colored"></i><b>FastAPI</b></span></li>
+                  <li style="--i: 4"><span class="chip"><i class="devicon-csharp-plain colored"></i><b>.NET (C#)</b></span></li>
+                </ul>
+                <ul class="ring ring--2" style="--n: 7">
+                  <li style="--i: 0"><span class="chip"><i class="devicon-react-original colored"></i><b>React</b></span></li>
+                  <li style="--i: 1"><span class="chip"><i class="devicon-react-original colored"></i><b>React Native</b></span></li>
+                  <li style="--i: 2"><span class="chip"><i class="devicon-typescript-original colored"></i><b>TypeScript</b></span></li>
+                  <li style="--i: 3"><span class="chip"><i class="devicon-azure-plain colored"></i><b>Azure</b></span></li>
+                  <li style="--i: 4"><span class="chip"><i class="devicon-azuredevops-plain colored"></i><b>Azure DevOps</b></span></li>
+                  <li style="--i: 5"><span class="chip"><i class="devicon-postgresql-plain colored"></i><b>PostgreSQL</b></span></li>
+                  <li style="--i: 6"><span class="chip"><i class="devicon-docker-plain colored"></i><b>Docker</b></span></li>
+                </ul>
+                <ul class="ring ring--3" style="--n: 7">
+                  <li style="--i: 0"><span class="chip"><i class="devicon-nextjs-plain"></i><b>Next.js</b></span></li>
+                  <li style="--i: 1"><span class="chip"><i class="devicon-vuejs-plain colored"></i><b>Vue.js</b></span></li>
+                  <li style="--i: 2"><span class="chip"><i class="devicon-tailwindcss-plain colored"></i><b>Tailwind CSS</b></span></li>
+                  <li style="--i: 3"><span class="chip"><i class="devicon-kotlin-plain colored"></i><b>Kotlin</b></span></li>
+                  <li style="--i: 4"><span class="chip"><i class="devicon-firebase-plain colored"></i><b>Firebase</b></span></li>
+                  <li style="--i: 5"><span class="chip"><i class="devicon-dotnetcore-plain colored"></i><b>ASP.NET Core</b></span></li>
+                  <li style="--i: 6"><span class="chip"><i class="devicon-googlecloud-plain colored"></i><b>Google Cloud</b></span></li>
+                </ul>
+              </div>
+            </div>
+            <p class="orbit-also">
+              <b>Also</b> Vertex AI data stores, Azure Bot Service, REST APIs,
+              CQRS, Clean Architecture, Entity Framework Core, SQL, CI/CD
+              pipelines, App Insights, Expo.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── ABOUT (with education) ─────────────────────────────────────── -->
+      <section id="about" class="section">
+        <div class="container">
+          <header class="section-head">
+            <h2>About</h2>
+          </header>
+
+          <div class="about">
+            <img
+              src="images/alan-teixido.webp?v=03eca435"
+              alt="Alan Teixidó"
+              class="about-photo"
+              width="720"
+              height="960"
+              loading="lazy"
+              decoding="async"
+            />
+            <div>
+              <p class="about-bio">
+                I build AI agents that answer from company knowledge with
+                Google ADK, Vertex AI and RAG, the Python and .NET APIs behind
+                them, and React and React Native apps on top. I care about the
+                full picture: clean architecture on the server, polished UI on
+                the client, and reliable delivery pipelines in between.
+              </p>
+
+              <dl class="facts">
+                <div>
+                  <dt>Based in</dt>
+                  <dd>Barcelona, Spain</dd>
+                </div>
+                <div>
+                  <dt>Languages</dt>
+                  <dd>Catalan, Spanish and English (native), French (basic)</dd>
+                </div>
+                <div id="education">
+                  <dt>Education</dt>
+                  <dd>
+                    Higher VET Diploma in Web Application Development (CFGS DAW)
+                    <span>Institut Tecnològic de Barcelona, Sep 2023 to Jun 2025</span>
+                  </dd>
+                  <dd>
+                    Intermediate VET Diploma in Microcomputer Systems &amp; Networks (CFGM SMX)
+                    <span>IFP Hospitalet, 2021 to 2023</span>
+                  </dd>
+                  <dd>
+                    Secondary Education (ESO)
+                    <span><a href="https://catalunya.sek.es/" target="_blank" rel="noopener" class="link">SEK Catalunya</a>, international school, Sep 2017 to Jun 2019</span>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── LOOKING FORWARD ────────────────────────────────────────────── -->
+      <section id="goals" class="section">
+        <div class="container">
+          <header class="section-head">
+            <h2>Looking forward</h2>
+          </header>
+
+          <div>
+            <p class="goals-quote" data-fill>
+              I already ship AI agents to production. Next, I want to make
+              them reliable at scale.
+            </p>
+            <div class="goals-text">
+              <p>
+                At Plain Concepts I build agents that answer from company
+                knowledge: the retrieval layer, the ingestion pipeline that keeps
+                it current, the APIs around it and the Microsoft Teams
+                integration that puts it in front of employees.
+              </p>
+              <p>
+                Where I want to grow is the engineering that keeps systems like
+                these dependable as usage grows: evaluating answer quality,
+                observability, grounding and guardrails, and keeping latency and
+                cost under control. AI systems deserve the same rigor as any
+                other production software.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ─── CONTACT / FOOTER ───────────────────────────────────────────── -->
+    <footer id="contact">
+      <div class="container">
+        <h2>Get in touch</h2>
+        <p class="contact-sub">
+          Always up for a conversation about AI systems, software or a good
+          side project. I'd love to hear from you.
+        </p>
+        <a href="mailto:teixido.alan@gmail.com" class="contact-email" data-copy="teixido.alan@gmail.com">teixido.alan@gmail.com</a>
+        <div class="contact-links">
+          <a href="https://www.linkedin.com/in/alanteixidosararols" target="_blank" rel="noopener me" class="link">LinkedIn</a>
+          <a href="https://github.com/AlanTeixido" target="_blank" rel="noopener me" class="link">GitHub</a>
+          <a href="/cv/Alan_Teixido_CV.pdf" download class="link">Download CV (PDF)</a>
+        </div>
+
+        <div class="footer">
+          <span>© 2026 Alan Teixidó Sararols, Barcelona</span>
+          <span>Designed and built by Alan Teixidó</span>
+        </div>
       </div>
-    </section>
+    </footer>
 
     <dialog id="cvVideo" class="cv-video" aria-label="My CV as a 30-second video">
       <button type="button" class="cv-video-close" aria-label="Close video">&times;</button>
       <video src="/video/cv-30s.mp4" poster="images/cv-video-poster.webp?v=5e0f5fea" controls playsinline preload="none"></video>
     </dialog>
 
-    <div id="clipboard-toast"><i class="fa-solid fa-check"></i> <span id="toast-text"></span></div>
+    <div id="clipboard-toast" role="status" aria-live="polite"></div>
 
-    <button id="back-to-top" aria-label="Back to top">
-      <i class="fa-solid fa-arrow-up"></i>
-    </button>
-
-    <!-- Scripts -->
-    <script src="main.js?v=0cfb6d3e" defer></script>
-    <script src="terminal.js?v=9f70e53e" defer></script>
+    <script src="main.js?v=09834a4d" defer></script>
+    <script src="terminal.js?v=ffa89899" defer></script>
+    <script src="cloud.js?v=d596a4ea" defer></script>
   </body>
 </html>

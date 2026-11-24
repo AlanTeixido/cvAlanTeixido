@@ -3,99 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>404 — Page not found · Alan Teixidó</title>
+    <title>Page not found · Alan Teixidó</title>
     <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#f5f6f8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=673fcd8c" />
     <style>
-      /* Same self-hosted fonts as the site (absolute paths: this page is served at any URL) */
-      @font-face { font-family: 'Plus Jakarta Sans'; font-style: normal; font-weight: 400 800; font-display: swap; src: url("/fonts/plus-jakarta-sans-v12-latin.woff2?v=a180dc40") format('woff2'); }
-      @font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 500 700; font-display: swap; src: url("/fonts/space-grotesk-v22-latin.woff2?v=0f3474ee") format('woff2'); }
-      @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400 500; font-display: swap; src: url("/fonts/jetbrains-mono-v24-latin.woff2?v=4d09cda4") format('woff2'); }
+      /* Self-contained on purpose: this page is served at any URL, so it
+         uses absolute paths and doesn't depend on style.css. Same font and
+         tokens as the site. */
+      @font-face { font-family: 'Archivo'; font-style: normal; font-weight: 400 700; font-stretch: 100% 125%; font-display: swap; src: url("/fonts/archivo-var-latin.woff2?v=f799f904") format('woff2'); }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       body {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background: #09090b;
-        color: #e4e4e7;
         min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 40px 24px;
-        overflow: hidden;
-        position: relative;
+        min-height: 100svh;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        padding: 20px clamp(20px, 4vw, 40px) 40px;
+        font-family: 'Archivo', system-ui, sans-serif;
+        font-size: 1.0625rem;
+        line-height: 1.6;
+        color: #0d0e12;
+        background: #f5f6f8;
+        -webkit-font-smoothing: antialiased;
       }
-      .glow {
-        position: absolute;
-        border-radius: 50%;
-        pointer-events: none;
-        filter: blur(80px);
-        opacity: 0.08;
-      }
-      .glow-1 { width: 500px; height: 500px; background: #fafafa; top: -120px; left: -120px; }
-      .glow-2 { width: 400px; height: 400px; background: #71717a; bottom: -100px; right: -100px; }
-      .code {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        color: #a1a1aa;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        margin-bottom: 20px;
-        opacity: 0.8;
-      }
-      h1 {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: clamp(5rem, 18vw, 9rem);
-        font-weight: 700;
-        letter-spacing: -0.06em;
-        line-height: 1;
-        background: linear-gradient(135deg, #fafafa 30%, #71717a);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 16px;
-      }
-      p {
-        font-size: 1.05rem;
-        color: #a1a1aa;
-        max-width: 380px;
-        line-height: 1.7;
-        margin-bottom: 40px;
-      }
-      .home-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 13px 28px;
-        border-radius: 100px;
-        background: #e4e4e7;
-        color: #09090b;
-        font-size: 14px;
+      .logo { font-stretch: 118%; font-weight: 650; text-decoration: none; color: inherit; }
+      main { align-self: center; max-width: 34rem; }
+      h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-stretch: 125%; font-weight: 700; line-height: 0.95; letter-spacing: -0.035em; }
+      p { margin-top: 20px; color: #4d525e; }
+      .home {
+        display: inline-block;
+        margin-top: 28px;
+        padding: 13px 22px;
+        border-radius: 10px;
+        background: #0d0e12;
+        color: #f5f6f8;
         font-weight: 600;
         text-decoration: none;
-        transition: background 0.2s ease, transform 0.2s ease;
       }
-      .home-btn:hover { background: #fafafa; transform: translateY(-2px); }
-      .logo {
-        position: absolute;
-        top: 28px; left: 32px;
-        font-size: 18px;
-        font-weight: 900;
-        text-decoration: none;
-        color: #e4e4e7;
-        letter-spacing: -0.03em;
-      }
-      .logo span { color: #71717a; }
+      .home:hover { background: #2a3bff; }
+      :focus-visible { outline: 2px solid #2a3bff; outline-offset: 3px; }
     </style>
   </head>
   <body>
-    <div class="glow glow-1"></div>
-    <div class="glow glow-2"></div>
-    <a href="/" class="logo">AT<span>.</span></a>
-    <div class="code">Error 404</div>
-    <h1>404</h1>
-    <p>This page doesn't exist — or it moved somewhere else. Head back to the homepage.</p>
-    <a href="/" class="home-btn">← Back to homepage</a>
+    <a href="/" class="logo">Alan Teixidó</a>
+    <main>
+      <h1>Nothing at this address</h1>
+      <p>The page doesn't exist, or it moved. The CV and the projects are on the home page.</p>
+      <a href="/" class="home">Go to the home page</a>
+    </main>
   </body>
 </html>

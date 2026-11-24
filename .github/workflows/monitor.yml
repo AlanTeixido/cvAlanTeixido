@@ -46,7 +46,7 @@ jobs:
           if [ "$code" = 200 ] && grep -q "Ask my CV" /tmp/projects.html; then ok "projects page"; else bad "projects page (HTTP $code)"; fi
 
           # Assets referenced by the home page (versioned with ?v=)
-          for asset in $(grep -oE '(style|icons)\.css\?v=[0-9a-f]+|(main|terminal)\.js\?v=[0-9a-f]+' <<<"$home" | sort -u); do
+          for asset in $(grep -oE '(style|icons)\.css\?v=[0-9a-f]+|(main|terminal|cloud)\.js\?v=[0-9a-f]+' <<<"$home" | sort -u); do
             code=$(get -o /dev/null -w '%{http_code}' "$SITE/$asset") || code=000
             if [ "$code" = 200 ]; then ok "$asset"; else bad "$asset (HTTP $code)"; fi
           done

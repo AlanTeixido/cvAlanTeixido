@@ -8,8 +8,11 @@ My CV as a website, with an AI assistant built into its terminal that answers qu
 
 - **Interactive terminal**: commands such as `about`, `projects`, `stack` and `contact`, plus history, Tab completion and aliases. You can drag the window around the hero.
 - **Ask my CV**: an assistant that answers only from [`api/profile.md`](api/profile.md), streamed token by token into the terminal. It works in any language the visitor writes in.
-- **Monochrome design**: sections fade between light and dark themes as you scroll, with metallic text and scroll-driven animations. All of it stays still when `prefers-reduced-motion` is set.
-- **Fast and accessible**: no framework and no build step. Fonts are self-hosted. Icons are generated as CSS masks, and every asset is cache-busted by content hash. Lighthouse scores: performance 96 on mobile and 100 on desktop, and 100 for accessibility, best practices and SEO.
+- **Experience and skills that move**: a timeline that fills in as you scroll, a pipeline with a signal running through its six stages, and the stack as three rings of logos orbiting what I build.
+- **A picture of retrieval**: behind the hero, a WebGL point cloud stands for documents in a vector space. Moving the pointer over it is a live query that lights up the nearest documents, and every command you run in the terminal drops a query of its own. Scrolling away scatters it. It is plain WebGL with no library, it pauses off screen, and it doesn't rotate when `prefers-reduced-motion` is set.
+- **Scroll-driven motion in CSS**: sections, the case-study diagram and the footer animate with `animation-timeline`, with no scroll listeners; page changes use cross-document view transitions. Browsers without support, and `prefers-reduced-motion`, get the same page standing still.
+- **One light theme, one typeface**: Archivo for everything (wider and heavier for headings), JetBrains Mono only inside the terminal. The terminal and the footer are the only dark surfaces.
+- **Fast and accessible**: no framework and no build step. Fonts are self-hosted and every asset is cache-busted by content hash.
 
 ## How Ask my CV works
 
@@ -43,10 +46,12 @@ flowchart LR
 
 ```
 index.html, projects.html   pages
-style.css, icons.css        styles (icons.css is generated)
-main.js, terminal.js        site behaviour and the terminal
+style.css                   styles (sections are listed at the top of the file)
+icons.css                   technology logos for the Skills orbit (Devicon, only the ones in use)
+main.js                     behaviour shared by both pages
+terminal.js, cloud.js       the terminal and the hero's point cloud
 api/ask.py, api/profile.md  the assistant and its knowledge base
-scripts/                    build-icons.js, stamp-assets.js (cache busting), build-cv.js
+scripts/                    stamp-assets.js (cache busting), build-cv.js
 cv/cv.html                  source of the CV PDF: node scripts/build-cv.js
 .githooks/pre-commit        re-stamps asset hashes on every commit
 ```

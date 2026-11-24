@@ -95,7 +95,7 @@
   }
 
   /* ── Content (same facts as the page) ────────────────────────── */
-  const SECTIONS = ['about', 'experience', 'projects', 'education', 'skills', 'goals', 'contact'];
+  const SECTIONS = ['about', 'experience', 'projects', 'education', 'skills', 'goals', 'contact'];   // ids in index.html
 
   const COMMANDS = {
     help: {
@@ -134,6 +134,8 @@
     projects: {
       desc: "things I've built",
       run: () => [
+        line(arrow(), link('Nox', 'projects.html#nox'),
+          span(' — voice assistant for Windows that answers only to my voice (Python, Whisper, Claude Code)', 'term-muted')),
         line(arrow(), link('Ask my CV', 'projects.html#ask-my-cv'),
           span(' — the AI assistant in this terminal (Python service, nginx, Gemini API)', 'term-muted')),
         line(arrow(), link('GenAI Data Platform', 'projects.html#genai-data-platform'),
@@ -335,6 +337,8 @@
     body.classList.remove('is-cleared');
     out.append(line(span('$ ', 'term-prompt'), span(text, 'term-cmd')));
     out.append(...resolve(text));
+    /* cloud.js listens for this and lights up a "retrieval" in the hero */
+    window.dispatchEvent(new CustomEvent('term:run', { detail: { command: text } }));
     while (out.childElementCount > MAX_LINES) out.firstElementChild.remove();
     body.scrollTop = body.scrollHeight;
   }
@@ -382,9 +386,7 @@
        when the window is ready (skipped with reduced motion) */
     const hint = document.createElement('span');
     hint.className = 'term-drag-hint';
-    const moveIcon = document.createElement('i');
-    moveIcon.className = 'fa-solid fa-up-down-left-right';
-    hint.append(moveIcon, ' drag me');
+    hint.textContent = 'drag me';
     bar.append(hint);
     let nudged = true;
     try { nudged = sessionStorage.getItem('at-term-nudge') === '1'; sessionStorage.setItem('at-term-nudge', '1'); } catch (e) {}

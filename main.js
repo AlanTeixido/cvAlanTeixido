@@ -1,46 +1,40 @@
 /* ─────────────────────────────────────────────────────────────────
-   main.js — Alan Teixidó CV
-   Effects:
-     00. Hero intro — typed title + status terminal (first visit only)
-     01. Navbar scroll + active section highlight
-     02. Mobile hamburger menu
-     03. Scroll reveal (IntersectionObserver)
-     04. Language bar fill animation
-     06. Scroll progress bar
-     07. Navbar theme (follows the section under it)
-     13. Projects 3D carousel
-     17. Skill pills stagger entrance
-     25. Timeline accordion
-     26. Back to top
-     21. Copy-to-clipboard toast
+   main.js — behaviour shared by index.html and projects.html
+
+     1. Hero intro: the terminal's status lines type themselves out
+     2. Navbar: border once the page scrolls, current section
+     3. Mobile menu
+     4. Copy-to-clipboard toast (the email in the footer)
+     5. Video dialogs (the CV in 30 seconds, the Nox demo)
+     6. Text that fills in as it scrolls past ([data-fill])
+
+   Every block looks for its own elements and returns if they aren't on
+   the page, so both pages load the same file.
 ───────────────────────────────────────────────────────────────── */
 
-const isTouch       = !window.matchMedia('(pointer: fine)').matches;
-const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/* ── 00. Hero intro: typed title + status terminal ───────────────
-   The sequence is CSS, enabled by html.intro (set in <head> on the first
-   visit of the session; calm version with reduced motion). This only splits the
-   title and the terminal lines into per-character spans with staggered
-   delays. Runs first so its clock matches the CSS animations. Each block
-   has a CSS fallback that reveals it anyway, so nothing stays hidden if
-   this runs late or not at all. */
+/* ── 1. Hero intro ────────────────────────────────────────────────
+   The sequence itself is CSS, switched on by html.intro (set in <head> on
+   the first visit of the session). This only splits the terminal's lines
+   into per-character spans with staggered delays. It runs first so its
+   clock matches the CSS animations, and the CSS has a fallback that shows
+   the text anyway if this runs late or not at all. */
 (function initHeroIntro() {
   if (!document.documentElement.classList.contains('intro')) return;
+  const block = document.querySelector('.term-body');
+  /* Already revealed by the CSS fallback: leave it as plain text */
+  if (!block || getComputedStyle(block).opacity !== '0') return;
 
-  const TITLE_START = 160, TITLE_STEP = 18;                     /* ms */
-  const TERM_START = 1100, TERM_STEP = 17, LINE_PAUSE = 160;
+  const START = 700, STEP = 17, LINE_PAUSE = 160;   /* ms */
 
   /* One span per character, keeping inner markup (prompt, arrows).
      Screen readers get the plain text from a visually hidden copy. */
   function splitChars(el) {
-    const label = el.textContent.replace(/\s+/g, ' ').trim();
     const visual = document.createElement('span');
     visual.setAttribute('aria-hidden', 'true');
-    visual.append(...el.childNodes);
     const sr = document.createElement('span');
     sr.className = 'sr-only';
-    sr.textContent = label;
+    sr.textContent = el.textContent.replace(/\s+/g, ' ').trim();
+    visual.append(...el.childNodes);
     el.append(visual, sr);
 
     const textNodes = [];
@@ -48,7 +42,7 @@ const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').mat
     while (walker.nextNode()) textNodes.push(walker.currentNode);
 
     const chars = [];
-    textNodes.forEach(node => {
+    for (const node of textNodes) {
       const frag = document.createDocumentFragment();
       for (const ch of node.textContent) {
         const span = document.createElement('span');
@@ -58,427 +52,143 @@ const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').mat
         chars.push(span);
       }
       node.replaceWith(frag);
-    });
+    }
     return chars;
   }
 
   /* --d: when the character appears · --s: how long the caret stays on it */
-  function typeBlock(block, lineEls, start, step, pause) {
-    /* Already revealed by the CSS fallback (script ran late): leave it as text */
-    if (!block || getComputedStyle(block).opacity !== '0') return;
-
-    const lines = lineEls.map(splitChars);
-    block.classList.add('is-typing');
-
-    let t = start, last = null;
-    lines.forEach(chars => {
-      chars.forEach((c, i) => {
-        c.style.setProperty('--d', `${t}ms`);
-        c.style.setProperty('--s', `${i === chars.length - 1 ? step + pause : step}ms`);
-        t += step;
-        last = c;
-      });
-      t += pause;
+  let t = START, last = null;
+  for (const lineEl of block.querySelectorAll('.term-line')) {
+    const chars = splitChars(lineEl);
+    chars.forEach((c, i) => {
+      const isLineEnd = i === chars.length - 1;
+      c.style.setProperty('--d', `${t}ms`);
+      c.style.setProperty('--s', `${isLineEnd ? STEP + LINE_PAUSE : STEP}ms`);
+      t += STEP;
+      last = c;
     });
-    if (last) last.classList.add('is-last');
+    t += LINE_PAUSE;
   }
-
-  const title = document.querySelector('.hero-title');
-  if (title) typeBlock(title, [title], TITLE_START, TITLE_STEP, 0);
-
-  const term = document.querySelector('.term-body');
-  if (term) typeBlock(term, [...term.querySelectorAll('.term-line')], TERM_START, TERM_STEP, LINE_PAUSE);
+  if (last) last.classList.add('is-last');
+  block.classList.add('is-typing');
 })();
 
-/* ── 01. Navbar scroll + active section ──────────────────────── */
-const navbar      = document.getElementById('navbar');
-const navAnchors  = document.querySelectorAll('.nav-links a[href^="#"]');
-const sections    = document.querySelectorAll('section[id]');
+/* ── 2. Navbar ────────────────────────────────────────────────── */
+(function initNavbar() {
+  const navbar = document.getElementById('navbar');
+  if (!navbar) return;
 
-function updateNav() {
-  navbar.classList.toggle('scrolled', window.scrollY > 20);
+  const onScroll = () => navbar.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-  let current = '';
-  sections.forEach(sec => {
-    if (window.scrollY >= sec.offsetTop - 120) current = sec.id;
-  });
-  navAnchors.forEach(a => {
-    a.classList.toggle('nav-active', a.getAttribute('href') === `#${current}`);
-  });
-}
-window.addEventListener('scroll', updateNav, { passive: true });
-
-/* ── 02. Mobile hamburger menu ────────────────────────────────── */
-const hamburger  = document.getElementById('hamburger');
-const mobileMenu = document.getElementById('mobileMenu');
-
-hamburger.addEventListener('click', () => {
-  const open = hamburger.classList.toggle('open');
-  mobileMenu.classList.toggle('open', open);
-  hamburger.setAttribute('aria-expanded', String(open));
-  hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-});
-
-function closeMobile() {
-  hamburger.classList.remove('open');
-  mobileMenu.classList.remove('open');
-  hamburger.setAttribute('aria-expanded', 'false');
-  hamburger.setAttribute('aria-label', 'Open menu');
-}
-
-/* ── 03. Scroll reveal ────────────────────────────────────────── */
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('visible');
-  });
-}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-/* ── 04. Language bar fill ────────────────────────────────────── */
-const langObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    entry.target.querySelectorAll('.lang-bar-fill').forEach(fill => {
-      fill.style.transform = `scaleX(${fill.dataset.width || '1'})`;
-    });
-  });
-}, { threshold: 0.3 });
-
-document.querySelectorAll('.about-card').forEach(el => langObserver.observe(el));
-
-/* ── 06. Scroll progress bar ─────────────────────────────────── */
-const progressBar = document.createElement('div');
-progressBar.id = 'scroll-progress';
-document.body.prepend(progressBar);
-
-window.addEventListener('scroll', () => {
-  const max  = document.documentElement.scrollHeight - window.innerHeight;
-  const pct  = max > 0 ? (window.scrollY / max) * 100 : 0;
-  progressBar.style.width = `${pct}%`;
-}, { passive: true });
-
-/* ── 07. Navbar theme ────────────────────────────────────────────
-   Sections paint themselves (data-section-theme, see THEME in style.css).
-   The navbar and the other fixed UI follow html[data-theme], set here from
-   the section under the navbar. A section's gradient band (--fade-h) still
-   counts as the previous section until its midpoint, where the band is
-   halfway between both colours. html.theme-ready (which turns the crossfade
-   on) is added after the first update, so a reload halfway down the page
-   doesn't fade in from dark. */
-(function initNavTheme() {
-  const root      = document.documentElement;
-  const themed    = Array.from(document.querySelectorAll('[data-section-theme]'));
-  const metaTheme = document.querySelector('meta[name="theme-color"]');
-  if (!themed.length) return;
-  let bands = [], fadeTimer, queued = false;
-
-  function measure() {
-    bands = themed.map(s => parseFloat(getComputedStyle(s).getPropertyValue('--fade-h')) || 0);
+  /* Mark the link of the section that crosses the upper third of the screen */
+  const links = new Map();
+  for (const a of navbar.querySelectorAll('.nav-links a[href^="#"]')) {
+    const section = document.getElementById(a.hash.slice(1));
+    if (section) links.set(section, a);
   }
+  if (!links.size) return;
 
-  function update() {
-    queued = false;
-    const y = navbar.offsetHeight / 2;
-    let theme = themed[0].dataset.sectionTheme;
-    for (let i = 0; i < themed.length; i++) {
-      if (themed[i].getBoundingClientRect().top + bands[i] / 2 > y) break;
-      theme = themed[i].dataset.sectionTheme;
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      links.forEach(a => a.removeAttribute('aria-current'));
+      links.get(entry.target).setAttribute('aria-current', 'true');
     }
-    if (root.dataset.theme === theme) return;
-    if (root.classList.contains('theme-ready')) {
-      // Matches the 0.5s token transition in style.css
-      root.classList.add('theme-fading');
-      clearTimeout(fadeTimer);
-      fadeTimer = setTimeout(() => root.classList.remove('theme-fading'), 550);
-    }
-    root.dataset.theme = theme;
-    if (metaTheme) metaTheme.content = theme === 'light' ? '#fafafa' : '#09090b';
-  }
-
-  function queue() {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(update);
-  }
-
-  measure();
-  update();
-  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('theme-ready')));
-  window.addEventListener('scroll', queue, { passive: true });
-  window.addEventListener('resize', () => { measure(); queue(); }, { passive: true });
+  }, { rootMargin: '-30% 0px -65% 0px' });
+  links.forEach((_, section) => observer.observe(section));
 })();
 
-/* ── 13. Projects 3D carousel — enhanced ──────────────────────── */
-(function initProjCarousel() {
-  const wrap    = document.querySelector('.proj-car-wrap');
-  const slides  = Array.from(document.querySelectorAll('.proj-slide'));
-  const dots    = Array.from(document.querySelectorAll('.proj-dot'));
-  const prevBtn = document.getElementById('projPrev');
-  const nextBtn = document.getElementById('projNext');
-  const counter = document.getElementById('projCounter');
-  const progBar = document.getElementById('projProgress');
-  if (!wrap || !slides.length) return;
+/* ── 3. Mobile menu ───────────────────────────────────────────── */
+(function initMobileMenu() {
+  const button = document.getElementById('hamburger');
+  const menu = document.getElementById('mobileMenu');
+  if (!button || !menu) return;
 
-  const N = slides.length;
-  let active = 0;
-  const AUTO_MS = 5000;
-
-  /* 5-slot depth positions with blur depth-of-field */
-  const POS = {
-    '-2': { tx: -600, ry:  35, sc: 0.58, op: 0.18, blur: 5 },
-    '-1': { tx: -330, ry:  18, sc: 0.82, op: 0.55, blur: 2 },
-     '0': { tx:    0, ry:   0, sc: 1.00, op: 1.00, blur: 0 },
-     '1': { tx:  330, ry: -18, sc: 0.82, op: 0.55, blur: 2 },
-     '2': { tx:  600, ry: -35, sc: 0.58, op: 0.18, blur: 5 },
-  };
-
-  function resetProgress() {
-    if (!progBar) return;
-    progBar.classList.remove('filling');
-    void progBar.offsetWidth;
-    progBar.classList.add('filling');
+  function setOpen(open) {
+    menu.classList.toggle('open', open);
+    button.setAttribute('aria-expanded', String(open));
+    button.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   }
-
-  function setPositions() {
-    slides.forEach((slide, i) => {
-      let diff = i - active;
-      if (diff < -(N / 2)) diff += N;
-      if (diff >  (N / 2)) diff -= N;
-
-      const slot = Math.max(-2, Math.min(2, diff));
-      const p    = POS[slot];
-      const zi   = diff === 0 ? 10 : 8 - Math.abs(diff);
-
-      slide.style.transform     = `translateX(${p.tx}px) rotateY(${p.ry}deg) scale(${p.sc})`;
-      slide.style.opacity       = Math.abs(diff) <= 2 ? p.op : 0;
-      slide.style.filter        = `blur(${p.blur}px)`;
-      slide.style.zIndex        = zi;
-      slide.style.pointerEvents = diff === 0 ? 'auto' : 'none';
-      slide.classList.toggle('proj-active', diff === 0);
-    });
-    dots.forEach((d, i) => d.classList.toggle('active', i === active));
-    if (counter) counter.textContent = `${active + 1} / ${N}`;
-    resetProgress();
-  }
-
-  function goTo(idx) {
-    active = ((idx % N) + N) % N;
-    setPositions();
-  }
-
-  /* ── Auto-play (disabled for users preferring reduced motion) ── */
-  let autoTimer = prefersReduced ? null : setInterval(() => goTo(active + 1), AUTO_MS);
-  function restartAuto() {
-    clearInterval(autoTimer);
-    if (!prefersReduced) autoTimer = setInterval(() => goTo(active + 1), AUTO_MS);
-  }
-
-  wrap.addEventListener('mouseenter', () => {
-    clearInterval(autoTimer);
-    if (progBar) progBar.style.animationPlayState = 'paused';
-  });
-  wrap.addEventListener('mouseleave', () => {
-    restartAuto();
-    if (progBar) progBar.style.animationPlayState = 'running';
-  });
-
-  /* ── Controls ──────────────────────────────────────────────── */
-  prevBtn.addEventListener('click', () => { restartAuto(); goTo(active - 1); });
-  nextBtn.addEventListener('click', () => { restartAuto(); goTo(active + 1); });
-  dots.forEach((d, i) => d.addEventListener('click', () => { restartAuto(); goTo(i); }));
-
-  slides.forEach((slide, i) => {
-    slide.addEventListener('click', e => {
-      if (i !== active) { e.preventDefault(); restartAuto(); goTo(i); }
-    });
-  });
-
-  /* Drag / swipe */
-  let startX = 0, pointerDown = false;
-  wrap.addEventListener('mousedown',  e => { startX = e.clientX; pointerDown = true; });
-  wrap.addEventListener('mouseup',    e => {
-    if (!pointerDown) return;
-    pointerDown = false;
-    const dx = e.clientX - startX;
-    if (Math.abs(dx) > 55) { restartAuto(); goTo(active + (dx < 0 ? 1 : -1)); }
-  });
-  wrap.addEventListener('mouseleave', () => { pointerDown = false; });
-  wrap.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-  wrap.addEventListener('touchend',   e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 50) { restartAuto(); goTo(active + (dx < 0 ? 1 : -1)); }
-  }, { passive: true });
-
-  /* Arrow keys */
-  document.addEventListener('keydown', e => {
-    if (e.target.closest('input, textarea, [contenteditable]')) return;   // e.g. typing in the terminal
-    const sec = document.getElementById('projects');
-    if (!sec) return;
-    const r = sec.getBoundingClientRect();
-    if (r.top < window.innerHeight && r.bottom > 0) {
-      if (e.key === 'ArrowLeft')  { restartAuto(); goTo(active - 1); }
-      if (e.key === 'ArrowRight') { restartAuto(); goTo(active + 1); }
-    }
-  });
-
-  /* ── Parallax on active card hover ─────────────────────────── */
-  if (!isTouch) {
-    slides.forEach(slide => {
-      slide.addEventListener('mousemove', e => {
-        if (!slide.classList.contains('proj-active')) return;
-        const rect = slide.getBoundingClientRect();
-        const cx = (e.clientX - rect.left) / rect.width - 0.5;
-        const cy = (e.clientY - rect.top) / rect.height - 0.5;
-        const thumb = slide.querySelector('.pp-thumb img');
-        if (thumb) thumb.style.transform = `scale(1.06) translate(${cx * -12}px, ${cy * -8}px)`;
-      }, { passive: true });
-      slide.addEventListener('mouseleave', () => {
-        const thumb = slide.querySelector('.pp-thumb img');
-        if (thumb) thumb.style.transform = '';
-      });
-    });
-  }
-
-  /* Slides are absolutely positioned, so the wrapper can't grow with them:
-     size it to the tallest card plus the controls row (--controls-h) */
-  function fitHeight() {
-    const controls = parseFloat(getComputedStyle(wrap).getPropertyValue('--controls-h')) || 56;
-    wrap.style.height = `${Math.max(...slides.map(s => s.offsetHeight)) + controls}px`;
-  }
-  fitHeight();
-  window.addEventListener('resize', fitHeight, { passive: true });
-  document.fonts.ready.then(fitHeight);
-  wrap.querySelectorAll('img').forEach(img => {
-    if (!img.complete) img.addEventListener('load', fitHeight, { once: true });
-  });
-
-  setPositions();
+  button.addEventListener('click', () => setOpen(button.getAttribute('aria-expanded') !== 'true'));
+  menu.addEventListener('click', e => { if (e.target.closest('a')) setOpen(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
 })();
 
-/* ── 17. Skill pills stagger entrance ────────────────────────── */
-(function initPillStagger() {
-  const groupObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const pills = entry.target.querySelectorAll('.skill-pill');
-      pills.forEach((pill, i) => {
-        pill.style.transitionDelay = `${i * 50}ms`;
-        pill.classList.add('pill-visible');
-      });
-      groupObserver.unobserve(entry.target);
-    });
-  }, { threshold: 0.2 });
-
-  document.querySelectorAll('.skill-group').forEach(g => groupObserver.observe(g));
-})();
-
-/* ── 25. Timeline accordion (collapsible bullets) ────────────── */
-(function initTimelineAccordion() {
-  /* A pixel max-height is only used while animating; once open it becomes
-     'none' so text can reflow (font load, resize, rotation) without clipping */
-  function open(card, bullets) {
-    bullets.style.maxHeight = bullets.scrollHeight + 'px';
-    bullets.addEventListener('transitionend', function done(e) {
-      if (e.target !== bullets || e.propertyName !== 'max-height') return;
-      bullets.removeEventListener('transitionend', done);
-      if (card.classList.contains('expanded')) bullets.style.maxHeight = 'none';
-    });
-  }
-  function close(bullets) {
-    bullets.style.maxHeight = bullets.scrollHeight + 'px'; /* 'none' can't animate */
-    void bullets.offsetHeight;
-    bullets.style.maxHeight = '0';
-  }
-
-  document.querySelectorAll('.timeline-card').forEach((card, i) => {
-    const bullets = card.querySelector('.timeline-bullets');
-    if (!bullets) return;
-
-    /* Non-tech cards: always expanded, no toggle (they're short) */
-    if (card.classList.contains('non-tech')) {
-      card.classList.add('expanded');
-      bullets.style.maxHeight = 'none';
-      return;
-    }
-
-    /* Create toggle button */
-    const toggle = document.createElement('button');
-    toggle.className = 'timeline-toggle';
-    const isFirst = i === 0;
-    toggle.innerHTML = `<span>${isFirst ? 'Hide details' : 'Show details'}</span> <i class="fa-solid fa-chevron-down"></i>`;
-    bullets.before(toggle);
-
-    /* First tech card starts expanded */
-    if (isFirst) {
-      card.classList.add('expanded');
-      bullets.style.maxHeight = 'none';
-    }
-
-    toggle.addEventListener('click', () => {
-      const expanding = card.classList.toggle('expanded');
-      toggle.querySelector('span').textContent = expanding ? 'Hide details' : 'Show details';
-      if (expanding) open(card, bullets);
-      else close(bullets);
-    });
-  });
-})();
-
-/* ── 26. Back to top button ─────────────────────────────────────── */
-(function initBackToTop() {
-  const btn = document.getElementById('back-to-top');
-  if (!btn) return;
-
-  window.addEventListener('scroll', () => {
-    btn.classList.toggle('show', window.scrollY > window.innerHeight * 0.8);
-  }, { passive: true });
-
-  btn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' });
-  });
-})();
-
-/* ── 21. Copy-to-clipboard with toast ───────────────────────────── */
+/* ── 4. Copy-to-clipboard toast ───────────────────────────────── */
 (function initClipboard() {
-  const toast    = document.getElementById('clipboard-toast');
-  const toastTxt = document.getElementById('toast-text');
-  if (!toast) return;
+  const toast = document.getElementById('clipboard-toast');
+  if (!toast || !navigator.clipboard) return;   // without the API the mailto: link just works
 
   let hideTimer;
-  function showToast(msg) {
-    toastTxt.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(hideTimer);
-    hideTimer = setTimeout(() => toast.classList.remove('show'), 2600);
-  }
-
-  document.querySelectorAll('[data-copy]').forEach(el => {
+  for (const el of document.querySelectorAll('[data-copy]')) {
     el.addEventListener('click', e => {
       e.preventDefault();
-      const text = el.dataset.copy;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(() => showToast(text));
-      } else {
-        const ta = Object.assign(document.createElement('textarea'), { value: text });
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        ta.remove();
-        showToast(text);
-      }
+      navigator.clipboard.writeText(el.dataset.copy).then(() => {
+        toast.textContent = `Copied ${el.dataset.copy}`;
+        toast.classList.add('show');
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+      }, () => { location.href = el.href; });
     });
-  });
+  }
 })();
 
-/* ─── CV video modal ─────────────────────────────────────────────────── */
-(() => {
-  const btn = document.getElementById('cvVideoBtn');
-  const dlg = document.getElementById('cvVideo');
-  if (!btn || !dlg || typeof dlg.showModal !== 'function') { if (btn) btn.hidden = true; return; }
-  const vid = dlg.querySelector('video');
-  const close = () => dlg.close();
-  btn.addEventListener('click', () => { dlg.showModal(); vid.play().catch(() => {}); });
-  dlg.querySelector('.cv-video-close').addEventListener('click', close);
-  dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
-  dlg.addEventListener('close', () => { vid.pause(); });
+/* ── 5. Video dialogs ─────────────────────────────────────────────
+   A button with data-video-dialog="<id>" opens that <dialog> and plays the
+   video inside it. Without <dialog> support the button is hidden. */
+(function initVideoDialogs() {
+  for (const button of document.querySelectorAll('[data-video-dialog]')) {
+    const dialog = document.getElementById(button.dataset.videoDialog);
+    if (!dialog || typeof dialog.showModal !== 'function') { button.hidden = true; continue; }
+    button.addEventListener('click', () => {
+      dialog.showModal();
+      dialog.querySelector('video').play().catch(() => {});
+    });
+  }
+  for (const dialog of document.querySelectorAll('dialog.cv-video')) {
+    dialog.querySelector('.cv-video-close').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });   // click on the backdrop
+    dialog.addEventListener('close', () => dialog.querySelector('video').pause());
+  }
+})();
+
+/* ── 6. Text that fills in as it scrolls past ─────────────────────
+   Each word of a [data-fill] paragraph goes from faint to full as the
+   paragraph crosses the middle of the screen. The words stay ordinary text
+   for screen readers; with reduced motion nothing is split and the
+   paragraph is simply shown. */
+(function initFillText() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const blocks = [...document.querySelectorAll('[data-fill]')].map(el => {
+    const words = el.textContent.trim().split(/\s+/).map(word => {
+      const span = document.createElement('span');
+      span.className = 'fill-word';
+      span.textContent = word;
+      return span;
+    });
+    el.replaceChildren(...words.flatMap(span => [span, ' ']));
+    return { el, words };
+  });
+  if (!blocks.length) return;
+
+  let queued = false;
+  function update() {
+    queued = false;
+    const vh = window.innerHeight;
+    for (const { el, words } of blocks) {
+      const box = el.getBoundingClientRect();
+      /* 0 when its top reaches 85% of the screen, 1 when it reaches 40% */
+      const progress = Math.min(Math.max((vh * 0.85 - box.top) / (vh * 0.45), 0), 1);
+      const lit = Math.round(progress * words.length);
+      words.forEach((word, i) => word.classList.toggle('is-lit', i < lit));
+    }
+  }
+  window.addEventListener('scroll', () => {
+    if (!queued) { queued = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
 })();
