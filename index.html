@@ -28,7 +28,7 @@
     <meta property="og:url"         content="https://alanteixido.dev/" />
     <meta property="og:title"       content="Alan Teixidó | Fullstack & AI Engineer — Agents, APIs & Mobile Apps" />
     <meta property="og:description" content="Fullstack & AI Engineer building AI agents (Google ADK, Vertex AI, RAG), .NET and Python APIs, and React Native apps. Based in Barcelona, Spain." />
-    <meta property="og:image"       content="https://alanteixido.dev/images/og-image.jpg?v=0ed82fd3" />
+    <meta property="og:image"       content="https://alanteixido.dev/images/og-image.jpg?v=93b7739f" />
     <meta property="og:image:width"  content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt"    content="Alan Teixidó — Fullstack & AI Engineer" />
@@ -37,7 +37,7 @@
     <meta name="twitter:card"        content="summary_large_image" />
     <meta name="twitter:title"       content="Alan Teixidó | Fullstack & AI Engineer — Agents, APIs & Mobile Apps" />
     <meta name="twitter:description" content="Fullstack & AI Engineer building AI agents (Google ADK, Vertex AI, RAG), .NET and Python APIs, and React Native apps. Based in Barcelona, Spain." />
-    <meta name="twitter:image"       content="https://alanteixido.dev/images/og-image.jpg?v=0ed82fd3" />
+    <meta name="twitter:image"       content="https://alanteixido.dev/images/og-image.jpg?v=93b7739f" />
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=673fcd8c" />
 
@@ -47,7 +47,7 @@
     <link rel="preload" href="fonts/jetbrains-mono-v24-latin.woff2?v=4d09cda4" as="font" type="font/woff2" crossorigin />
 
     <link rel="stylesheet" href="icons.css?v=d8136626" />
-    <link rel="stylesheet" href="style.css?v=f21e2c61" />
+    <link rel="stylesheet" href="style.css?v=b1000a3c" />
 
     <meta name="theme-color" content="#f5f6f8" />
 
@@ -241,7 +241,7 @@
                 <li><b>API</b><span>FastAPI</span></li>
                 <li><b>Teams</b><span>Azure Bot Service</span></li>
               </ol>
-              <details class="role-more">
+              <details class="cli">
                 <summary><span class="cmd">git log --graph</span></summary>
                 <div class="tlog">
                   <ol class="commits">
@@ -283,7 +283,7 @@
                 <li><b>Legacy refactors</b><span>Clean Code</span></li>
                 <li><b>Scrum team</b><span>cross-functional</span></li>
               </ul>
-              <details class="role-more">
+              <details class="cli">
                 <summary><span class="cmd">git log --graph</span></summary>
                 <div class="tlog">
                   <ol class="commits">
@@ -301,7 +301,8 @@
               </details>
             </article>
 
-            <article class="panel" id="xp-sjas" aria-labelledby="xt-sjas">
+            <article class="panel panel--split" id="xp-sjas" aria-labelledby="xt-sjas">
+              <div>
               <header class="role-head">
                 <div>
                   <h3>Camp Counselor</h3>
@@ -310,10 +311,18 @@
                 </div>
               </header>
               <p class="role-sum role-sum--lead">Led international groups in outdoor and team activities.</p>
+              </div>
+              <ul class="stages stages--two">
+                <li><b>International groups</b></li>
+                <li><b>Outdoor activities</b></li>
+                <li><b>Team activities</b></li>
+              </ul>
             </article>
 
-            <article class="panel" id="xp-camper" aria-labelledby="xt-camper">
+            <article class="panel panel--split" id="xp-camper" aria-labelledby="xt-camper">
+              <div>
               <header class="role-head">
+                <span class="role-logo"><img src="images/logo_camper.webp?v=48087310" alt="" loading="lazy" decoding="async" /></span>
                 <div>
                   <h3>Sales Representative &amp; Web Developer</h3>
                   <p class="role-org">CamperXpress, Barcelona.</p>
@@ -321,10 +330,18 @@
                 </div>
               </header>
               <p class="role-sum role-sum--lead">Sales and client support, and built and maintained the company website.</p>
+              </div>
+              <ul class="stages stages--two">
+                <li><b>Sales</b></li>
+                <li><b>Client support</b></li>
+                <li><b>Company website</b></li>
+              </ul>
             </article>
 
-            <article class="panel" id="xp-pista" aria-labelledby="xt-pista">
+            <article class="panel panel--split" id="xp-pista" aria-labelledby="xt-pista">
+              <div>
               <header class="role-head">
+                <span class="role-logo"><img src="images/logo_pistazero.webp?v=5b0f1dd9" alt="" loading="lazy" decoding="async" /></span>
                 <div>
                   <h3>Hardware Technician</h3>
                   <p class="role-org">Pista Cero Informática, Barcelona.</p>
@@ -332,6 +349,13 @@
                 </div>
               </header>
               <p class="role-sum role-sum--lead">Assembled, repaired and upgraded computers, and supported server maintenance.</p>
+              </div>
+              <ul class="stages stages--two">
+                <li><b>Assembly</b></li>
+                <li><b>Repairs</b></li>
+                <li><b>Upgrades</b></li>
+                <li><b>Server maintenance</b></li>
+              </ul>
             </article>
           </div>
         </div>
@@ -501,23 +525,10 @@
       <video src="/video/cv-30s.mp4" poster="images/cv-video-poster.webp?v=5e0f5fea" controls playsinline preload="none"></video>
     </dialog>
 
-    <!-- Side panel that shows the long version of a job or a project.
-         main.js fills it from the <details> that was opened. -->
-    <dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
-      <header class="sheet-head">
-        <div>
-          <p class="sheet-kicker" id="sheetKicker"></p>
-          <h2 id="sheetTitle"></h2>
-          <p class="sheet-when" id="sheetWhen"></p>
-        </div>
-        <button type="button" class="sheet-close" aria-label="Close">&times;</button>
-      </header>
-      <div class="sheet-body" id="sheetBody"></div>
-    </dialog>
 
     <div id="clipboard-toast" role="status" aria-live="polite"></div>
 
-    <script src="main.js?v=fbfb10c9" defer></script>
+    <script src="main.js?v=9bfe11de" defer></script>
     <script src="terminal.js?v=d3335f7f" defer></script>
     <script src="cloud.js?v=d596a4ea" defer></script>
   </body>

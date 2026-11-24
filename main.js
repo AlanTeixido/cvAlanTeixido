@@ -194,41 +194,7 @@
   update();
 })();
 
-/* ── 7. Side panel ────────────────────────────────────────────────
-   The long version of a job or a project lives in a <details>, which works
-   on its own. With <dialog> support, opening one shows its content in the
-   side panel instead: the title comes from the nearest heading. */
-(function initSheet() {
-  const sheet = document.getElementById('sheet');
-  if (!sheet || typeof sheet.showModal !== 'function') return;
-  const title = document.getElementById('sheetTitle');
-  const kicker = document.getElementById('sheetKicker');
-  const body = document.getElementById('sheetBody');
-  const when = document.getElementById('sheetWhen');
-
-  document.addEventListener('click', e => {
-    const summary = e.target.closest('.project-card details > summary');
-    if (!summary) return;
-    e.preventDefault();                               // keep the <details> closed
-    const details = summary.parentElement;
-    const owner = details.closest('.project-card');
-    const heading = owner && owner.querySelector('h3');
-    const org = owner && owner.querySelector('.project-kind');
-
-    title.textContent = heading ? heading.textContent : summary.textContent;
-    kicker.textContent = org ? org.textContent : '';
-    const dates = owner && owner.querySelector('.role-when');
-    when.textContent = dates ? dates.textContent : '';
-    body.replaceChildren(...[...details.children].filter(el => el !== summary).map(el => el.cloneNode(true)));
-    sheet.showModal();
-    sheet.scrollTop = 0;
-  });
-
-  sheet.querySelector('.sheet-close').addEventListener('click', () => sheet.close());
-  sheet.addEventListener('click', e => { if (e.target === sheet) sheet.close(); });   // click on the backdrop
-})();
-
-/* ── 8. Experience: the years are tabs ─────────────────────────── */
+/* ── 7. Experience: the years are tabs ─────────────────────────── */
 /* The markup is five links and five panels. Here the links become tabs:
    one panel is shown at a time, and the line is inked up to the chosen year. */
 (function initExperience() {
@@ -281,15 +247,17 @@
   axis.scrollLeft = axis.scrollWidth;       // on a phone, start at the current job
 })();
 
-/* ── 9. Experience: a job's terminal types its command, then prints ── */
-/* The <details> works on its own. Here, opening it types the command a
-   character at a time and only then lets the output through (.is-run). */
-(function initJobTerminals() {
+/* ── 8. Terminals: type the command, then print ────────────────── */
+/* The long version of a job or a project is a <details class="cli"> that
+   works on its own. Here, opening one types its command a character at a
+   time and only then lets the output through (.is-run). */
+(function initTerminals() {
   const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll('.role-more').forEach(term => {
+  document.querySelectorAll('.cli').forEach(term => {
     const cmd = term.querySelector('.cmd');
     const text = cmd.textContent;
     let timer;
+    term.classList.add('is-live');
     term.addEventListener('toggle', () => {
       clearInterval(timer);
       cmd.textContent = text;
@@ -306,4 +274,3 @@
     });
   });
 })();
-

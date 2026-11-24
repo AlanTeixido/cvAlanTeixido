@@ -41,7 +41,7 @@ fs.writeFileSync(tmpHtml, html);
 
 try {
   execFileSync(CHROME, [
-    '--headless=new', '--disable-gpu', '--no-pdf-header-footer',
+    '--headless=new', '--disable-gpu', ...(process.env.CHROME_NO_SANDBOX ? ['--no-sandbox'] : []), '--no-pdf-header-footer',
     `--user-data-dir=${path.join(tmpDir, 'profile')}`,
     '--virtual-time-budget=3000',
     `--print-to-pdf=${OUT}`,

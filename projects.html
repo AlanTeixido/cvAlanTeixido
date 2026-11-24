@@ -17,7 +17,7 @@
     <meta property="og:url"         content="https://alanteixido.dev/projects.html" />
     <meta property="og:title"       content="Projects | Alan Teixidó — Fullstack & AI Engineer" />
     <meta property="og:description" content="Projects by Alan Teixidó, Fullstack & AI Engineer: GenAI Data Platform (LLM text-to-SQL), ProTactics, Fit, Pokédex, Crypto Tracker and more, built with Python, Next.js, Vue 3, Node.js and TypeScript." />
-    <meta property="og:image"       content="https://alanteixido.dev/images/og-image.jpg?v=0ed82fd3" />
+    <meta property="og:image"       content="https://alanteixido.dev/images/og-image.jpg?v=93b7739f" />
     <meta property="og:image:width"  content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt"    content="Alan Teixidó — Fullstack & AI Engineer" />
@@ -26,14 +26,14 @@
     <meta name="twitter:card"        content="summary_large_image" />
     <meta name="twitter:title"       content="Projects | Alan Teixidó — Fullstack & AI Engineer" />
     <meta name="twitter:description" content="Projects by Alan Teixidó, Fullstack & AI Engineer: GenAI Data Platform (LLM text-to-SQL), ProTactics, Fit, Pokédex, Crypto Tracker and more, built with Python, Next.js, Vue 3, Node.js and TypeScript." />
-    <meta name="twitter:image"       content="https://alanteixido.dev/images/og-image.jpg?v=0ed82fd3" />
+    <meta name="twitter:image"       content="https://alanteixido.dev/images/og-image.jpg?v=93b7739f" />
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=673fcd8c" />
 
     <!-- Fonts: self-hosted (@font-face at the top of style.css) -->
     <link rel="preload" href="fonts/archivo-var-latin.woff2?v=f799f904" as="font" type="font/woff2" crossorigin />
 
-    <link rel="stylesheet" href="style.css?v=f21e2c61" />
+    <link rel="stylesheet" href="style.css?v=b1000a3c" />
 
     <meta name="theme-color" content="#f5f6f8" />
   </head>
@@ -81,7 +81,7 @@
           <h2 class="project-group">AI systems</h2>
           <div class="project-grid">
             <article class="project-card project-card--lead" id="nox">
-              <button type="button" class="project-shot project-shot--video" data-video-dialog="noxVideo" aria-haspopup="dialog" aria-label="Play the Nox demo, 45 seconds">
+              <button type="button" class="project-shot project-shot--video" data-video-dialog="noxVideo" aria-haspopup="dialog" aria-label="Watch the demo, 45 s: Nox">
                 <img src="images/nox_cover.webp?v=2c5d9dca" alt="The Nox island answering a spoken question about today's agenda" class="is-cover" width="1600" height="900" loading="lazy" decoding="async" />
                 <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg> Watch the demo, 45 s</span>
               </button>
@@ -90,9 +90,18 @@
                 <h3>Nox</h3>
                 <p>A voice assistant for Windows that answers only to my voice. Speech is transcribed on my own GPU; a router handles simple requests locally and sends the rest to a headless Claude Code process limited to an allowlist of tools.</p>
                 <p class="stack">Python, PySide6 (Qt), faster-whisper (CUDA), Resemblyzer, edge-tts, Claude Code headless with MCP, Postgres (Supabase), Strava API</p>
-                <details>
-                  <summary>How it is built</summary>
-                  <p>A voice assistant for Windows that lives as an island at the top of the screen and answers only to my voice. Listening is local: wake word, Whisper on the GPU and a speaker check, so only text reaches the model. A router sends simple requests (open a file, take a note, log food) to local shortcuts, which took opening a file from 11.7 seconds to 0.1; everything else goes to a persistent headless Claude Code process that picks the model per request. Security was most of the work: connectors come from an allowlist, about 120 deny rules block anything that sends, deletes or pays, emails and web pages are treated as data and never as instructions, secrets live in the Windows Credential Manager, and its database role is read-only with row-level security. The repository is a showcase: architecture, security model and demo, with the source kept private.</p>
+                <details class="cli">
+                  <summary><span class="cmd">cat README.md</span></summary>
+                  <div class="tlog">
+                    <ul class="readme">
+                      <li>A voice assistant for Windows that lives as an island at the top of the screen and answers only to my voice.</li>
+                      <li>Listening is local: wake word, Whisper on the GPU and a speaker check, so only text reaches the model.</li>
+                      <li>A router sends simple requests (open a file, take a note, log food) to local shortcuts, which took opening a file from 11.7 seconds to 0.1; everything else goes to a persistent headless Claude Code process that picks the model per request.</li>
+                      <li>Security was most of the work: connectors come from an allowlist, about 120 deny rules block anything that sends, deletes or pays, emails and web pages are treated as data and never as instructions, secrets live in the Windows Credential Manager, and its database role is read-only with row-level security.</li>
+                      <li>The repository is a showcase: architecture, security model and demo, with the source kept private.</li>
+                    </ul>
+                    <p class="tlog-end" aria-hidden="true"></p>
+                  </div>
                 </details>
                 <p class="project-links">
                   <a href="https://github.com/AlanTeixido/nox" target="_blank" rel="noopener" class="link">Architecture and demo on GitHub</a>
@@ -108,9 +117,17 @@
                 <h3>Ask my CV</h3>
                 <p>The assistant in the terminal on my home page. A small Python service on my own server answers only from my CV and streams the reply.</p>
                 <p class="stack">Python, Gemini API, nginx, systemd, JavaScript, Streaming</p>
-                <details>
-                  <summary>How it is built</summary>
-                  <p>An AI assistant built into the terminal on my home page. Visitors ask about my experience in English, Spanish or Catalan and the answer streams in live, written only from my CV. A small Python service (standard library, no dependencies) runs behind nginx on my own VPS and calls the Gemini API with my profile as context. Production details on a zero budget: the prompt keeps it on topic and treats every message as a question, never as instructions; length limits, per-visitor and daily caps and nginx rate limiting keep it safe and free to run; questions are never logged; and systemd runs it sandboxed, restarting it on every deploy.</p>
+                <details class="cli">
+                  <summary><span class="cmd">cat README.md</span></summary>
+                  <div class="tlog">
+                    <ul class="readme">
+                      <li>An AI assistant built into the terminal on my home page.</li>
+                      <li>Visitors ask about my experience in English, Spanish or Catalan and the answer streams in live, written only from my CV.</li>
+                      <li>A small Python service (standard library, no dependencies) runs behind nginx on my own VPS and calls the Gemini API with my profile as context.</li>
+                      <li>Production details on a zero budget: the prompt keeps it on topic and treats every message as a question, never as instructions; length limits, per-visitor and daily caps and nginx rate limiting keep it safe and free to run; questions are never logged; and systemd runs it sandboxed, restarting it on every deploy.</li>
+                    </ul>
+                    <p class="tlog-end" aria-hidden="true"></p>
+                  </div>
                 </details>
                 <p class="project-links">
                   <a href="index.html#ask" class="link">Try it in the terminal</a>
@@ -127,9 +144,16 @@
                 <h3>GenAI Data Platform</h3>
                 <p>Business users ask in plain language. An LLM writes the SQL, a governed semantic layer validates it, and the result is published as Metabase dashboards.</p>
                 <p class="stack">Python, PostgreSQL, Docker, LLM text-to-SQL, Metabase API, Streamlit</p>
-                <details>
-                  <summary>How it is built</summary>
-                  <p>Natural-language analytics platform built during a corporate GenAI mentorship program. Business users ask questions in plain language; an LLM translates them into SQL, a governed semantic layer validates every query (read-only, row-level security), and the result is executed on a PostgreSQL warehouse and published automatically as charts and dashboards in Metabase through its REST API. I authored the semantic business-term definitions, built the Metabase integration bridge and automated dashboard composition, and developed the Streamlit web interface — working hands-on with AI agents as part of the development workflow.</p>
+                <details class="cli">
+                  <summary><span class="cmd">cat README.md</span></summary>
+                  <div class="tlog">
+                    <ul class="readme">
+                      <li>Natural-language analytics platform built during a corporate GenAI mentorship program.</li>
+                      <li>Business users ask questions in plain language; an LLM translates them into SQL, a governed semantic layer validates every query (read-only, row-level security), and the result is executed on a PostgreSQL warehouse and published automatically as charts and dashboards in Metabase through its REST API.</li>
+                      <li>I authored the semantic business-term definitions, built the Metabase integration bridge and automated dashboard composition, and developed the Streamlit web interface — working hands-on with AI agents as part of the development workflow.</li>
+                    </ul>
+                    <p class="tlog-end" aria-hidden="true"></p>
+                  </div>
                 </details>
               </div>
             </article>
@@ -142,9 +166,15 @@
                 <h3>Fit</h3>
                 <p>Personal training app with an AI coach, built on the Claude API with tool use over my own training data.</p>
                 <p class="stack">Next.js, React, TypeScript, Supabase, Vercel, Claude API</p>
-                <details>
-                  <summary>How it is built</summary>
-                  <p>Personal training app with an AI coach, dashboard and activity tracking that I use daily. The coach is built on the Claude API with tool use over my own data (meals, workouts, daily metrics and goals), plus Strava and Google Health Connect integrations.</p>
+                <details class="cli">
+                  <summary><span class="cmd">cat README.md</span></summary>
+                  <div class="tlog">
+                    <ul class="readme">
+                      <li>Personal training app with an AI coach, dashboard and activity tracking that I use daily.</li>
+                      <li>The coach is built on the Claude API with tool use over my own data (meals, workouts, daily metrics and goals), plus Strava and Google Health Connect integrations.</li>
+                    </ul>
+                    <p class="tlog-end" aria-hidden="true"></p>
+                  </div>
                 </details>
                 <p class="project-links">
                   <a href="https://fit.alanteixido.dev" target="_blank" rel="noopener" class="link">Open the live site</a>
@@ -160,9 +190,16 @@
                 <h3>Polymarket trading bot</h3>
                 <p>Two Claude agents built and reviewed trading strategies. Right 81% of the time in simulation and 41% with real money, so I shut it down.</p>
                 <p class="stack">Claude agents, Docker, Hetzner VPS</p>
-                <details>
-                  <summary>How it is built</summary>
-                  <p>A bot that traded prediction markets, built by two Claude agents: one implemented strategies and the other reviewed them. It was right 81% of the time in simulation and 41% with real money, so I shut it down. What I kept from it: a backtest only proves the simulator, so validate with small real stakes before scaling anything.</p>
+                <details class="cli">
+                  <summary><span class="cmd">cat README.md</span></summary>
+                  <div class="tlog">
+                    <ul class="readme">
+                      <li>A bot that traded prediction markets, built by two Claude agents: one implemented strategies and the other reviewed them.</li>
+                      <li>It was right 81% of the time in simulation and 41% with real money, so I shut it down.</li>
+                      <li>What I kept from it: a backtest only proves the simulator, so validate with small real stakes before scaling anything.</li>
+                    </ul>
+                    <p class="tlog-end" aria-hidden="true"></p>
+                  </div>
                 </details>
               </div>
             </article>
@@ -179,9 +216,16 @@
                 <h3>ProTactics</h3>
                 <p>Football club management platform built by a team of three: training planner, player tracking and an interactive tactics board.</p>
                 <p class="stack">Vue 3, Node.js, Express, PostgreSQL, JWT, Cloudinary</p>
-                <details>
-                  <summary>How it is built</summary>
-                  <p>Full-stack football club management platform, built as a team of three developers. Clubs manage coaches and teams; coaches plan training sessions, track players with stats and positions, share publications with the club, and draw tactics on an interactive Canvas board with drag-and-drop tokens and freehand drawing. JWT auth with role-based access (club / coach).</p>
+                <details class="cli">
+                  <summary><span class="cmd">cat README.md</span></summary>
+                  <div class="tlog">
+                    <ul class="readme">
+                      <li>Full-stack football club management platform, built as a team of three developers.</li>
+                      <li>Clubs manage coaches and teams; coaches plan training sessions, track players with stats and positions, share publications with the club, and draw tactics on an interactive Canvas board with drag-and-drop tokens and freehand drawing.</li>
+                      <li>JWT auth with role-based access (club / coach).</li>
+                    </ul>
+                    <p class="tlog-end" aria-hidden="true"></p>
+                  </div>
                 </details>
                 <p class="project-links">
                   <a href="https://alanteixido.github.io/ProTactics/" target="_blank" rel="noopener" class="link">Open the live demo</a>
@@ -199,9 +243,15 @@
                 <h3>Pokédex App</h3>
                 <p>A Pokédex with real-time search, filters, evolution chains and side-by-side stat comparison, on the PokéAPI.</p>
                 <p class="stack">Next.js, TypeScript, Tailwind CSS, SWR, Framer Motion, PokéAPI</p>
-                <details>
-                  <summary>How it is built</summary>
-                  <p>Full-featured Pokédex built with Next.js and TypeScript, consuming the free PokéAPI. Includes real-time search, type and generation filters, detailed Pokémon pages with evolution chains, shiny toggle, type matchup charts, and a side-by-side stat comparison with radar chart.</p>
+                <details class="cli">
+                  <summary><span class="cmd">cat README.md</span></summary>
+                  <div class="tlog">
+                    <ul class="readme">
+                      <li>Full-featured Pokédex built with Next.js and TypeScript, consuming the free PokéAPI.</li>
+                      <li>Includes real-time search, type and generation filters, detailed Pokémon pages with evolution chains, shiny toggle, type matchup charts, and a side-by-side stat comparison with radar chart.</li>
+                    </ul>
+                    <p class="tlog-end" aria-hidden="true"></p>
+                  </div>
                 </details>
                 <p class="project-links">
                   <a href="https://pokedex.alanteixido.dev" target="_blank" rel="noopener" class="link">Open the live site</a>
@@ -218,9 +268,15 @@
                 <h3>Crypto Tracker</h3>
                 <p>Live prices for the top 100 coins, with sparklines, filters and a watchlist saved in the browser, on the CoinGecko API.</p>
                 <p class="stack">Next.js, TypeScript, Tailwind CSS, SWR, Framer Motion, CoinGecko API</p>
-                <details>
-                  <summary>How it is built</summary>
-                  <p>Live cryptocurrency tracker built with Next.js and TypeScript, consuming the free CoinGecko API. Features real-time prices for the top 100 coins, 7-day sparkline charts, market cap and volume stats, search and filters (Gainers, Losers, Top 10), auto-refresh every 60 seconds, coin detail pages with interactive price charts, and a personal watchlist saved in localStorage.</p>
+                <details class="cli">
+                  <summary><span class="cmd">cat README.md</span></summary>
+                  <div class="tlog">
+                    <ul class="readme">
+                      <li>Live cryptocurrency tracker built with Next.js and TypeScript, consuming the free CoinGecko API.</li>
+                      <li>Features real-time prices for the top 100 coins, 7-day sparkline charts, market cap and volume stats, search and filters (Gainers, Losers, Top 10), auto-refresh every 60 seconds, coin detail pages with interactive price charts, and a personal watchlist saved in localStorage.</li>
+                    </ul>
+                    <p class="tlog-end" aria-hidden="true"></p>
+                  </div>
                 </details>
                 <p class="project-links">
                   <a href="https://crypto.alanteixido.dev" target="_blank" rel="noopener" class="link">Open the live site</a>
@@ -258,22 +314,9 @@
       <video src="/video/nox-demo.mp4" poster="images/nox_cover.webp?v=2c5d9dca" controls playsinline preload="none"></video>
     </dialog>
 
-    <!-- Side panel that shows the long version of a job or a project.
-         main.js fills it from the <details> that was opened. -->
-    <dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
-      <header class="sheet-head">
-        <div>
-          <p class="sheet-kicker" id="sheetKicker"></p>
-          <h2 id="sheetTitle"></h2>
-          <p class="sheet-when" id="sheetWhen"></p>
-        </div>
-        <button type="button" class="sheet-close" aria-label="Close">&times;</button>
-      </header>
-      <div class="sheet-body" id="sheetBody"></div>
-    </dialog>
 
     <div id="clipboard-toast" role="status" aria-live="polite"></div>
 
-    <script src="main.js?v=fbfb10c9" defer></script>
+    <script src="main.js?v=9bfe11de" defer></script>
   </body>
 </html>

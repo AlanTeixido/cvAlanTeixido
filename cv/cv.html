@@ -1,84 +1,81 @@
 <!doctype html>
 <!-- Source of cv/Alan_Teixido_CV.pdf. Rebuild the PDF with: node scripts/build-cv.js
-     Monochrome design; sizes are in pt to match the A4 layout (15 mm side margins). -->
+     Same type and colours as the site. Sizes are in pt to match the A4 layout
+     (15 mm side margins), and everything has to fit on one page. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Alan Teixidó Sararols — CV</title>
+<title>Alan Teixidó Sararols, CV</title>
 <meta name="robots" content="noindex">
 <style>
-  @font-face { font-family: 'Space Grotesk'; src: url('../fonts/space-grotesk-v22-latin.woff2') format('woff2'); font-weight: 500 700; }
-  @font-face { font-family: 'Plus Jakarta Sans'; src: url('../fonts/plus-jakarta-sans-v12-latin.woff2') format('woff2'); font-weight: 400 800; }
-  @font-face { font-family: 'JetBrains Mono'; src: url('../fonts/jetbrains-mono-v24-latin.woff2') format('woff2'); font-weight: 400 500; }
+  @font-face { font-family: 'Archivo'; src: url('../fonts/archivo-var-latin.woff2') format('woff2'); font-weight: 400 700; font-stretch: 100% 125%; }
 
   :root {
-    --ink: #09090b;
-    --text: #3f3f46;
-    --muted: #71717a;
-    --rule: #e4e4e7;
+    --ink: #0d0e12;
+    --text: #3d414b;
+    --muted: #6b7080;
+    --rule: #dcdfe5;
+    --paper: #f1f2f5;
+    --signal: #2a3bff;
   }
   @page { size: A4; margin: 0; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: #fff; }
   body {
     width: 595.28pt; height: 841.89pt; position: relative; overflow: hidden;
-    padding: 28.3pt 42.52pt 0;
-    font: 400 8.5pt/11.2pt 'Plus Jakarta Sans', sans-serif; color: var(--text);
+    padding: 26pt 42.52pt 0;
+    font: 400 8.5pt/11.3pt 'Archivo', sans-serif; color: var(--text);
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-  body::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3pt; background: var(--ink); }
-  b { font-weight: 700; }
+  b { font-weight: 650; color: var(--ink); }
+  a { color: inherit; text-decoration: none; }
   .nowrap { white-space: nowrap; }
 
-  header { display: flex; align-items: flex-end; gap: 17pt; }
-  .photo { width: 56.69pt; height: 70.87pt; object-fit: cover; object-position: center 35%; flex: none; }
-  .who { flex: 1; padding-bottom: 1pt; }
-  h1 { font: 700 25pt/27pt 'Space Grotesk', sans-serif; color: var(--ink); }
-  .role { font: 500 9.5pt/13pt 'JetBrains Mono', monospace; color: var(--text); }
-  .focus { margin-top: 2pt; font-size: 8.3pt; line-height: 11pt; color: var(--muted); }
-  .contact { text-align: right; font-size: 8.4pt; line-height: 12.2pt; color: var(--text); padding-bottom: 1pt; }
+  header { display: flex; align-items: flex-end; gap: 16pt; padding-bottom: 11pt; border-bottom: 1.2pt solid var(--ink); }
+  .photo { width: 60pt; height: 72pt; flex: none; border-radius: 8pt; background: var(--paper); object-fit: cover; object-position: center 8%; }
+  .who { flex: 1; }
+  h1 { font: 700 22pt/24pt 'Archivo', sans-serif; font-stretch: 122%; letter-spacing: -.035em; color: var(--ink); white-space: nowrap; }
+  .role { margin-top: 3pt; font-size: 10.5pt; line-height: 13pt; font-weight: 600; color: var(--ink); }
+  .focus { margin-top: 1pt; font-size: 8.5pt; color: var(--muted); }
+  .contact { text-align: right; font-size: 8.4pt; line-height: 12.2pt; }
+  .contact .site { font-weight: 650; color: var(--signal); }
 
-  h2 {
-    margin-top: 3.5pt; padding: 2.4pt 0 1.4pt; border-bottom: .6pt solid var(--rule);
-    font: 500 8.4pt/11pt 'JetBrains Mono', monospace; color: var(--ink); text-transform: uppercase;
-  }
-  h2::before { content: '— '; }
-  header + h2 { margin-top: 5.5pt; }
-  h2 + * { margin-top: 2.5pt; }
+  h2 { margin-top: 7pt; font: 700 10.5pt/13pt 'Archivo', sans-serif; font-stretch: 120%; letter-spacing: -.01em; color: var(--ink); }
+  h2 + * { margin-top: 3pt; }
 
-  .entry + .entry { margin-top: 5pt; }
+  .entry + .entry { margin-top: 4.2pt; }
   .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12pt; }
-  h3 { font: 700 9.6pt/12.5pt 'Plus Jakarta Sans', sans-serif; color: var(--ink); }
-  .date { font: 400 8pt/12.5pt 'JetBrains Mono', monospace; color: var(--muted); white-space: nowrap; }
-  .meta { font-size: 8.3pt; line-height: 11pt; color: var(--muted); }
-  .meta .link { color: var(--text); }
+  h3 { font: 650 9.6pt/12.5pt 'Archivo', sans-serif; color: var(--ink); }
+  .now h3::before { content: ''; display: inline-block; width: 5pt; height: 5pt; margin-right: 5pt; border-radius: 50%; background: var(--signal); vertical-align: 1pt; }
+  .date { font-size: 8.2pt; line-height: 12.5pt; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .meta { font-size: 8.4pt; line-height: 11.3pt; color: var(--muted); }
+  .meta .link { color: var(--signal); }
   ul { list-style: none; }
-  li { padding-left: 10.69pt; text-indent: -10.69pt; margin-top: .6pt; }
-  li::before { content: '•'; display: inline-block; width: 10.69pt; text-indent: 0; font-weight: 700; color: var(--ink); }
-  .tech { margin-top: 2pt; font: 400 7.3pt/9.6pt 'JetBrains Mono', monospace; color: var(--muted); }
+  li { position: relative; padding-left: 9pt; margin-top: .8pt; }
+  li::before { content: ''; position: absolute; left: 0; top: 5pt; width: 4pt; height: .8pt; background: var(--muted); }
+  .tech { margin-top: 2pt; font-size: 7.8pt; line-height: 10pt; color: var(--muted); }
 
   table { width: 100%; border-collapse: collapse; }
-  td { padding: 1.25pt 0; font-size: 8.4pt; line-height: 11pt; vertical-align: top; }
-  td:first-child { width: 96.38pt; font-weight: 700; color: var(--ink); }
+  td { padding: 1.2pt 0; font-size: 8.4pt; line-height: 11pt; vertical-align: top; }
+  td:first-child { width: 96.38pt; font-weight: 650; color: var(--ink); }
 
   .entry.edu + .entry.edu { margin-top: 1.5pt; }
   .edu h3 { font-size: 9pt; }
-  .edu h3 .where.own-line { display: block; line-height: 10.5pt; }
-  .edu h3 .where { font: 400 8pt/12.5pt 'Plus Jakarta Sans', sans-serif; color: var(--muted); }
+  .edu h3 .where { font-weight: 400; font-size: 8.2pt; color: var(--muted); }
 </style>
 </head>
 <body>
   <header>
-    <img class="photo" src="../images/alan-teixido.jpg" alt="Alan Teixidó">
+    <img class="photo" src="../images/alan-teixido-cutout.webp" alt="Alan Teixidó">
     <div class="who">
       <h1>Alan Teixidó Sararols</h1>
-      <div class="role">FULLSTACK &amp; AI ENGINEER</div>
-      <div class="focus">AI agents · .NET &amp; Python APIs · React &amp; React Native</div>
+      <div class="role">Fullstack &amp; AI Engineer</div>
+      <div class="focus">AI agents with RAG, .NET and Python APIs, React and React Native</div>
     </div>
     <div class="contact">
       Barcelona, Spain<br>
       teixido.alan@gmail.com<br>
-      alanteixido.dev<br>
+      <span class="site">alanteixido.dev</span><br>
       linkedin.com/in/alanteixidosararols<br>
       github.com/AlanTeixido
     </div>
@@ -88,62 +85,62 @@
   <p>Fullstack engineer building <b>AI agents</b>, <b>.NET and Python APIs</b> and <b>cross-platform mobile apps</b> in production. At Plain Concepts I deliver RAG-based agents on Google Cloud Vertex AI, integrated into Microsoft Teams through Azure, working autonomously and directly with the client.</p>
 
   <h2>Experience</h2>
-  <div class="entry">
-    <div class="row"><h3>Software Engineer — Fullstack &amp; AI</h3><span class="date">Jun 2025 — Present</span></div>
-    <div class="meta"><b>Plain Concepts</b> · Client: Puig · Barcelona, Spain</div>
+  <div class="entry now">
+    <div class="row"><h3>Software Engineer, Fullstack &amp; AI</h3><span class="date">Jun 2025 to now</span></div>
+    <div class="meta"><b>Plain Concepts</b>, Barcelona. Client: Puig.</div>
     <ul>
       <li>Built <b>AI agents with Google ADK</b> on <b>Vertex AI</b>, using <b>RAG</b> over Vertex AI data stores to ground answers in company documents.</li>
       <li>Designed the <b>document ingestion workflow</b>: JSON metadata, data store imports and content updates so the agents always answer from current knowledge.</li>
       <li>Developed the <b>FastAPI</b> (Python) backend connecting the agents with the rest of the platform.</li>
-      <li>Integrated the agents into <b>Microsoft Teams</b> via <b>Azure Bot Service</b>, in a multi-cloud architecture (Google Cloud + Azure).</li>
+      <li>Integrated the agents into <b>Microsoft Teams</b> via <b>Azure Bot Service</b>, in a multi-cloud architecture (Google Cloud and Azure).</li>
       <li>Built <b>Azure DevOps CI/CD pipelines</b> to deploy across four repositories: agents, bot, API and infrastructure.</li>
       <li>Designed <b>.NET REST APIs</b> (CQRS, Clean Architecture, EF Core, PostgreSQL) and <b>React Native</b> apps for iOS and Android, with Firebase release tooling (App Distribution, Crashlytics, Analytics).</li>
     </ul>
-    <div class="tech">Google ADK · Vertex AI · Python · FastAPI · Azure Bot Service · Azure DevOps · .NET · React Native · TypeScript · PostgreSQL · Firebase</div>
+    <div class="tech">Google ADK, Vertex AI, Python, FastAPI, Azure Bot Service, Azure DevOps, .NET, React Native, TypeScript, PostgreSQL, Firebase</div>
   </div>
   <div class="entry">
-    <div class="row"><h3>Backend Developer (.NET) — Internship</h3><span class="date">Oct 2024 — Mar 2025</span></div>
-    <div class="meta"><b>Quantion</b> · Barcelona, Spain</div>
+    <div class="row"><h3>Backend Developer (.NET), internship</h3><span class="date">Oct 2024 to Mar 2025</span></div>
+    <div class="meta"><b>Quantion</b>, Barcelona</div>
     <ul>
       <li>Shipped .NET (C#) features and tested REST endpoints in a live production codebase from day one, and refactored legacy code within a Scrum team.</li>
     </ul>
   </div>
   <div class="entry">
-    <div class="row"><h3>Camp Counselor</h3><span class="date">Jul — Aug 2024</span></div>
-    <div class="meta"><b>SJAS Summer Camp</b> · Lucerne, Switzerland</div>
+    <div class="row"><h3>Camp Counselor</h3><span class="date">Jul to Aug 2024</span></div>
+    <div class="meta"><b>SJAS Summer Camp</b>, Lucerne, Switzerland</div>
     <ul>
       <li>Led international groups in outdoor and team activities, working daily across languages and cultures.</li>
     </ul>
   </div>
   <div class="entry">
     <div class="row"><h3>Earlier roles</h3></div>
-    <div class="meta">Sales Representative &amp; Web Developer, <b>CamperXpress</b> (2022) · Hardware Technician, <b>Pista Cero Informática</b> (2021 — 2022)</div>
+    <div class="meta">Sales Representative &amp; Web Developer, <b>CamperXpress</b> (2022). Hardware Technician, <b>Pista Cero Informática</b> (2021 to 2022).</div>
   </div>
 
   <h2>Selected projects</h2>
   <div class="entry">
+    <div class="row"><h3>Nox</h3></div>
+    <div class="meta">Personal voice assistant for Windows, in daily use. <span class="link">github.com/AlanTeixido/nox</span></div>
+    <ul>
+      <li>Answers only to my voice: speech is transcribed on my own GPU, a router handles simple requests locally and sends the rest to a headless Claude Code process limited to an allowlist of tools.</li>
+    </ul>
+    <div class="tech">Python, PySide6 (Qt), faster-whisper (CUDA), Claude Code headless with MCP, Postgres (Supabase)</div>
+  </div>
+  <div class="entry">
     <div class="row"><h3>GenAI Data Platform</h3></div>
     <div class="meta">Corporate GenAI mentorship program</div>
     <ul>
-      <li>Natural-language analytics: an LLM turns business questions into SQL, a governed semantic layer validates every query <span class="nowrap">(read-only,</span> row-level security), and results are published automatically as Metabase dashboards via its REST API. Built the semantic definitions, the Metabase integration and the Streamlit interface.</li>
+      <li>Natural-language analytics: an LLM turns business questions into SQL, a governed semantic layer validates every query <span class="nowrap">(read-only,</span> row-level security), and results are published as Metabase dashboards via its REST API.</li>
     </ul>
-    <div class="tech">LLM · SQL · PostgreSQL · Metabase API · Streamlit · Python</div>
+    <div class="tech">LLM text-to-SQL, PostgreSQL, Metabase API, Streamlit, Python</div>
   </div>
   <div class="entry">
     <div class="row"><h3>Fit</h3></div>
-    <div class="meta">Personal training app I use daily · <span class="link">fit.alanteixido.dev</span></div>
+    <div class="meta">Personal training app I use daily. <span class="link">fit.alanteixido.dev</span></div>
     <ul>
       <li>AI coach built on the Claude API with tool use over my own data (meals, workouts, daily metrics, goals), plus Strava and Google Health Connect integrations.</li>
     </ul>
-    <div class="tech">Next.js · React · TypeScript · Supabase · Vercel · Claude API</div>
-  </div>
-  <div class="entry">
-    <div class="row"><h3>ProTactics</h3></div>
-    <div class="meta">Football club management platform (team of 3) · <span class="link">github.com/AlanTeixido/ProTactics</span></div>
-    <ul>
-      <li>Fullstack platform with role-based auth, training planner, player tracking and an interactive tactics board.</li>
-    </ul>
-    <div class="tech">Vue 3 · Node.js · REST API · PostgreSQL</div>
+    <div class="tech">Next.js, React, TypeScript, Supabase, Vercel, Claude API</div>
   </div>
 
   <h2>Skills</h2>
@@ -158,13 +155,13 @@
 
   <h2>Education</h2>
   <div class="entry edu">
-    <div class="row"><h3>Higher VET Diploma in Web Application Development (CFGS DAW) <span class="where own-line">Institut Tecnològic de Barcelona</span></h3><span class="date">Sep 2023 — Jun 2025</span></div>
+    <div class="row"><h3>Higher VET Diploma in Web Application Development (CFGS DAW) <span class="where">Institut Tecnològic de Barcelona</span></h3><span class="date">Sep 2023 to Jun 2025</span></div>
   </div>
   <div class="entry edu">
-    <div class="row"><h3>Intermediate VET Diploma in Microcomputer Systems &amp; Networks (CFGM SMX) <span class="where">· IFP Hospitalet</span></h3><span class="date">2021 — 2023</span></div>
+    <div class="row"><h3>Intermediate VET Diploma in Microcomputer Systems &amp; Networks (CFGM SMX) <span class="where">IFP Hospitalet</span></h3><span class="date">2021 to 2023</span></div>
   </div>
   <div class="entry edu">
-    <div class="row"><h3>Secondary Education (ESO) <span class="where">· SEK Catalunya, La Garriga</span></h3><span class="date">Sep 2017 — Jun 2019</span></div>
+    <div class="row"><h3>Secondary Education (ESO) <span class="where">SEK Catalunya, La Garriga</span></h3><span class="date">Sep 2017 to Jun 2019</span></div>
   </div>
 </body>
 </html>

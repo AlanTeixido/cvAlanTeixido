@@ -590,13 +590,15 @@ button.link { border: 0; background: none; cursor: pointer; }
 .stages li { padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
 .stages b { display: block; font-size: 0.9375rem; font-weight: 600; }
 .stages span { display: block; margin-top: 2px; color: var(--slate); font-size: 0.8125rem; line-height: 1.35; }
+/* jobs with no logo to show still get their head on one line */
 @media (min-width: 560px) { .stages:not(.stages--two) { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 28px; } }
 
-/* The long version of a job is a small terminal at the foot of its panel:
-   a <details> whose summary is the window bar with the command, and whose
-   content is the output. The work reads as `git log --graph`: one commit
-   per thing built, joined by the branch line. main.js types the command. */
-.role-more {
+/* The long version of a job or a project is a small terminal: a <details>
+   whose summary is the window bar with the command, and whose content is
+   the output. A job reads as `git log --graph` (one commit per thing built,
+   joined by the branch line); a project as `cat README.md`. main.js types
+   the command before the output is let through. */
+.cli {
   border: 1px solid var(--term-line);
   border-radius: 12px;
   background: var(--term-bg);
@@ -606,8 +608,8 @@ button.link { border: 0; background: none; cursor: pointer; }
   line-height: 1.6;
   box-shadow: 0 18px 40px -24px rgba(13, 14, 18, 0.55);
 }
-.panel--split .role-more { grid-column: 1 / -1; }
-.role-more summary {
+.panel--split .cli { grid-column: 1 / -1; }
+.cli summary {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -616,9 +618,9 @@ button.link { border: 0; background: none; cursor: pointer; }
   cursor: pointer;
   list-style: none;
 }
-.role-more summary::-webkit-details-marker { display: none; }
+.cli summary::-webkit-details-marker { display: none; }
 /* three window dots, drawn from one */
-.role-more summary::before {
+.cli summary::before {
   content: '';
   flex: none;
   width: 10px; height: 10px;
@@ -627,9 +629,9 @@ button.link { border: 0; background: none; cursor: pointer; }
   background: #3a3d47;
   box-shadow: 16px 0 #3a3d47, 32px 0 #3a3d47;
 }
-.role-more summary::after { content: 'click to run'; margin-left: auto; color: var(--term-dim); transition: color 0.2s ease; }
-.role-more[open] summary::after { content: 'close'; }
-.role-more summary:hover::after { color: var(--term-hi); }
+.cli summary::after { content: 'click to run'; margin-left: auto; color: var(--term-dim); transition: color 0.2s ease; }
+.cli[open] summary::after { content: 'close'; }
+.cli summary:hover::after { color: var(--term-hi); }
 .cmd { color: var(--term-hi); }
 .cmd::before, .tlog-cmd::before, .tlog-end::before { content: '$ '; color: var(--term-dim); }
 .cmd::after, .tlog-end::after {
@@ -640,8 +642,8 @@ button.link { border: 0; background: none; cursor: pointer; }
   vertical-align: -0.2em;
   background: var(--term-hi);
 }
-.role-more.is-run .cmd::after { display: none; }
-.xp.is-js .role-more[open]:not(.is-run) .tlog { display: none; }   /* nothing printed until the command is typed */
+.cli.is-run .cmd::after { display: none; }
+.cli.is-live[open]:not(.is-run) .tlog { display: none; }   /* nothing printed until the command is typed */
 .tlog { padding: 18px 18px 18px; border-top: 1px solid var(--term-line); }
 
 .commits li { position: relative; padding: 0 0 16px 28px; }
@@ -671,6 +673,10 @@ button.link { border: 0; background: none; cursor: pointer; }
 .tstack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .tstack li { padding: 1px 9px; border: 1px solid var(--term-line); border-radius: 6px; color: var(--term-text); font-size: 0.75rem; }
 .tlog-end { margin-top: 16px; }
+.readme { display: grid; gap: 10px; }
+.readme li { position: relative; padding-left: 20px; color: var(--term-text); }
+.readme li::before { content: '-'; position: absolute; left: 0; color: #9aa5ff; }
+.readme + .tlog-end { margin-top: 14px; }
 
 /* ─── 6. PROJECTS ──────────────────────────────────────────────── */
 
@@ -978,30 +984,7 @@ button.link { border: 0; background: none; cursor: pointer; }
 .project-card-body > .stack { color: var(--slate); }
 .project-links { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px 24px; font-weight: 500; }
 
-.project-card details { margin-top: 14px; }
-.project-card summary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  list-style: none;
-}
-.project-card summary::-webkit-details-marker { display: none; }
-.project-card summary::before {
-  content: '+';
-  display: inline-grid;
-  place-items: center;
-  width: 22px; height: 22px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  font-weight: 400;
-  line-height: 1;
-  transition: border-color 0.2s ease;
-}
-.project-card details[open] summary::before { content: '\2212'; }
-.project-card summary:hover::before { border-color: var(--ink); }
-.project-card details p { margin-top: 12px; color: var(--graphite); font-size: 0.9688rem; max-width: 64ch; }
+.project-card .cli { margin-top: 18px; }
 
 @media (min-width: 760px) {
   .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1027,71 +1010,6 @@ button.link { border: 0; background: none; cursor: pointer; }
 .project-group:first-child { margin-top: 0; }
 
 /* ─── 11. OVERLAYS ─────────────────────────────────────────────── */
-/* Side panel for the long version of a job or project */
-.sheet {
-  position: fixed;
-  inset: 0 0 0 auto;
-  width: min(720px, 100%);
-  max-width: none;
-  height: 100dvh;
-  max-height: none;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-left: 1px solid #23263a;
-  background: #0a0b10;
-  color: var(--paper);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: #2c3044 transparent;
-}
-.sheet::backdrop { background: rgba(13, 14, 18, 0.5); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-
-/* The header is a small cover: glow, where it was, the title large */
-.sheet-head {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
-  min-height: 230px;
-  padding: 40px 40px 32px;
-  background:
-    radial-gradient(520px 300px at 88% -10%, rgba(42, 59, 255, 0.6), transparent 68%),
-    radial-gradient(360px 220px at 8% 110%, rgba(42, 59, 255, 0.2), transparent 70%),
-    #0d0e14;
-  border-bottom: 1px solid #1c1f2e;
-}
-.sheet-kicker { color: #a7adc4; font-size: 0.9375rem; }
-.sheet-head h2 { margin-top: 8px; max-width: 16ch; font-size: clamp(1.75rem, 4vw, 2.5rem); font-stretch: 120%; letter-spacing: -0.03em; }
-.sheet-when { margin-top: 12px; color: #a7adc4; font-size: 0.9375rem; font-variant-numeric: tabular-nums; }
-.sheet-when:empty { display: none; }
-.sheet-close {
-  position: absolute;
-  top: 20px; right: 20px;
-  width: 42px; height: 42px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  background: rgba(13, 14, 20, 0.5);
-  color: var(--paper);
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
-  transition: background 0.2s ease, rotate 0.3s var(--ease);
-}
-.sheet-close:hover { background: rgba(255, 255, 255, 0.16); rotate: 90deg; }
-.sheet :focus-visible { outline-color: var(--paper); }
-
-.sheet-body { padding: 8px 40px 56px; }
-.sheet-body > p:not(.stack) { margin-top: 28px; color: #c9cdda; font-size: 1.0625rem; line-height: 1.65; }
-.sheet-body .stack { margin-top: 10px; color: #c9cdda; font-size: 1rem; line-height: 1.6; }
-
-@media (max-width: 560px) {
-  .sheet-head { min-height: 190px; padding: 32px 22px 24px; }
-  .sheet-body { padding-inline: 22px; }
-}
-
 .cv-video {
   width: min(1100px, 92vw);
   margin: auto;
@@ -1189,8 +1107,6 @@ button.link { border: 0; background: none; cursor: pointer; }
 @keyframes orbitIn  { from { opacity: 0; transform: scale(0.72) rotate(-24deg); } }
 @keyframes spin     { to   { transform: rotate(360deg); } }
 @keyframes unspin   { to   { transform: rotate(-360deg); } }
-@keyframes sheetIn  { from { transform: translateX(100%); } }
-@keyframes fadeIn   { from { opacity: 0; } }
 @keyframes drift    { from { transform: translateX(-4%); } to { transform: translateX(10%); } }
 @keyframes print    { from { opacity: 0; } }
 @keyframes caret    { 50% { opacity: 0; } }
@@ -1242,17 +1158,12 @@ button.link { border: 0; background: none; cursor: pointer; }
   .xp.is-js .panel > * { animation: introUp 0.5s var(--ease) both; }
   .xp.is-js .panel > :nth-child(2) { animation-delay: 0.08s; }
   /* The terminal prints its output line by line, and the cursor blinks */
-  .role-more[open] :is(.commits li, .tlog-cmd, .tstack, .tlog-end) { animation: print 0.01s steps(1) both; animation-delay: calc(var(--n, 0) * 0.13s); }
-  .commits li:nth-child(2) { --n: 1; } .commits li:nth-child(3) { --n: 2; } .commits li:nth-child(4) { --n: 3; }
-  .commits li:nth-child(5) { --n: 4; } .commits li:nth-child(6) { --n: 5; }
-  .tlog-cmd { --n: 7; } .tstack { --n: 8; } .tlog-end { --n: 9.5; }
+  .cli[open] :is(.tlog li, .tlog-cmd, .tlog-end) { animation: print 0.01s steps(1) both; animation-delay: calc(var(--n, 0) * 0.13s); }
+  .tlog li:nth-child(2) { --n: 1; } .tlog li:nth-child(3) { --n: 2; } .tlog li:nth-child(4) { --n: 3; }
+  .tlog li:nth-child(5) { --n: 4; } .tlog li:nth-child(6) { --n: 5; } .tlog li:nth-child(7) { --n: 6; }
+  .tlog li:nth-child(n + 8) { --n: 7; }
+  .tlog-cmd { --n: 7; } .tstack li { --n: 8; } .tlog-end { --n: 9.5; }
   .cmd::after, .tlog-end::after { animation: caret 1.1s steps(1) infinite; }
-
-  /* The side panel slides in from the right; its notes follow one by one */
-  .sheet[open] { animation: sheetIn 0.45s var(--ease); }
-  .sheet[open]::backdrop { animation: fadeIn 0.3s ease; }
-  .sheet[open] .sheet-body > * { animation: introUp 0.5s var(--ease) 0.12s both; }
-  .sheet[open] .sheet-head > div > * { animation: introUp 0.6s var(--ease) 0.1s both; }
 
 
   /* Nox blinks now and then */

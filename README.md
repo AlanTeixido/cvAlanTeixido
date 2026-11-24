@@ -8,7 +8,7 @@ My CV as a website, with an AI assistant built into its terminal that answers qu
 
 - **Interactive terminal**: commands such as `about`, `projects`, `stack` and `contact`, plus history, Tab completion and aliases. You can drag the window around the hero.
 - **Ask my CV**: an assistant that answers only from [`api/profile.md`](api/profile.md), streamed token by token into the terminal. It works in any language the visitor writes in.
-- **Experience and skills that move**: a timeline that fills in as you scroll, a pipeline with a signal running through its six stages, and the stack as three rings of logos orbiting what I build.
+- **Experience and skills that move**: the jobs sit on a line of years that work as tabs, the long version of each job opens as a small terminal that types `git log --graph`, and the stack is three rings of logos orbiting what I build.
 - **A picture of retrieval**: behind the hero, a WebGL point cloud stands for documents in a vector space. Moving the pointer over it is a live query that lights up the nearest documents, and every command you run in the terminal drops a query of its own. Scrolling away scatters it. It is plain WebGL with no library, it pauses off screen, and it doesn't rotate when `prefers-reduced-motion` is set.
 - **Scroll-driven motion in CSS**: sections, the case-study diagram and the footer animate with `animation-timeline`, with no scroll listeners; page changes use cross-document view transitions. Browsers without support, and `prefers-reduced-motion`, get the same page standing still.
 - **One light theme, one typeface**: Archivo for everything (wider and heavier for headings), JetBrains Mono only inside the terminal. The terminal and the footer are the only dark surfaces.
